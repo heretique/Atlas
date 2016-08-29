@@ -72,7 +72,7 @@ void Resource::unload()
 float Resource::getElemParamF( int elem, int elemIdx, int param, int compIdx )
 {
     Engine::log().writeError( "Invalid elem, param or component in atlasGetResParamF" );
-    return NaN;
+    return std::numeric_limits<float>::quiet_NaN();
 }
 
 void Resource::setElemParamF( int elem, int elemIdx, int param, int compIdx, float value )

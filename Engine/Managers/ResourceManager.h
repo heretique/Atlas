@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include "Types.h"
+#include "Base.h"
 #include "AtlasCore.h"
 
 namespace atlas {
@@ -28,7 +28,8 @@ enum class ResourceTypes {
     Shader,
     Texture,
     ParticleEffect,
-    Pipeline
+    Pipeline,
+    UserDefined // This is last always
 };
 
 class Resource

@@ -73,7 +73,7 @@ const Vector3& Transform::getScale() const
 
 void Transform::getScale(Vector3* scale) const
 {
-    _ASSERT(scale);
+    ASSERT(scale);
     scale->set(_scale);
 }
 
@@ -99,19 +99,19 @@ const Quaternion& Transform::getRotation() const
 
 void Transform::getRotation(Quaternion* rotation) const
 {
-    _ASSERT(rotation);
+    ASSERT(rotation);
     rotation->set(_rotation);
 }
 
 void Transform::getRotation(Matrix* rotation) const
 {
-    _ASSERT(rotation);
+    ASSERT(rotation);
     Matrix::createRotation(_rotation, rotation);
 }
 
 float Transform::getRotation(Vector3* axis) const
 {
-    _ASSERT(axis);
+    ASSERT(axis);
     return _rotation.toAxisAngle(axis);
 }
 
@@ -122,7 +122,7 @@ const Vector3& Transform::getTranslation() const
 
 void Transform::getTranslation(Vector3* translation) const
 {
-    _ASSERT(translation);
+    ASSERT(translation);
     translation->set(_translation);
 }
 

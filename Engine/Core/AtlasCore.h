@@ -1,8 +1,7 @@
 #ifndef ATLASCORE_H
 #define ATLASCORE_H
 
-#include "debug.h"
-#include "types.h"
+#include "Base.h"
 
 #include <cstring>
 #include <queue>
@@ -11,6 +10,66 @@
 namespace atlas {
 
 #define INVALID_PACKED_INDEX UINT32_MAX
+
+
+template <typename T, size_t StorageBits, size_t GenerationBits>
+struct HandledStorage
+{
+    constexpr static uint32_t StorageSize = (1 << StorageBits);
+
+    struct Handle {
+        u32 index : StorageBits;
+        u32 generation : GenerationBits;
+    };
+
+    HandledStorage() {
+        memset(_storage, 0x0, StorageSize*sizeof(T));
+        memset(_generations, 0x0, StorageSize*sizeof(u32));
+        for (u32 i = 0; i < StorageSize; ++i) {
+            _freeList[i] = i + 1;
+        }
+        _freeHead = 0;
+    }
+
+    bool isValid(Handle handle) {
+        if (_generations[handle.index] != handle.generation || handle.generation == 0)
+            return false;
+        return true;
+    }
+
+    Handle add(T &item)
+    {
+        ASSERT(_freeHead < StorageSize && "Assert: No more handles available");
+        u32 index = _freeHead;
+        _storage[index] = item;
+        Handle handle = {index, _generations[index]};
+        _freeHead = _freeList[_freeHead];
+        return handle;
+    }
+
+
+    void remove(Handle handle)
+    {
+        if (!isValid(handle))
+            return;
+
+        // swap the released item with the last one to preserve packing
+        _generations[handle.index]++;
+        _freeList[handle.index] = _freeHead;
+        _freeHead = handle.index;
+    }
+
+    T* get(Handle handle) {
+      return isValid(handle) ? &(_storage[handle.index]) : 0x0;
+    }
+
+
+    T _storage[StorageSize];
+    u32 _generations[StorageSize];
+    u32 _freeList[StorageSize];
+    u32 _freeHead;
+};
+
 
 template <typename T, size_t StorageBits, size_t GenerationBits>
 struct HandledPackedStorage
@@ -115,64 +174,6 @@ private:
     u32     _freeHead;
     Index   _indices[StorageSize];
     PackedStorage _storage;
-};
-
-template <typename T, size_t StorageBits, size_t GenerationBits>
-struct HandledStorage
-{
-    constexpr static uint32_t StorageSize = (1 << StorageBits);
-
-    struct Handle {
-        u32 index : StorageBits;
-        u32 generation : GenerationBits;
-    };
-
-    HandledStorage() {
-        memset(_storage, 0x0, StorageSize*sizeof(T));
-        memset(_generations, 0x0, StorageSize*sizeof(u32));
-        for (u32 i = 0; i < StorageSize; ++i) {
-            _freeList[i] = i + 1;
-        }
-        _freeHead = 0;
-    }
-
-    bool isValid(Handle handle) {
-        if (_generations[handle.index] != handle.generation || handle.generation == 0)
-            return false;
-        return true;
-    }
-
-    Handle add(T &item)
-    {
-        ASSERT(_freeHead < StorageSize && "Assert: No more handles available");
-        u32 index = _freeHead;
-        _storage[index] = item;
-        Handle handle = {index, _generations[index]};
-        _freeHead = _freeList[_freeHead];
-        return handle;
-    }
-
-
-    void remove(Handle handle)
-    {
-        if (!isValid(handle))
-            return;
-
-        // swap the released item with the last one to preserve packing
-        _generations[handle.index]++;
-        _freeList[handle.index] = _freeHead;
-        _freeHead = handle.index;
-    }
-
-    T* get(Handle handle) {
-      return isValid(handle) ? &(_storage[handle.index]) : 0x0;
-    }
-
-
-    T _storage[StorageSize];
-    u32 _generations[StorageSize];
-    u32 _freeList[StorageSize];
-    u32 _freeHead;
 };
 
 

@@ -1,7 +1,11 @@
+#ifndef BASE_H
+#define BASE_H
+
 #include <new>
 #include <memory>
 #include <cstring>
 #include <cmath>
+#include <cstdint>
 #include <locale>
 #include <algorithm>
 #include <string>
@@ -27,6 +31,17 @@ using std::string;
 using std::vector;
 
 
+// Types
+typedef unsigned int uint;
+
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+typedef uintptr_t uptr;
+
+
 // Current function macro.
 #ifdef WIN32
 #define __current__func__ __FUNCTION__
@@ -37,9 +52,9 @@ using std::vector;
 // Assert macros.
 #ifdef _DEBUG
 #include <cassert>
-#define _ASSERT(expression) assert(expression)
+#define ASSERT(expression) assert(expression)
 #else
-#define _ASSERT(expression)
+#define ASSERT(expression)
 #endif
 
 #if defined(WIN32) && defined(_MSC_VER)
@@ -65,29 +80,6 @@ using std::vector;
     } while (0)
 
 
-
-// Object deletion macro
-#define SAFE_DELETE(x) \
-    { \
-        delete x; \
-        x = NULL; \
-    }
-
-// Array deletion macro
-#define SAFE_DELETE_ARRAY(x) \
-    { \
-        delete[] x; \
-        x = NULL; \
-    }
-
-// Ref cleanup macro
-#define SAFE_RELEASE(x) \
-    if (x) \
-    { \
-        (x)->release(); \
-        x = NULL; \
-    }
-
 // Math
 #define MATH_DEG_TO_RAD(x)          ((x) * 0.0174532925f)
 #define MATH_RAD_TO_DEG(x)          ((x)* 57.29577951f)
@@ -108,13 +100,10 @@ using std::vector;
 #define M_1_PI                      0.31830988618379067154
 #endif
 
-#ifdef __GNUC__
-    const float NaN = __builtin_nanf("");
-#else
-    const float NaN = *(float *)&MaxUInt32;
-#endif
 
 // NOMINMAX makes sure that windef.h doesn't add macros min and max
 #ifdef WIN32
     #define NOMINMAX
+#endif
+
 #endif

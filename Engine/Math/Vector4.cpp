@@ -113,7 +113,7 @@ void Vector4::add(const Vector4& v)
 
 void Vector4::add(const Vector4& v1, const Vector4& v2, Vector4* dst)
 {
-    _ASSERT(dst);
+    ASSERT(dst);
 
     dst->x = v1.x + v2.x;
     dst->y = v1.y + v2.y;
@@ -123,7 +123,7 @@ void Vector4::add(const Vector4& v1, const Vector4& v2, Vector4* dst)
 
 void Vector4::clamp(const Vector4& min, const Vector4& max)
 {
-    _ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
+    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
 
     // Clamp the x value.
     if (x < min.x)
@@ -152,8 +152,8 @@ void Vector4::clamp(const Vector4& min, const Vector4& max)
 
 void Vector4::clamp(const Vector4& v, const Vector4& min, const Vector4& max, Vector4* dst)
 {
-    _ASSERT(dst);
-    _ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
+    ASSERT(dst);
+    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
 
     // Clamp the x value.
     dst->x = v.x;
@@ -241,7 +241,7 @@ Vector4& Vector4::normalize()
 
 void Vector4::normalize(Vector4* dst) const
 {
-    _ASSERT(dst);
+    ASSERT(dst);
 
     if (dst != this)
     {
@@ -286,7 +286,7 @@ void Vector4::set(float x, float y, float z, float w)
 
 void Vector4::set(const float* array)
 {
-    _ASSERT(array);
+    ASSERT(array);
 
     x = array[0];
     y = array[1];
@@ -320,7 +320,7 @@ void Vector4::subtract(const Vector4& v)
 
 void Vector4::subtract(const Vector4& v1, const Vector4& v2, Vector4* dst)
 {
-    _ASSERT(dst);
+    ASSERT(dst);
 
     dst->x = v1.x - v2.x;
     dst->y = v1.y - v2.y;

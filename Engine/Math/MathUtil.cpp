@@ -6,7 +6,7 @@ namespace math
 
 void MathUtil::smooth(float* x, float target, float elapsedTime, float responseTime)
 {
-    _ASSERT(x);
+    ASSERT(x);
 
     if (elapsedTime > 0)
     {
@@ -16,7 +16,7 @@ void MathUtil::smooth(float* x, float target, float elapsedTime, float responseT
 
 void MathUtil::smooth(float* x, float target, float elapsedTime, float riseTime, float fallTime)
 {
-    _ASSERT(x);
+    ASSERT(x);
     
     if (elapsedTime > 0)
     {
