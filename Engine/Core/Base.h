@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <map>
 
 // Bring common functions from C++ into global namespace
 using std::memcpy;
@@ -29,6 +30,7 @@ using std::modf;
 using std::atoi;
 using std::string;
 using std::vector;
+using std::map;
 
 
 // Types
@@ -41,6 +43,12 @@ typedef uint64_t u64;
 
 typedef uintptr_t uptr;
 
+// make_unique
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique( Args&& ...args )
+{
+    return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+}
 
 // Current function macro.
 #ifdef WIN32

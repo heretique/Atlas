@@ -2,22 +2,16 @@ import qbs
 
 Product {
     type: "application"
-    name: "AtlasEditor"
+    name: "AtlasPlayer"
     consoleApplication: false
     files: [
         "*.cpp",
         "*.h",
-        "ImGUI/*.cpp",
-        "ImGUI/*.h",
-        "ImGuizmo/*.cpp",
-        "ImGuizmo/*.h",
     ]
 
     Depends { name: "cpp" }
     cpp.includePaths: [
         ".",
-        "ImGUI",
-        "ImGuizmo",
         "../Engine/Core",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",

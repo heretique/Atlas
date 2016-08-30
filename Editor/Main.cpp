@@ -2,6 +2,8 @@
 #include <QDebug>
 #include "MainWindow.h"
 
+using namespace atlasEditor;
+
 int main(int argc, char **argv)
 {
     if (!qputenv("QT_QPA_UPDATE_IDLE_TIME", "0"))

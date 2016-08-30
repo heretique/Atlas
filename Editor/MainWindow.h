@@ -1,15 +1,22 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <bgfx/bgfx.h>
-#include <bx/uint32_t.h>
+#include <Base.h>
 #include <QBGFXWindow.h>
+#include <EditorViews.h>
+
+struct ImDrawData;
+
+
+namespace atlasEditor {
 
 class MainWindow : public QBGFXWindow
 {
 public:
     MainWindow();
     ~MainWindow();
+    template <class T>
+    void addView();
 
 protected:
     void initializeBGFX() Q_DECL_OVERRIDE;
@@ -18,27 +25,24 @@ protected:
     void paintBGFX() Q_DECL_OVERRIDE;
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
 
+    // imgui related
+    bool imguiInit();
+    void imguiShutdown();
+    void imguiNewFrame();
+    void imguiRenderDrawLists(ImDrawData* drawData);
+
 private:
-    uint32_t m_width;
-    uint32_t m_height;
-    uint32_t m_debug;
-    uint32_t m_reset;
-
-    bool     m_autoAdjust;
-    int32_t  m_scrollArea;
-    int32_t  m_dim;
-    int32_t  m_maxDim;
-    uint32_t m_transform;
-
-    int64_t  m_timeOffset;
-
-    int64_t  m_deltaTimeNs;
-    int64_t  m_deltaTimeAvgNs;
-    int64_t  m_numFrames;
-
-    bgfx::ProgramHandle m_program;
-    bgfx::VertexBufferHandle m_vbh;
-    bgfx::IndexBufferHandle  m_ibh;
+    vector<std::unique_ptr<EditorView>> _views;
 };
+
+
+template <class T>
+void MainWindow::addView()
+{
+    _views.push_back(make_unique<T>());
+}
+
+} // atlasEditor
+
 
 #endif // WINDOW_H
