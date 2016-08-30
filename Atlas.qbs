@@ -7,6 +7,7 @@ Project {
         "Engine/Engine.qbs",
         "Tests/Tests.qbs",
         "Editor/Editor.qbs",
+        "Window/Window.qbs",
     ]
     name: "Atlas"
 }

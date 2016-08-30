@@ -47,6 +47,12 @@ StaticLibrary {
 
     Depends { name: "bgfx" }
     Depends { name: "entityx" }
+    Depends { name: "AtlasWindow" }
+
+    Properties {
+        condition: qbs.targetOS.contains("windows")
+        cpp.dynamicLibraries: [ "psapi", "gdi32" ]
+    }
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

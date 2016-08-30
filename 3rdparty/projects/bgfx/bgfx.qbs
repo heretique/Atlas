@@ -40,7 +40,7 @@ StaticLibrary {
     ]
     cpp.cxxLanguageVersion: "c++11"
 //    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
-    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
+//    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
 
     Properties {
         condition: qbs.toolchain.contains("msvc")

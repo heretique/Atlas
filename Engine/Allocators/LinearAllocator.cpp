@@ -30,7 +30,7 @@ void* LinearAllocator::allocate(size_t size, u8 alignment)
 	return (void*)aligned_address;
 }
 
-void LinearAllocator::deallocate(void* p)
+void LinearAllocator::deallocate(void*)
 {
 	ASSERT( false && "Use clear() instead" );
 }
