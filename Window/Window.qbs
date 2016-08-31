@@ -6,12 +6,15 @@ StaticLibrary {
     files: [
         "QBGFXWindow.cpp",
         "QBGFXWindow.h",
+        "SDLApp.cpp",
+        "SDLApp.h",
         "SDLWindow.cpp",
         "SDLWindow.h",
     ]
 
     Depends { name: "cpp" }
     cpp.includePaths: [
+        "../Engine/Core",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",
         "../3rdparty/bgfx/3rdparty",

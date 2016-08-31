@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <Base.h>
-#include <QBGFXWindow.h>
+#include <SDLWindow.h>
 #include <EditorViews.h>
 
 struct ImDrawData;
@@ -10,21 +10,17 @@ struct ImDrawData;
 
 namespace atlasEditor {
 
-class MainWindow : public QBGFXWindow
+class MainWindow : public SDLWindow
 {
 public:
-    MainWindow();
+    MainWindow(const char *title,
+               int x, int y, int w,
+               int h, u32 flags);
     ~MainWindow();
     template <class T>
     void addView();
 
 protected:
-    void initializeBGFX() Q_DECL_OVERRIDE;
-    void releaseBGFX() Q_DECL_OVERRIDE;
-    void resizeBGFX(const QSize &size) Q_DECL_OVERRIDE;
-    void paintBGFX() Q_DECL_OVERRIDE;
-    void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-
     // imgui related
     bool imguiInit();
     void imguiShutdown();

@@ -51,13 +51,17 @@ std::unique_ptr<T> make_unique( Args&& ...args )
 }
 
 // make_resource
-//template<typename Creator, typename Destructor, typename... Arguments>
-//auto make_resource(Creator c, Destructor d, Arguments&&... args)
-//{
-//    auto r = c(std::forward<Arguments>(args)...);
-//    if (!r) { throw std::system_error(errno, std::generic_category()); }
-//    return std::unique_ptr<std::decay_t<decltype(*r)>, decltype(d)>(r, d);
-//}
+template< class T >
+using decay_t = typename std::decay<T>::type;
+
+template<typename Creator, typename Destructor, typename... Arguments>
+auto make_resource(Creator c, Destructor d, Arguments&&... args) ->
+decltype(std::unique_ptr<decay_t<decltype(*c(std::forward<Arguments>(args)...))>, decltype(d)>(c(std::forward<Arguments>(args)...), d))
+{
+    auto r = c(std::forward<Arguments>(args)...);
+    if (!r) { throw std::system_error(errno, std::generic_category()); }
+    return std::unique_ptr<decay_t<decltype(*r)>, decltype(d)>(r, d);
+}
 
 // Current function macro.
 #ifdef WIN32

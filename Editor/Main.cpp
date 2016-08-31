@@ -1,20 +1,18 @@
-#include <QGuiApplication>
-#include <QDebug>
+#define SDL_MAIN_HANDLED
+
 #include "MainWindow.h"
+#include "SDLApp.h"
+#include "SDLWindow.h"
 
 using namespace atlasEditor;
 
 int main(int argc, char **argv)
 {
-    if (!qputenv("QT_QPA_UPDATE_IDLE_TIME", "0"))
-        qDebug() << "Variable not set";
+    SDLApp::get().init(SDL_INIT_VIDEO);
 
-    QGuiApplication app(argc, argv);
+    SDLWindow window("BGFX", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN
+                     | SDL_WINDOW_RESIZABLE);
 
-    MainWindow window;
-    window.resize(1024, 768);
-    window.show();
-
-    return app.exec();
+    return SDLApp::get().exec();
 }
 

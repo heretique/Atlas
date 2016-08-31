@@ -23,8 +23,6 @@ Product {
     ]
     cpp.cxxLanguageVersion: "c++11"
 
-
-    Depends { name: "Qt"; submodules: ["core", "gui"] }
     Depends { name: "AtlasWindow" }
     Depends { name: "bgfx" }
 
