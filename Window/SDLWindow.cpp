@@ -11,13 +11,13 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     _height = h;
 
     // Setup window
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+//    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+//    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+//    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
     _window = SDL_CreateWindow(title, x, y, w, h, flags);
@@ -48,8 +48,9 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 
     _debug  = BGFX_DEBUG_TEXT;
     _reset  = BGFX_RESET_VSYNC;
-    bgfx::init(bgfx::RendererType::OpenGL);
+    bgfx::init(bgfx::RendererType::Count);
     bgfx::reset(w, h, _reset);
+    bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
     // Enable debug text.
     bgfx::setDebug(_debug);
 
@@ -80,6 +81,8 @@ void SDLWindow::handleEvent(SDL_Event &e)
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             _width = e.window.data1;
             _height = e.window.data2;
+            bgfx::reset(_width, _height);
+            bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
             break;
         }
     }
@@ -92,8 +95,6 @@ void SDLWindow::update(float dt)
 
 void SDLWindow::doUpdate(float dt)
 {
-    bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
-
     // This dummy draw call is here to make sure that view 0 is cleared
     // if no other draw calls are submitted to view 0.
     bgfx::touch(0);
