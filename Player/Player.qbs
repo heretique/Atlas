@@ -20,7 +20,7 @@ Product {
         "../3rdparty/bgfx/3rdparty/dxsdk/include",
         "../3rdparty/bgfx/examples/17-drawstress",
         "../Window",
-     ]
+    ]
     cpp.cxxLanguageVersion: "c++11"
 
 
@@ -30,20 +30,26 @@ Product {
 
 
     Properties {
-            condition: qbs.toolchain.contains("msvc")
-            cpp.systemIncludePaths: outer.uniqueConcat([ "../3rdparty/bx/include/compat/msvc" ])
-        }
-
-        Properties {
-            condition: qbs.toolchain.contains("mingw")
-            cpp.systemIncludePaths: outer.uniqueConcat([ "../3rdparty/bx/include/compat/mingw" ])
-        }
-
-
-
-    Properties {
         condition: qbs.targetOS.contains("windows")
+
+        property string arch: {
+            if (qbs.architecture == "x86")
+                return "x86"
+            if (qbs.architecture == "x86_64")
+                return "x64"
+        }
+        property string toolchain: {
+            if (qbs.toolchain.contains("msvc"))
+                return "msvc"
+            if (qbs.toolchain.contains("mingw"))
+                return "mingw"
+        }
+
+
         cpp.dynamicLibraries: [ "psapi", "gdi32", "user32" ]
+        cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + toolchain])
+        cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + toolchain + "/" + arch])
+        cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
     }
 
     Properties {
