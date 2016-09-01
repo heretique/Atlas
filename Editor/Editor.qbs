@@ -7,15 +7,11 @@ Product {
     files: [
         "*.cpp",
         "*.h",
-        "ImGUI/*.cpp",
-        "ImGUI/*.h",
     ]
 
     Depends { name: "cpp" }
     cpp.includePaths: [
         ".",
-        "ImGUI",
-        "ImGuizmo",
         "../Engine/Core",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",

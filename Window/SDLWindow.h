@@ -4,6 +4,8 @@
 #include "Base.h"
 #include <SDL2/SDL.h>
 
+struct ImDrawData;
+
 class SDLWindow
 {
     friend class SDLApp;
@@ -14,12 +16,22 @@ public:
     virtual ~SDLWindow();
     virtual void handleEvent(SDL_Event& e);
     virtual void update(float dt);
+
+protected:
+    // imgui related
+    bool imguiInit();
+    void imguiShutdown();
+    void imguiNewFrame();
+
+    // bgfx related
+    bool bgfxInit();
+
 private:
     void doUpdate(float dt);
 
 private:
     SDL_Window* _window{nullptr};
-    int _windowId{0};
+    u32 _windowId{0};
     SDL_GLContext _glContext;
 
     u32 _width{0};
@@ -27,5 +39,7 @@ private:
     u32 _debug{0};
     u32 _reset{0};
 };
+
+void imguiRenderDrawLists(ImDrawData* drawData);
 
 #endif // SDLWINDOW_H

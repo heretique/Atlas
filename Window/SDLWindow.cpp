@@ -4,6 +4,8 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/bgfxplatform.h>
 #include <SDL2/SDL_syswm.h>
+#include <ImGUI/imgui.h>
+#include <fmt/printf.h>
 
 SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 {
@@ -22,7 +24,10 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     SDL_GetCurrentDisplayMode(0, &current);
     _window = SDL_CreateWindow(title, x, y, w, h, flags);
     if (_window == nullptr)
-        throw std::system_error();
+    {
+        fmt::print("SLD Window creation failed, err: {}", SDL_GetError());
+        return;
+    }
 
     _windowId = SDL_GetWindowID(_window);
     SDLApp::get().addWindow(this);
@@ -30,37 +35,8 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     _glContext = SDL_GL_CreateContext(_window);
 
 
-
-    bgfx::PlatformData pd;
-    SDL_SysWMinfo wmi;
-    SDL_VERSION(&wmi.version);
-    if (!SDL_GetWindowWMInfo(_window, &wmi) )
-    {
-        throw std::system_error();
-    }
-
-#if BX_PLATFORM_WINDOWS
-    pd.ndt          = NULL;
-    pd.nwh          = wmi.info.win.window;
-    pd.context      = _glContext;
-#endif
-    setPlatformData(pd);
-
-    _debug  = BGFX_DEBUG_TEXT;
-    _reset  = BGFX_RESET_VSYNC;
-    bgfx::init(bgfx::RendererType::Count);
-    bgfx::reset(w, h, _reset);
-    bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
-    // Enable debug text.
-    bgfx::setDebug(_debug);
-
-    // Set view 0 clear state.
-    bgfx::setViewClear(0
-                       , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
-                       , 0x303030ff
-                       , 1.0f
-                       , 0
-                       );
+    if (!bgfxInit()) fmt::print("Failed to initialize bgfx");
+    if (!imguiInit()) fmt::print("Failed to initialize imgui");
 }
 
 SDLWindow::~SDLWindow()
@@ -102,5 +78,78 @@ void SDLWindow::doUpdate(float dt)
     bgfx::frame();
 }
 
+bool SDLWindow::imguiInit()
+{
+    ImGuiIO& io = ImGui::GetIO();
+
+    // get native  window handle
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(_window, &wmi) )
+        return false;
+#if BX_PLATFORM_WINDOWS
+    io.ImeWindowHandle =  wmi.info.win.window;
+#endif
+
+    io.RenderDrawListsFn = &imguiRenderDrawLists;
+
+    return true;
+}
+
+void SDLWindow::imguiShutdown()
+{
+
+}
+
+void SDLWindow::imguiNewFrame()
+{
+
+}
+
+bool SDLWindow::bgfxInit()
+{
+    bgfx::PlatformData pd;
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(_window, &wmi) )
+        return false;
+
+#if BX_PLATFORM_WINDOWS
+    pd.ndt          = NULL;
+    pd.nwh          = wmi.info.win.window;
+    pd.context      = _glContext;
+#endif
+    setPlatformData(pd);
+
+    _debug  = BGFX_DEBUG_TEXT;
+    _reset  = BGFX_RESET_VSYNC;
+
+    if (!bgfx::init(bgfx::RendererType::OpenGL))
+        return false;
+
+    bgfx::reset(_width, _height, _reset);
+    bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
+    // Enable debug text.
+    bgfx::setDebug(_debug);
+
+    // Set view 0 clear state.
+    bgfx::setViewClear(0
+                       , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                       , 0x303030ff
+                       , 1.0f
+                       , 0
+                       );
+    return true;
+}
+
+void imguiRenderDrawLists(ImDrawData *drawData)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    int fb_width = (int)(io.DisplaySize.x * io.DisplayFramebufferScale.x);
+    int fb_height = (int)(io.DisplaySize.y * io.DisplayFramebufferScale.y);
+    if (fb_width == 0 || fb_height == 0)
+        return;
+    drawData->ScaleClipRects(io.DisplayFramebufferScale);
+}
 
 

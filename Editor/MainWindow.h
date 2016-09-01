@@ -5,8 +5,6 @@
 #include <SDLWindow.h>
 #include <EditorViews.h>
 
-struct ImDrawData;
-
 
 namespace atlasEditor {
 
@@ -19,13 +17,6 @@ public:
     ~MainWindow();
     template <class T>
     void addView();
-
-protected:
-    // imgui related
-    bool imguiInit();
-    void imguiShutdown();
-    void imguiNewFrame();
-    void imguiRenderDrawLists(ImDrawData* drawData);
 
 private:
     vector<std::unique_ptr<EditorView>> _views;
