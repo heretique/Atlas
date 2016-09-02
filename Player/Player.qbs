@@ -20,6 +20,7 @@ Product {
         "../3rdparty/bgfx/3rdparty/dxsdk/include",
         "../3rdparty/bgfx/examples/17-drawstress",
         "../Window",
+        "../3rdparty/sdl/include",
     ]
     cpp.cxxLanguageVersion: "c++11"
 
@@ -44,7 +45,7 @@ Product {
         }
 
 
-        cpp.dynamicLibraries: [ "psapi", "gdi32", "user32" ]
+        cpp.dynamicLibraries: [ "psapi", "gdi32", "user32", "ole32", "winmm", "imm32", "oleaut32", "version", "shell32" ]
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + toolchain])
         cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + toolchain + "/" + arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])

@@ -38,7 +38,10 @@ int SDLApp::exec()
         }
 
         for (SDLWindow* window: _windows)
+        {
             window->doUpdate(0.0f);
+            bgfx::frame();
+        }
     }
 
     return 0;

@@ -7,17 +7,17 @@
 #include <ImGUI/imgui.h>
 #include <fmt/printf.h>
 
+bool SDLWindow::_initialized = false;
+//SDL_GLContext SDLWindow::_glContext = 0;
+u32 SDLWindow::_debug  = BGFX_DEBUG_TEXT;
+u32 SDLWindow::_reset  = BGFX_RESET_VSYNC;
+u8 SDLWindow::_windowCount = 0;
+
 SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 {
     _width = w;
     _height = h;
 
-    // Setup window
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-//    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-//    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-//    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-//    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_DisplayMode current;
@@ -25,23 +25,59 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     _window = SDL_CreateWindow(title, x, y, w, h, flags);
     if (_window == nullptr)
     {
-        fmt::print("SLD Window creation failed, err: {}", SDL_GetError());
+        fmt::print("SLD Window creation failed, err: {}\n", SDL_GetError());
         return;
     }
-
-    _windowId = SDL_GetWindowID(_window);
-    SDLApp::get().addWindow(this);
-
     _glContext = SDL_GL_CreateContext(_window);
 
+    _windowId = SDL_GetWindowID(_window);
 
-    if (!bgfxInit()) fmt::print("Failed to initialize bgfx");
-    if (!imguiInit()) fmt::print("Failed to initialize imgui");
+    if (!_initialized)
+    {
+        if (!bgfxInit()) fmt::print("Failed to initialize bgfx\n");
+        if (!imguiInit()) fmt::print("Failed to initialize imgui\n");
+        _initialized = true;
+        _isDefault = true;
+        const bgfx::Caps* caps = bgfx::getCaps();
+        bool swapChainSupported = 0 != (caps->supported & BGFX_CAPS_SWAP_CHAIN);
+        fmt::print("Swapchain supported: {}\n", swapChainSupported);
+    }
+
+    if (!_isDefault)
+    {
+        _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
+    }
+    else
+    {
+        _framebuffer = BGFX_INVALID_HANDLE;
+    }
+
+    _viewId = _windowCount++;
+    bgfx::setViewName(_viewId, title);
+    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+    bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
+    bgfx::setViewClear(_viewId
+                       , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                       , 0x303030ff
+                       , 1.0f
+                       , 0
+                       );
+
+
+    SDLApp::get().addWindow(this);
 }
 
 SDLWindow::~SDLWindow()
 {
-    bgfx::shutdown();
+    if (bgfx::isValid(_framebuffer))
+        bgfx::destroyFrameBuffer(_framebuffer);
+
+    if (_isDefault)
+    {
+        imguiShutdown();
+        bgfx::shutdown();
+    }
+
     SDL_GL_DeleteContext(_glContext);
     SDL_DestroyWindow(_window);
 }
@@ -53,12 +89,24 @@ void SDLWindow::handleEvent(SDL_Event &e)
     {
         switch(e.window.event)
         {
-        //Get new dimensions and repaint
+        //Get new dimensions and recreate framebuffer
         case SDL_WINDOWEVENT_SIZE_CHANGED:
+            if (_width != e.window.data1 ||
+                    _height != e.window.data2)
+            {
             _width = e.window.data1;
             _height = e.window.data2;
+
+            if (bgfx::isValid(_framebuffer))
+            {
+                bgfx::destroyFrameBuffer(_framebuffer);
+                bgfx::createFrameBuffer(nativeHandle(), _width, _height);
+            }
+
             bgfx::reset(_width, _height);
-            bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
+            bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
+            bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+            }
             break;
         }
     }
@@ -66,29 +114,22 @@ void SDLWindow::handleEvent(SDL_Event &e)
 
 void SDLWindow::update(float dt)
 {
-
+    bgfx::dbgTextClear();
+    bgfx::dbgTextPrintf(0, 1, 0x4f, fmt::format("Bgfx window {}", _viewId).c_str());
 }
 
 void SDLWindow::doUpdate(float dt)
 {
-    // This dummy draw call is here to make sure that view 0 is cleared
-    // if no other draw calls are submitted to view 0.
-    bgfx::touch(0);
+    bgfx::touch(_viewId);
     update(dt);
-    bgfx::frame();
 }
 
 bool SDLWindow::imguiInit()
 {
     ImGuiIO& io = ImGui::GetIO();
 
-    // get native  window handle
-    SDL_SysWMinfo wmi;
-    SDL_VERSION(&wmi.version);
-    if (!SDL_GetWindowWMInfo(_window, &wmi) )
-        return false;
 #if BX_PLATFORM_WINDOWS
-    io.ImeWindowHandle =  wmi.info.win.window;
+    io.ImeWindowHandle =  nativeHandle();
 #endif
 
     io.RenderDrawListsFn = &imguiRenderDrawLists;
@@ -121,25 +162,30 @@ bool SDLWindow::bgfxInit()
 #endif
     setPlatformData(pd);
 
-    _debug  = BGFX_DEBUG_TEXT;
-    _reset  = BGFX_RESET_VSYNC;
-
     if (!bgfx::init(bgfx::RendererType::OpenGL))
         return false;
 
     bgfx::reset(_width, _height, _reset);
-    bgfx::setViewRect(0, 0, 0, uint16_t(_width), uint16_t(_height) );
+
     // Enable debug text.
     bgfx::setDebug(_debug);
 
-    // Set view 0 clear state.
-    bgfx::setViewClear(0
-                       , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
-                       , 0x303030ff
-                       , 1.0f
-                       , 0
-                       );
     return true;
+}
+
+void *SDLWindow::nativeHandle()
+{
+    // get native  window handle
+    SDL_SysWMinfo wmi;
+    SDL_VERSION(&wmi.version);
+    if (!SDL_GetWindowWMInfo(_window, &wmi) )
+        return nullptr;
+
+#if BX_PLATFORM_WINDOWS
+    return wmi.info.win.window;
+#endif
+
+    return nullptr;
 }
 
 void imguiRenderDrawLists(ImDrawData *drawData)

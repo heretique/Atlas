@@ -8,8 +8,6 @@ StaticLibrary {
         "SDLApp.h",
         "SDLWindow.cpp",
         "SDLWindow.h",
-        "ImGUI/*.cpp",
-        "ImGUI/*.h",
     ]
 
     Depends { name: "cpp" }
@@ -22,16 +20,17 @@ StaticLibrary {
         "../3rdparty/bgfx/3rdparty",
         "../3rdparty/bgfx/3rdparty/khronos",
         "../3rdparty/bgfx/3rdparty/dxsdk/include",
-        "../3rdparty/sdl/win/include",
+        "../3rdparty/sdl/include",
      ]
     cpp.cxxLanguageVersion: "c++11"
     cpp.dynamicLibraries: [ "psapi", "gdi32" ]
 
     Depends { name: "bgfx" }
     Depends { name: "fmt" }
+    Depends { name: "imgui" }
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
-        qbs.install: true
+        qbs.install: false
     }
 }

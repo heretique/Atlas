@@ -3,6 +3,7 @@
 
 #include "Base.h"
 #include <SDL2/SDL.h>
+#include <bgfx/bgfx.h>
 
 struct ImDrawData;
 
@@ -27,17 +28,25 @@ protected:
     bool bgfxInit();
 
 private:
+    void* nativeHandle();
     void doUpdate(float dt);
 
 private:
-    SDL_Window* _window{nullptr};
-    u32 _windowId{0};
-    SDL_GLContext _glContext;
+    static bool             _initialized;
+    SDL_GLContext    _glContext;
+    static u32              _debug;
+    static u32              _reset;
+    static u8               _windowCount;
 
-    u32 _width{0};
-    u32 _height{0};
-    u32 _debug{0};
-    u32 _reset{0};
+    u8                      _viewId{0};
+    SDL_Window*             _window{nullptr};
+    u32                     _windowId{0};
+    bgfx::FrameBufferHandle _framebuffer;
+
+    bool                    _isDefault{false};
+
+    u32                     _width{0};
+    u32                     _height{0};
 };
 
 void imguiRenderDrawLists(ImDrawData* drawData);
