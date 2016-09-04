@@ -23,6 +23,6 @@ StaticLibrary {
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
-        qbs.install: false
+        qbs.install: true
     }
 }

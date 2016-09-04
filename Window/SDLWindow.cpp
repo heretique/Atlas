@@ -8,7 +8,7 @@
 #include <fmt/printf.h>
 
 bool SDLWindow::_initialized = false;
-//SDL_GLContext SDLWindow::_glContext = 0;
+SDL_GLContext SDLWindow::_glContext = 0;
 u32 SDLWindow::_debug  = BGFX_DEBUG_TEXT;
 u32 SDLWindow::_reset  = BGFX_RESET_VSYNC;
 u8 SDLWindow::_windowCount = 0;
@@ -28,12 +28,13 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
         fmt::print("SLD Window creation failed, err: {}\n", SDL_GetError());
         return;
     }
-    _glContext = SDL_GL_CreateContext(_window);
 
     _windowId = SDL_GetWindowID(_window);
 
     if (!_initialized)
     {
+        _glContext = SDL_GL_CreateContext(_window);
+
         if (!bgfxInit()) fmt::print("Failed to initialize bgfx\n");
         if (!imguiInit()) fmt::print("Failed to initialize imgui\n");
         _initialized = true;
@@ -46,6 +47,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     if (!_isDefault)
     {
         _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
+        bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     }
     else
     {
@@ -54,7 +56,6 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 
     _viewId = _windowCount++;
     bgfx::setViewName(_viewId, title);
-    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
     bgfx::setViewClear(_viewId
                        , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
@@ -76,9 +77,9 @@ SDLWindow::~SDLWindow()
     {
         imguiShutdown();
         bgfx::shutdown();
+        SDL_GL_DeleteContext(_glContext);
     }
 
-    SDL_GL_DeleteContext(_glContext);
     SDL_DestroyWindow(_window);
 }
 
@@ -94,18 +95,24 @@ void SDLWindow::handleEvent(SDL_Event &e)
             if (_width != e.window.data1 ||
                     _height != e.window.data2)
             {
-            _width = e.window.data1;
-            _height = e.window.data2;
+                _width = e.window.data1;
+                _height = e.window.data2;
 
-            if (bgfx::isValid(_framebuffer))
-            {
-                bgfx::destroyFrameBuffer(_framebuffer);
-                bgfx::createFrameBuffer(nativeHandle(), _width, _height);
-            }
+                if (bgfx::isValid(_framebuffer))
+                {
+                    bgfx::destroyFrameBuffer(_framebuffer);
+                    _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
+                    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+                }
 
-            bgfx::reset(_width, _height);
-            bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
-            bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+                bgfx::reset(_width, _height);
+                bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
+                bgfx::setViewClear(_viewId
+                    , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                    , 0x303030ff
+                    , 1.0f
+                    , 0
+                    );
             }
             break;
         }
@@ -114,8 +121,7 @@ void SDLWindow::handleEvent(SDL_Event &e)
 
 void SDLWindow::update(float dt)
 {
-    bgfx::dbgTextClear();
-    bgfx::dbgTextPrintf(0, 1, 0x4f, fmt::format("Bgfx window {}", _viewId).c_str());
+
 }
 
 void SDLWindow::doUpdate(float dt)
@@ -158,7 +164,6 @@ bool SDLWindow::bgfxInit()
 #if BX_PLATFORM_WINDOWS
     pd.ndt          = NULL;
     pd.nwh          = wmi.info.win.window;
-    pd.context      = _glContext;
 #endif
     setPlatformData(pd);
 

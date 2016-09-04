@@ -33,7 +33,7 @@ private:
 
 private:
     static bool             _initialized;
-    SDL_GLContext    _glContext;
+    static SDL_GLContext    _glContext;
     static u32              _debug;
     static u32              _reset;
     static u8               _windowCount;

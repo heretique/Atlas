@@ -27,6 +27,7 @@ Product {
 
     Depends { name: "AtlasWindow" }
     Depends { name: "bgfx" }
+    Depends { name: "imgui" }
 
 
     Properties {
