@@ -13,6 +13,8 @@ u32 SDLWindow::_debug  = BGFX_DEBUG_TEXT;
 u32 SDLWindow::_reset  = BGFX_RESET_VSYNC;
 u8 SDLWindow::_windowCount = 0;
 
+
+
 SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 {
     _width = w;
@@ -46,6 +48,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 
     if (!_isDefault)
     {
+        fmt::print("Native Window Handle: {}\n", nativeHandle());
         _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
         bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     }
@@ -71,7 +74,10 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 SDLWindow::~SDLWindow()
 {
     if (bgfx::isValid(_framebuffer))
+    {
         bgfx::destroyFrameBuffer(_framebuffer);
+        bgfx::setViewFrameBuffer(_viewId, BGFX_INVALID_HANDLE);
+    }
 
     if (_isDefault)
     {
@@ -115,6 +121,14 @@ void SDLWindow::handleEvent(SDL_Event &e)
                     );
             }
             break;
+        case SDL_WINDOWEVENT_CLOSE:
+            if (_isDefault)
+            {
+                SDLApp::get().quit();
+                return;
+            }
+            SDLApp::get().closeWindow(this);
+            break;
         }
     }
 }
@@ -126,19 +140,21 @@ void SDLWindow::update(float dt)
 
 void SDLWindow::doUpdate(float dt)
 {
+    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+
     bgfx::touch(_viewId);
     update(dt);
 }
 
 bool SDLWindow::imguiInit()
 {
-    ImGuiIO& io = ImGui::GetIO();
+//    ImGuiIO& io = ImGui::GetIO();
 
-#if BX_PLATFORM_WINDOWS
-    io.ImeWindowHandle =  nativeHandle();
-#endif
+//#if BX_PLATFORM_WINDOWS
+//    io.ImeWindowHandle =  nativeHandle();
+//#endif
 
-    io.RenderDrawListsFn = &imguiRenderDrawLists;
+//    io.RenderDrawListsFn = &imguiRenderDrawLists;
 
     return true;
 }

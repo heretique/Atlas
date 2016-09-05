@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <string>
 #include <vector>
+#include <list>
 #include <map>
 
 // Bring common functions from C++ into global namespace

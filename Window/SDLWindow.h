@@ -15,6 +15,7 @@ public:
               int x, int y, int w,
               int h, u32 flags);
     virtual ~SDLWindow();
+    u32 winId() const;
     virtual void handleEvent(SDL_Event& e);
     virtual void update(float dt);
 

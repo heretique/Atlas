@@ -19,10 +19,12 @@ public:
     int init(u32 flags);
     int addWindow(SDLWindow* window);
     int exec();
+    void closeWindow(SDLWindow* window);
+    void quit();
 
 private:
     bool _running{true};
-    vector<SDLWindow*> _windows;
+    std::list<std::unique_ptr<SDLWindow>> _windows;
 };
 
 #endif // SDLAPP_H
