@@ -4,8 +4,12 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/bgfxplatform.h>
 #include <SDL2/SDL_syswm.h>
-#include <ImGUI/imgui.h>
+#include <imgui/imgui.h>
 #include <fmt/printf.h>
+#include <bx/fpumath.h>
+
+#include "vs_ocornut_imgui.bin.h"
+#include "fs_ocornut_imgui.bin.h"
 
 bool SDLWindow::_initialized = false;
 SDL_GLContext SDLWindow::_glContext = 0;
@@ -13,6 +17,161 @@ u32 SDLWindow::_debug  = BGFX_DEBUG_TEXT;
 u32 SDLWindow::_reset  = BGFX_RESET_VSYNC;
 u8 SDLWindow::_windowCount = 0;
 
+
+
+struct ImGuiBgfx {
+
+    void init(int width, int height) {
+        ImGuiIO& io = ImGui::GetIO();
+        io.DisplaySize = ImVec2(width, height);
+        io.DeltaTime = 1.0f / 60.0f;
+        io.IniFilename = NULL;
+
+
+        const bgfx::Memory* vsmem;
+        const bgfx::Memory* fsmem;
+
+        switch (bgfx::getRendererType() )
+        {
+        case bgfx::RendererType::Direct3D9:
+            vsmem = bgfx::makeRef(vs_ocornut_imgui_dx9, sizeof(vs_ocornut_imgui_dx9) );
+            fsmem = bgfx::makeRef(fs_ocornut_imgui_dx9, sizeof(fs_ocornut_imgui_dx9) );
+            break;
+
+        case bgfx::RendererType::Direct3D11:
+        case bgfx::RendererType::Direct3D12:
+            vsmem = bgfx::makeRef(vs_ocornut_imgui_dx11, sizeof(vs_ocornut_imgui_dx11) );
+            fsmem = bgfx::makeRef(fs_ocornut_imgui_dx11, sizeof(fs_ocornut_imgui_dx11) );
+            break;
+
+        case bgfx::RendererType::Metal:
+            vsmem = bgfx::makeRef(vs_ocornut_imgui_mtl, sizeof(vs_ocornut_imgui_mtl) );
+            fsmem = bgfx::makeRef(fs_ocornut_imgui_mtl, sizeof(fs_ocornut_imgui_mtl) );
+            break;
+
+        default:
+            vsmem = bgfx::makeRef(vs_ocornut_imgui_glsl, sizeof(vs_ocornut_imgui_glsl) );
+            fsmem = bgfx::makeRef(fs_ocornut_imgui_glsl, sizeof(fs_ocornut_imgui_glsl) );
+            break;
+        }
+
+        bgfx::ShaderHandle vsh = bgfx::createShader(vsmem);
+        bgfx::ShaderHandle fsh = bgfx::createShader(fsmem);
+        _program = bgfx::createProgram(vsh, fsh, true);
+
+        _vDecl
+            .begin()
+            .add(bgfx::Attrib::Position,  2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+            .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
+            .end();
+
+        _tex = bgfx::createUniform("s_tex", bgfx::UniformType::Int1);
+
+        u8* data;
+        i32 texWidth;
+        i32 texHeight;
+        i32 texBits;
+        io.Fonts->GetTexDataAsRGBA32(&data, &texWidth, &texHeight, &texBits);
+        _texture = bgfx::createTexture2D(
+              (u16)texWidth
+            , (u16)texHeight
+            , 1
+            , bgfx::TextureFormat::BGRA8
+            , 0
+            , bgfx::copy(data, texWidth*texHeight*texBits)
+            );
+    }
+
+    void render(u8 viewId, ImDrawData* drawData)
+    {
+        const ImGuiIO& io = ImGui::GetIO();
+        const float width  = io.DisplaySize.x;
+        const float height = io.DisplaySize.y;
+
+        {
+            float ortho[16];
+            bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f);
+            bgfx::setViewTransform(viewId, NULL, ortho);
+        }
+
+        // Render command lists
+        for (i32 ii = 0, num = drawData->CmdListsCount; ii < num; ++ii)
+        {
+            bgfx::TransientVertexBuffer tvb;
+            bgfx::TransientIndexBuffer tib;
+
+            const ImDrawList* drawList = drawData->CmdLists[ii];
+            u32 numVertices = (u32)drawList->VtxBuffer.size();
+            u32 numIndices  = (u32)drawList->IdxBuffer.size();
+
+            if (!bgfx::checkAvailTransientVertexBuffer(numVertices, _vDecl)
+            ||  !bgfx::checkAvailTransientIndexBuffer(numIndices) )
+            {
+                // not enough space in transient buffer just quit drawing the rest...
+                break;
+            }
+
+            bgfx::allocTransientVertexBuffer(&tvb, numVertices, _vDecl);
+            bgfx::allocTransientIndexBuffer(&tib, numIndices);
+
+            ImDrawVert* verts = (ImDrawVert*)tvb.data;
+            memcpy(verts, drawList->VtxBuffer.begin(), numVertices * sizeof(ImDrawVert) );
+
+            ImDrawIdx* indices = (ImDrawIdx*)tib.data;
+            memcpy(indices, drawList->IdxBuffer.begin(), numIndices * sizeof(ImDrawIdx) );
+
+            u32 offset = 0;
+            for (const ImDrawCmd* cmd = drawList->CmdBuffer.begin(), *cmdEnd = drawList->CmdBuffer.end(); cmd != cmdEnd; ++cmd)
+            {
+                if (cmd->UserCallback)
+                {
+                    cmd->UserCallback(drawList, cmd);
+                }
+                else if (0 != cmd->ElemCount)
+                {
+                    u64 state = 0
+                        | BGFX_STATE_RGB_WRITE
+                        | BGFX_STATE_ALPHA_WRITE
+                        | BGFX_STATE_MSAA
+                        ;
+
+                    state |= BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
+
+                    const u16 xx = u16(bx::fmax(cmd->ClipRect.x, 0.0f) );
+                    const u16 yy = u16(bx::fmax(cmd->ClipRect.y, 0.0f) );
+                    bgfx::setScissor(xx, yy
+                            , u16(bx::fmin(cmd->ClipRect.z, 65535.0f)-xx)
+                            , u16(bx::fmin(cmd->ClipRect.w, 65535.0f)-yy)
+                            );
+
+                    bgfx::setState(state);
+                    bgfx::setTexture(0, _tex, _texture);
+                    bgfx::setVertexBuffer(&tvb, 0, numVertices);
+                    bgfx::setIndexBuffer(&tib, offset, cmd->ElemCount);
+                    bgfx::submit(viewId, _program);
+                }
+
+                offset += cmd->ElemCount;
+            }
+        }
+    }
+
+    void destroy() {
+        ImGui::Shutdown();
+
+        bgfx::destroyUniform(_tex);
+        bgfx::destroyTexture(_texture);
+        bgfx::destroyProgram(_program);
+    }
+
+    bgfx::VertexDecl    _vDecl;
+    bgfx::ProgramHandle _program;
+    bgfx::TextureHandle _texture;
+    bgfx::UniformHandle _tex;
+};
+
+static ImGuiBgfx s_imguiBgfx;
 
 
 SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
@@ -38,7 +197,6 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
         _glContext = SDL_GL_CreateContext(_window);
 
         if (!bgfxInit()) fmt::print("Failed to initialize bgfx\n");
-        if (!imguiInit()) fmt::print("Failed to initialize imgui\n");
         _initialized = true;
         _isDefault = true;
         const bgfx::Caps* caps = bgfx::getCaps();
@@ -67,12 +225,14 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
                        , 0
                        );
 
-
+    imguiInit();
     SDLApp::get().addWindow(this);
 }
 
 SDLWindow::~SDLWindow()
 {
+    imguiShutdown();
+
     if (bgfx::isValid(_framebuffer))
     {
         bgfx::destroyFrameBuffer(_framebuffer);
@@ -81,7 +241,6 @@ SDLWindow::~SDLWindow()
 
     if (_isDefault)
     {
-        imguiShutdown();
         bgfx::shutdown();
         SDL_GL_DeleteContext(_glContext);
     }
@@ -138,35 +297,77 @@ void SDLWindow::update(float dt)
 
 }
 
+void SDLWindow::onGUI()
+{
+
+}
+
 void SDLWindow::doUpdate(float dt)
 {
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
-
     bgfx::touch(_viewId);
+    // render content
     update(dt);
+    // GUI
+    imguiPushCtx();
+    imguiNewFrame();
+    onGUI();
+    imguiRender();
+    imguiPopCtx();
 }
 
 bool SDLWindow::imguiInit()
 {
-//    ImGuiIO& io = ImGui::GetIO();
+    if (_isDefault)
+        s_imguiBgfx.init(_width, _height);
 
-//#if BX_PLATFORM_WINDOWS
-//    io.ImeWindowHandle =  nativeHandle();
-//#endif
-
-//    io.RenderDrawListsFn = &imguiRenderDrawLists;
+    _imguiCtx = ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+#if BX_PLATFORM_WINDOWS
+    io.ImeWindowHandle =  nativeHandle();
+#endif
+    io.RenderDrawListsFn = NULL;
 
     return true;
 }
 
 void SDLWindow::imguiShutdown()
 {
-
+    ImGui::DestroyContext(_imguiCtx);
+    if (_isDefault)
+    {
+        s_imguiBgfx.destroy();
+    }
 }
+
 
 void SDLWindow::imguiNewFrame()
 {
+    ImGuiIO& io = ImGui::GetIO();
+    io.DisplaySize = ImVec2((float)_width, (float)_height);
+    io.DeltaTime = 1.0f/60.0f; // TODO
+    ImGui::NewFrame();
+}
 
+void SDLWindow::imguiPushCtx()
+{
+    _prevImguiCtx = ImGui::GetCurrentContext();
+    ImGui::SetCurrentContext(_imguiCtx);
+}
+
+void SDLWindow::imguiPopCtx()
+{
+    ImGui::SetCurrentContext(_prevImguiCtx);
+}
+
+
+void SDLWindow::imguiRender()
+{
+
+    ImGui::Render();
+    ImDrawData* drawData = ImGui::GetDrawData();
+
+    s_imguiBgfx.render(_viewId, drawData);
 }
 
 bool SDLWindow::bgfxInit()
@@ -207,16 +408,6 @@ void *SDLWindow::nativeHandle()
 #endif
 
     return nullptr;
-}
-
-void imguiRenderDrawLists(ImDrawData *drawData)
-{
-    ImGuiIO& io = ImGui::GetIO();
-    int fb_width = (int)(io.DisplaySize.x * io.DisplayFramebufferScale.x);
-    int fb_height = (int)(io.DisplaySize.y * io.DisplayFramebufferScale.y);
-    if (fb_width == 0 || fb_height == 0)
-        return;
-    drawData->ScaleClipRects(io.DisplayFramebufferScale);
 }
 
 

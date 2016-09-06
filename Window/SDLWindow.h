@@ -6,6 +6,7 @@
 #include <bgfx/bgfx.h>
 
 struct ImDrawData;
+struct ImGuiContext;
 
 class SDLWindow
 {
@@ -18,12 +19,16 @@ public:
     u32 winId() const;
     virtual void handleEvent(SDL_Event& e);
     virtual void update(float dt);
+    virtual void onGUI();
 
 protected:
     // imgui related
     bool imguiInit();
     void imguiShutdown();
     void imguiNewFrame();
+    void imguiRender();
+    void imguiPushCtx();
+    void imguiPopCtx();
 
     // bgfx related
     bool bgfxInit();
@@ -33,6 +38,7 @@ private:
     void doUpdate(float dt);
 
 private:
+
     static bool             _initialized;
     static SDL_GLContext    _glContext;
     static u32              _debug;
@@ -48,8 +54,8 @@ private:
 
     u32                     _width{0};
     u32                     _height{0};
+    ImGuiContext*           _imguiCtx;
+    ImGuiContext*           _prevImguiCtx;
 };
-
-void imguiRenderDrawLists(ImDrawData* drawData);
 
 #endif // SDLWINDOW_H
