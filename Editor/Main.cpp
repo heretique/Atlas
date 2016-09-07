@@ -45,6 +45,10 @@ public:
 
     void onGUI() {
         ImGui::Text("Window3");
+        if (ImGui::Button("Test", ImVec2(50, 20)))
+        {
+            ImGui::Text("Clicked");
+        }
     }
 };
 

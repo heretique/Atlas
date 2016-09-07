@@ -178,6 +178,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
 {
     _width = w;
     _height = h;
+    _title = title;
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
@@ -248,47 +249,90 @@ SDLWindow::~SDLWindow()
     SDL_DestroyWindow(_window);
 }
 
+u32 SDLWindow::winId() const
+{
+    return _windowId;
+}
+
+bool SDLWindow::isMain() const
+{
+    return _isDefault;
+}
+
 void SDLWindow::handleEvent(SDL_Event &e)
 {
     //If an event was detected for this window
     if( e.type == SDL_WINDOWEVENT && e.window.windowID == _windowId )
     {
-        switch(e.window.event)
+        handleWindowEvent(e.window);
+        return;
+    }
+
+    u32 flags = SDL_GetWindowFlags(_window);
+    if (flags & SDL_WINDOW_INPUT_FOCUS || flags & SDL_WINDOW_MOUSE_FOCUS)
+    {
+        handleInputEvent(e);
+    }
+}
+
+void SDLWindow::handleWindowEvent(SDL_WindowEvent &e)
+{
+    switch(e.event)
+    {
+    //Get new dimensions and recreate framebuffer
+    case SDL_WINDOWEVENT_SIZE_CHANGED:
+        if (_width != e.data1 ||
+                _height != e.data2)
         {
-        //Get new dimensions and recreate framebuffer
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
-            if (_width != e.window.data1 ||
-                    _height != e.window.data2)
-            {
-                _width = e.window.data1;
-                _height = e.window.data2;
+            _width = e.data1;
+            _height = e.data2;
 
-                if (bgfx::isValid(_framebuffer))
-                {
-                    bgfx::destroyFrameBuffer(_framebuffer);
-                    _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
-                    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
-                }
-
-                bgfx::reset(_width, _height);
-                bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
-                bgfx::setViewClear(_viewId
-                    , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
-                    , 0x303030ff
-                    , 1.0f
-                    , 0
-                    );
-            }
-            break;
-        case SDL_WINDOWEVENT_CLOSE:
-            if (_isDefault)
+            if (bgfx::isValid(_framebuffer))
             {
-                SDLApp::get().quit();
-                return;
+                bgfx::destroyFrameBuffer(_framebuffer);
+                _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
+                bgfx::setViewFrameBuffer(_viewId, _framebuffer);
             }
-            SDLApp::get().closeWindow(this);
-            break;
+
+            bgfx::reset(_width, _height);
+            bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
+            bgfx::setViewClear(_viewId
+                , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                , 0x303030ff
+                , 1.0f
+                , 0
+                );
         }
+        break;
+    }
+}
+
+void SDLWindow::handleInputEvent(SDL_Event &e)
+{
+    imguiPushCtx();
+    ImGuiIO& io = ImGui::GetIO();
+    imguiPopCtx();
+    switch (e.type) {
+    case SDL_MOUSEMOTION:
+        io.MousePos = ImVec2(e.motion.x, e.motion.y);
+        break;
+    case SDL_MOUSEWHEEL:
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        io.MouseDown[0] = (e.button.button == SDL_BUTTON_LEFT && e.type == SDL_MOUSEBUTTONDOWN);
+        io.MouseDown[1] = (e.button.button == SDL_BUTTON_RIGHT && e.type == SDL_MOUSEBUTTONDOWN);
+        io.MouseDown[3] = (e.button.button == SDL_BUTTON_MIDDLE && e.type == SDL_MOUSEBUTTONDOWN);
+        break;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+        int key = e.key.keysym.sym;
+        io.KeysDown[key] = (e.type == SDL_KEYDOWN);
+        io.KeyShift = ((SDL_GetModState() & KMOD_SHIFT) != 0);
+        io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
+        io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
+        io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
+        break;
     }
 }
 
@@ -328,6 +372,26 @@ bool SDLWindow::imguiInit()
 #endif
     io.RenderDrawListsFn = NULL;
 
+    io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;                       // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array that we will update during the application lifetime.
+    io.KeyMap[ImGuiKey_LeftArrow] = SDLK_LEFT;
+    io.KeyMap[ImGuiKey_RightArrow] = SDLK_RIGHT;
+    io.KeyMap[ImGuiKey_UpArrow] = SDLK_UP;
+    io.KeyMap[ImGuiKey_DownArrow] = SDLK_DOWN;
+    io.KeyMap[ImGuiKey_PageUp] = SDLK_PAGEUP;
+    io.KeyMap[ImGuiKey_PageDown] = SDLK_PAGEDOWN;
+    io.KeyMap[ImGuiKey_Home] = SDLK_HOME;
+    io.KeyMap[ImGuiKey_End] = SDLK_END;
+    io.KeyMap[ImGuiKey_Delete] = SDLK_DELETE;
+    io.KeyMap[ImGuiKey_Backspace] = SDLK_BACKSPACE;
+    io.KeyMap[ImGuiKey_Enter] = SDLK_RETURN;
+    io.KeyMap[ImGuiKey_Escape] = SDLK_ESCAPE;
+    io.KeyMap[ImGuiKey_A] = SDLK_a;
+    io.KeyMap[ImGuiKey_C] = SDLK_c;
+    io.KeyMap[ImGuiKey_V] = SDLK_v;
+    io.KeyMap[ImGuiKey_X] = SDLK_x;
+    io.KeyMap[ImGuiKey_Y] = SDLK_y;
+    io.KeyMap[ImGuiKey_Z] = SDLK_z;
+
     return true;
 }
 
@@ -347,6 +411,9 @@ void SDLWindow::imguiNewFrame()
     io.DisplaySize = ImVec2((float)_width, (float)_height);
     io.DeltaTime = 1.0f/60.0f; // TODO
     ImGui::NewFrame();
+    ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
+    ImGui::SetNextWindowSize(ImVec2(_width, _height));
+    ImGui::Begin("", nullptr, ImVec2(_width, _height), 0.0f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
 }
 
 void SDLWindow::imguiPushCtx()
@@ -363,7 +430,7 @@ void SDLWindow::imguiPopCtx()
 
 void SDLWindow::imguiRender()
 {
-
+    ImGui::End();
     ImGui::Render();
     ImDrawData* drawData = ImGui::GetDrawData();
 

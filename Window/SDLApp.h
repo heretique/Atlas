@@ -4,6 +4,7 @@
 #include "Base.h"
 
 class SDLWindow;
+union SDL_Event;
 
 class SDLApp
 {
@@ -19,7 +20,7 @@ public:
     int init(u32 flags);
     int addWindow(SDLWindow* window);
     int exec();
-    void closeWindow(SDLWindow* window);
+    bool shouldCloseWindow(SDL_Event &e, SDLWindow& window);
     void quit();
 
 private:

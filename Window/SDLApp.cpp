@@ -23,14 +23,12 @@ int SDLApp::addWindow(SDLWindow *window)
     return _windows.size();
 }
 
-void SDLApp::closeWindow(SDLWindow *window)
+bool SDLApp::shouldCloseWindow(SDL_Event &e, SDLWindow &window)
 {
-    for(auto& w: _windows)
-        if (w.get() == window)
-        {
-            _windows.remove(w);
-            break;
-        }
+    if ((e.type == SDL_WINDOWEVENT) && (e.window.windowID == window.winId()) && (e.window.event == SDL_WINDOWEVENT_CLOSE))
+        return true;
+
+    return false;
 }
 
 void SDLApp::quit()
@@ -41,9 +39,11 @@ void SDLApp::quit()
 int SDLApp::exec()
 {
     SDL_Event e;
+    int eventCount = 0;
 
     while (_running) {
-        while(SDL_PollEvent( &e ) != 0) {
+        eventCount = 0;
+        while(SDL_PollEvent( &e ) != 0 && eventCount++ < 10 ) {
             //User requests quit
             if( e.type == SDL_QUIT )
             {
@@ -60,13 +60,28 @@ int SDLApp::exec()
                     break;
                 }
             }
-            for (auto& window: _windows)
-                window->handleEvent(e);
+            for (auto it = _windows.begin(); it != _windows.end();)
+            {
+                if (shouldCloseWindow(e, *(*it).get()))
+                {
+                    if ((*it)->isMain()){
+                        quit();
+                        break;
+                    } else {
+                        it = _windows.erase(it);
+                    }
+                }
+                else
+                {
+                    (*it)->handleEvent(e);
+                    ++it;
+                }
+            }
         }
 
         for (auto& window: _windows)
         {
-            window->doUpdate(0.0f);
+            window->doUpdate(1.f/60.f);
         }
         bgfx::frame();
     }

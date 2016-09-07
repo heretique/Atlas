@@ -17,7 +17,7 @@ public:
               int h, u32 flags);
     virtual ~SDLWindow();
     u32 winId() const;
-    virtual void handleEvent(SDL_Event& e);
+    bool isMain() const;
     virtual void update(float dt);
     virtual void onGUI();
 
@@ -36,6 +36,9 @@ protected:
 private:
     void* nativeHandle();
     void doUpdate(float dt);
+    void handleEvent(SDL_Event& e);
+    void handleWindowEvent(SDL_WindowEvent& e);
+    void handleInputEvent(SDL_Event& e);
 
 private:
 
@@ -52,6 +55,7 @@ private:
 
     bool                    _isDefault{false};
 
+    string                  _title;
     u32                     _width{0};
     u32                     _height{0};
     ImGuiContext*           _imguiCtx;
