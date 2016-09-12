@@ -60,11 +60,11 @@ struct ImGuiBgfx {
         _program = bgfx::createProgram(vsh, fsh, true);
 
         _vDecl
-            .begin()
-            .add(bgfx::Attrib::Position,  2, bgfx::AttribType::Float)
-            .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-            .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
-            .end();
+                .begin()
+                .add(bgfx::Attrib::Position,  2, bgfx::AttribType::Float)
+                .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
+                .add(bgfx::Attrib::Color0,    4, bgfx::AttribType::Uint8, true)
+                .end();
 
         _tex = bgfx::createUniform("s_tex", bgfx::UniformType::Int1);
 
@@ -74,13 +74,14 @@ struct ImGuiBgfx {
         i32 texBits;
         io.Fonts->GetTexDataAsRGBA32(&data, &texWidth, &texHeight, &texBits);
         _texture = bgfx::createTexture2D(
-              (u16)texWidth
-            , (u16)texHeight
-            , 1
-            , bgfx::TextureFormat::BGRA8
-            , 0
-            , bgfx::copy(data, texWidth*texHeight*texBits)
-            );
+                    (u16)texWidth
+                    , (u16)texHeight
+                    , false
+                    , 1
+                    , bgfx::TextureFormat::BGRA8
+                    , 0
+                    , bgfx::copy(data, texWidth*texHeight*texBits)
+                    );
     }
 
     void render(u8 viewId, ImDrawData* drawData)
@@ -106,7 +107,7 @@ struct ImGuiBgfx {
             u32 numIndices  = (u32)drawList->IdxBuffer.size();
 
             if (!bgfx::checkAvailTransientVertexBuffer(numVertices, _vDecl)
-            ||  !bgfx::checkAvailTransientIndexBuffer(numIndices) )
+                    ||  !bgfx::checkAvailTransientIndexBuffer(numIndices) )
             {
                 // not enough space in transient buffer just quit drawing the rest...
                 break;
@@ -131,19 +132,19 @@ struct ImGuiBgfx {
                 else if (0 != cmd->ElemCount)
                 {
                     u64 state = 0
-                        | BGFX_STATE_RGB_WRITE
-                        | BGFX_STATE_ALPHA_WRITE
-                        | BGFX_STATE_MSAA
-                        ;
+                            | BGFX_STATE_RGB_WRITE
+                            | BGFX_STATE_ALPHA_WRITE
+                            | BGFX_STATE_MSAA
+                            ;
 
                     state |= BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
                     const u16 xx = u16(bx::fmax(cmd->ClipRect.x, 0.0f) );
                     const u16 yy = u16(bx::fmax(cmd->ClipRect.y, 0.0f) );
                     bgfx::setScissor(xx, yy
-                            , u16(bx::fmin(cmd->ClipRect.z, 65535.0f)-xx)
-                            , u16(bx::fmin(cmd->ClipRect.w, 65535.0f)-yy)
-                            );
+                                     , u16(bx::fmin(cmd->ClipRect.z, 65535.0f)-xx)
+                                     , u16(bx::fmin(cmd->ClipRect.w, 65535.0f)-yy)
+                                     );
 
                     bgfx::setState(state);
                     bgfx::setTexture(0, _tex, _texture);
@@ -204,22 +205,21 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
         if (!bgfxInit()) fmt::print("Failed to initialize bgfx\n");
         _initialized = true;
         _isDefault = true;
-        const bgfx::Caps* caps = bgfx::getCaps();
-        bool swapChainSupported = 0 != (caps->supported & BGFX_CAPS_SWAP_CHAIN);
     }
+
+    _viewId = _windowCount++;
 
     if (!_isDefault)
     {
-        fmt::print("Native Window Handle: {}\n", nativeHandle());
         _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
-        bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     }
     else
     {
         _framebuffer = BGFX_INVALID_HANDLE;
     }
+    bgfx::setViewFrameBuffer(_viewId, _framebuffer);
 
-    _viewId = _windowCount++;
+
     bgfx::setViewName(_viewId, title);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
     bgfx::setViewClear(_viewId
@@ -300,11 +300,11 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent &e)
             bgfx::reset(_width, _height);
             bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
             bgfx::setViewClear(_viewId
-                , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
-                , 0x303030ff
-                , 1.0f
-                , 0
-                );
+                               , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                               , 0x303030ff
+                               , 1.0f
+                               , 0
+                               );
         }
         break;
     }
