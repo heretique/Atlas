@@ -174,7 +174,7 @@ struct ImGuiBgfx {
 static ImGuiBgfx s_imguiBgfx;
 
 
-SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
+SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
 {
     _width = w;
     _height = h;
@@ -184,7 +184,11 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h, u32 flags)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(title, x, y, w, h, flags);
+    _window = SDL_CreateWindow(title, x, y, w, h,
+                               SDL_WINDOW_SHOWN |
+                               SDL_WINDOW_RESIZABLE |
+                               SDL_WINDOW_OPENGL |
+                               SDL_WINDOW_BORDERLESS);
     if (_window == nullptr)
     {
         fmt::print("SLD Window creation failed, err: {}\n", SDL_GetError());
@@ -413,7 +417,18 @@ void SDLWindow::imguiNewFrame()
     ImGui::NewFrame();
     ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
     ImGui::SetNextWindowSize(ImVec2(_width, _height));
-    ImGui::Begin("", nullptr, ImVec2(_width, _height), 0.0f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize );
+    ImGui::Begin(_title.c_str(), &_open, ImVec2(_width, _height), 0.0f,
+                 ImGuiWindowFlags_NoMove |
+                 ImGuiWindowFlags_NoResize |
+                 ImGuiWindowFlags_NoCollapse);
+    if (!_open)
+    {
+        SDL_Event event;
+        event.type = SDL_WINDOWEVENT;
+        event.window.event = SDL_WINDOWEVENT_CLOSE;
+        event.window.windowID = _windowId;
+        SDL_PushEvent(&event);
+    }
 }
 
 void SDLWindow::imguiPushCtx()

@@ -13,8 +13,7 @@ class SDLWindow
     friend class SDLApp;
 public:
     SDLWindow(const char *title,
-              int x, int y, int w,
-              int h, u32 flags);
+              int x, int y, int w, int h);
     virtual ~SDLWindow();
     u32 winId() const;
     bool isMain() const;
@@ -56,6 +55,7 @@ private:
     bool                    _isDefault{false};
 
     string                  _title;
+    bool                    _open{true};
     u32                     _width{0};
     u32                     _height{0};
     ImGuiContext*           _imguiCtx;

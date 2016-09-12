@@ -5,8 +5,7 @@ namespace atlasEditor {
 
 
 MainWindow::MainWindow(const char *title,
-                       int x, int y, int w,
-                       int h, u32 flags) : SDLWindow(title, x, y, w, h, flags)
+                       int x, int y, int w, int h) : SDLWindow(title, x, y, w, h)
 {
 
 }

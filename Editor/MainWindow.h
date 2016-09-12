@@ -12,8 +12,7 @@ class MainWindow : public SDLWindow
 {
 public:
     MainWindow(const char *title,
-               int x, int y, int w,
-               int h, u32 flags);
+               int x, int y, int w, int h);
     ~MainWindow();
     template <class T>
     void addView();
