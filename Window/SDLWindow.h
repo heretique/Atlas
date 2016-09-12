@@ -28,6 +28,7 @@ protected:
     void imguiRender();
     void imguiPushCtx();
     void imguiPopCtx();
+    void imguiMoveWindow();
 
     // bgfx related
     bool bgfxInit();
@@ -60,6 +61,9 @@ private:
     u32                     _height{0};
     ImGuiContext*           _imguiCtx;
     ImGuiContext*           _prevImguiCtx;
+
+    int                     _moveOffsetX{0};
+    int                     _moveOffsetY{0};
 };
 
 #endif // SDLWINDOW_H

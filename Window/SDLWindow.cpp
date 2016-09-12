@@ -206,7 +206,6 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
         _isDefault = true;
         const bgfx::Caps* caps = bgfx::getCaps();
         bool swapChainSupported = 0 != (caps->supported & BGFX_CAPS_SWAP_CHAIN);
-        fmt::print("Swapchain supported: {}\n", swapChainSupported);
     }
 
     if (!_isDefault)
@@ -359,6 +358,7 @@ void SDLWindow::doUpdate(float dt)
     // GUI
     imguiPushCtx();
     imguiNewFrame();
+    imguiMoveWindow();
     onGUI();
     imguiRender();
     imguiPopCtx();
@@ -440,6 +440,26 @@ void SDLWindow::imguiPushCtx()
 void SDLWindow::imguiPopCtx()
 {
     ImGui::SetCurrentContext(_prevImguiCtx);
+}
+
+void SDLWindow::imguiMoveWindow()
+{
+    if (ImGui::IsMouseClicked(0))
+    {
+        int wx, wy, mx, my;
+        SDL_GetWindowPosition(_window, &wx, &wy);
+        SDL_GetGlobalMouseState(&mx, &my);
+        _moveOffsetX = mx - wx;
+        _moveOffsetY = my - wy;
+    }
+
+    if ((_moveOffsetX >= 0 && _moveOffsetY <= 22) && // cursor must be *on* the title bar
+            ImGui::IsMouseDragging(0))
+    {
+        int posX, posY;
+        SDL_GetGlobalMouseState(&posX, &posY);
+        SDL_SetWindowPosition(_window, posX - _moveOffsetX, posY - _moveOffsetY);
+    }
 }
 
 
