@@ -218,8 +218,6 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
         _framebuffer = BGFX_INVALID_HANDLE;
     }
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
-
-
     bgfx::setViewName(_viewId, title);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
     bgfx::setViewClear(_viewId
@@ -292,19 +290,23 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent &e)
 
             if (bgfx::isValid(_framebuffer))
             {
+                bgfx::resetView(_viewId);
                 bgfx::destroyFrameBuffer(_framebuffer);
                 _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
                 bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+                bgfx::setViewClear(_viewId
+                                   , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
+                                   , 0x303030ff
+                                   , 1.0f
+                                   , 0
+                                   );
+            }
+            else
+            {
+                bgfx::reset(_width, _height);
             }
 
-            bgfx::reset(_width, _height);
             bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
-            bgfx::setViewClear(_viewId
-                               , BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH
-                               , 0x303030ff
-                               , 1.0f
-                               , 0
-                               );
         }
         break;
     }
@@ -352,6 +354,7 @@ void SDLWindow::onGUI()
 void SDLWindow::doUpdate(float dt)
 {
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
+    bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
     bgfx::touch(_viewId);
     // render content
     update(dt);

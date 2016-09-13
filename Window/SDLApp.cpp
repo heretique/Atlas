@@ -39,11 +39,9 @@ void SDLApp::quit()
 int SDLApp::exec()
 {
     SDL_Event e;
-    int eventCount = 0;
 
     while (_running) {
-        eventCount = 0;
-        while(SDL_PollEvent( &e ) != 0 && eventCount++ < 10 ) {
+        while(SDL_PollEvent( &e ) != 0) {
             //User requests quit
             if( e.type == SDL_QUIT )
             {
