@@ -21,13 +21,16 @@ StaticLibrary {
         "../3rdparty/bgfx/3rdparty/khronos",
         "../3rdparty/bgfx/3rdparty/dxsdk/include",
         "../3rdparty/sdl/include",
+        "../3rdparty/wren/src/include",
+        "../3rdparty/wrenpp",
      ]
-    cpp.cxxLanguageVersion: "c++11"
+    cpp.cxxLanguageVersion: "c++14"
     cpp.dynamicLibraries: [ "psapi", "gdi32" ]
 
     Depends { name: "bgfx" }
     Depends { name: "fmt" }
     Depends { name: "imgui" }
+    Depends { name: "wren" }
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

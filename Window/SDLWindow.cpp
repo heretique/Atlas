@@ -183,6 +183,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
     _window = SDL_CreateWindow(title, x, y, w, h,
@@ -260,6 +261,11 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
+void SDLWindow::init()
+{
+
+}
+
 void SDLWindow::handleEvent(SDL_Event &e)
 {
     //If an event was detected for this window
@@ -307,6 +313,7 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent &e)
             }
 
             bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height) );
+            fmt::print("Resize event, window: {}, view: {}, size({}, {})\n", _windowId, _viewId, _width, _height);
         }
         break;
     }

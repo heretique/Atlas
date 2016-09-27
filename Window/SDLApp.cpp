@@ -82,6 +82,7 @@ int SDLApp::exec()
             window->doUpdate(1.f/60.f);
         }
         bgfx::frame();
+        SDL_Delay(10);
     }
 
     return 0;

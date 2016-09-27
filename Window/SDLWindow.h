@@ -17,6 +17,7 @@ public:
     virtual ~SDLWindow();
     u32 winId() const;
     bool isMain() const;
+    virtual void init();
     virtual void update(float dt);
     virtual void onGUI();
 
