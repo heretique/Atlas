@@ -18,11 +18,11 @@ StaticLibrary {
     Depends { name: "cpp" }
 
     cpp.includePaths: [ "../..", ".." ]
-    cpp.cxxLanguageVersion: "c++11"
+    cpp.cxxLanguageVersion: "c++14"
 
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
-        qbs.install: true
+        qbs.install: false
     }
 }

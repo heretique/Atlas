@@ -2,13 +2,14 @@ import qbs
 import qbs.ModUtils
 
 StaticLibrary {
-    id: wren
-    name: "wren"
+    id: wrenpp
+    name: "wrenpp"
     files: [
-        "../../wren/src/vm/*.c",
-        "../../wren/src/optional/*.c",
+        "../../wrenpp/Wren++.cpp",
+        "../../wrenpp/Wren++.h",
     ]
     Depends { name: "cpp" }
+    Depends { name: "wren" }
 
     cpp.includePaths: [ 
         "../../wren/src/include",

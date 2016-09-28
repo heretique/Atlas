@@ -3,7 +3,7 @@ import qbs
 Product {
     type: "application"
     name: "AtlasEditor"
-    consoleApplication: false
+    consoleApplication: true
     files: [
         "*.cpp",
         "*.h",
@@ -23,11 +23,12 @@ Product {
         "../Window",
         "../3rdparty/sdl/include",
     ]
-    cpp.cxxLanguageVersion: "c++11"
+    cpp.cxxLanguageVersion: "c++14"
 
     Depends { name: "AtlasWindow" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
+    Depends { name: "wren" }
 
 
     Properties {

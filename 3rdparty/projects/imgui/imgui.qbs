@@ -12,14 +12,20 @@ StaticLibrary {
         "../../imgui/imgui_draw.cpp",
         "../../imgui/stb_rect_pack.h",
         "../../imgui/stb_textedit.h",
-        "../../imgui/stb_truetype.h"
+        "../../imgui/stb_truetype.h",
+        "Imgui.wren.h",
+        "WrenBindings.cpp",
+        "WrenBindings.h",
     ]
     Depends { name: "cpp" }
-
+    Depends { name: "wren" }
+    Depends { name: "wrenpp" }
     cpp.includePaths: [ 
-    	"../../imgui"
+        "../../imgui",
+        "../../wren/src/include",
+        "../../wrenpp",
     ]
-    cpp.cxxLanguageVersion: "c++11"
+    cpp.cxxLanguageVersion: "c++14"
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

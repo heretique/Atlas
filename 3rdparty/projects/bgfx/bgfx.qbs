@@ -15,6 +15,7 @@ StaticLibrary {
         "../../bgfx/src/glcontext_ppapi.cpp",
         "../../bgfx/src/glcontext_wgl.cpp",
         "../../bgfx/src/image.cpp",
+        "../../bgfx/src/hmd.cpp",
         "../../bgfx/src/hmd_ovr.cpp",
         "../../bgfx/src/hmd_openvr.cpp",
         "../../bgfx/src/debug_renderdoc.cpp",
@@ -22,7 +23,7 @@ StaticLibrary {
         "../../bgfx/src/renderer_d3d12.cpp",
         "../../bgfx/src/renderer_d3d9.cpp",
         "../../bgfx/src/renderer_gl.cpp",
-        "../../bgfx/src/renderer_null.cpp",
+        "../../bgfx/src/renderer_noop.cpp",
         "../../bgfx/src/renderer_vk.cpp",
         "../../bgfx/src/shader_dx9bc.cpp",
         "../../bgfx/src/shader_dxbc.cpp",
@@ -38,8 +39,8 @@ StaticLibrary {
         "../../bgfx/3rdparty/khronos",
         "../../bgfx/3rdparty/dxsdk/include"
     ]
-    cpp.cxxLanguageVersion: "c++11"
-//    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
+    cpp.cxxLanguageVersion: "c++14"
+    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
 //    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
 
     Properties {
