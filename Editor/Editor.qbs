@@ -28,7 +28,9 @@ Product {
     Depends { name: "AtlasWindow" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
+    Depends { name: "fmt" }
     Depends { name: "wren" }
+    Depends { name: "wrenpp" }
 
 
     Properties {

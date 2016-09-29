@@ -30,7 +30,6 @@ StaticLibrary {
     Depends { name: "bgfx" }
     Depends { name: "fmt" }
     Depends { name: "imgui" }
-    Depends { name: "wren" }
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
