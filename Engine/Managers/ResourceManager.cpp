@@ -1,7 +1,7 @@
 #include "Base.h"
-#include "resourcemanager.h"
-#include "engine.h"
-#include "logmanager.h"
+#include "ResourceManager.h"
+#include "Engine.h"
+#include "LogManager.h"
 
 namespace atlas {
 

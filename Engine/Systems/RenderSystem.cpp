@@ -1,6 +1,6 @@
-#include "rendersystem.h"
+#include "RenderSystem.h"
 #include "Math/Transform.h"
-#include "Components/meshcomponent.h"
+#include "Components/MeshComponent.h"
 
 namespace atlas {
 

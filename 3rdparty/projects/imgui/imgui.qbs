@@ -15,7 +15,7 @@ StaticLibrary {
         "../../imgui/stb_truetype.h",
         "Imgui.wren.h",
         "WrenBindings.cpp",
-        "WrenBindings.h",
+        "WrenBindings.h"
     ]
     Depends { name: "cpp" }
     Depends { name: "wren" }
@@ -23,7 +23,7 @@ StaticLibrary {
     cpp.includePaths: [ 
         "../../imgui",
         "../../wren/src/include",
-        "../../wrenpp",
+        "../../wrenpp"
     ]
     cpp.cxxLanguageVersion: "c++14"
 

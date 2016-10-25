@@ -32,7 +32,7 @@ protected:
     void imguiMoveWindow();
 
     // bgfx related
-    bool bgfxInit();
+    bool bgfxInit(void* context = nullptr);
 
 private:
     void* nativeHandle();

@@ -1,11 +1,11 @@
 #include "SDLWindow.h"
+#include <fmt/printf.h> // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <SDL2/SDL.h>
 #include "SDLApp.h"
 #include <bgfx/bgfx.h>
 #include <bgfx/bgfxplatform.h>
 #include <SDL2/SDL_syswm.h>
 #include <imgui/imgui.h>
-#include <fmt/printf.h>
 #include <bx/fpumath.h>
 
 #include "vs_ocornut_imgui.bin.h"
@@ -203,7 +203,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
     {
         _glContext = SDL_GL_CreateContext(_window);
 
-        if (!bgfxInit()) fmt::print("Failed to initialize bgfx\n");
+        if (!bgfxInit(_glContext)) fmt::print("Failed to initialize bgfx\n");
         _initialized = true;
         _isDefault = true;
     }
@@ -482,7 +482,7 @@ void SDLWindow::imguiRender()
     s_imguiBgfx.render(_viewId, drawData);
 }
 
-bool SDLWindow::bgfxInit()
+bool SDLWindow::bgfxInit(void* context)
 {
     bgfx::PlatformData pd;
     SDL_SysWMinfo wmi;
@@ -493,7 +493,12 @@ bool SDLWindow::bgfxInit()
 #if BX_PLATFORM_WINDOWS
     pd.ndt          = NULL;
     pd.nwh          = wmi.info.win.window;
+#elif BX_PLATFORM_LINUX
+    pd.ndt          = wmi.info.x11.display;
+    pd.nwh          = (void*)(uintptr_t)wmi.info.x11.window;
+    pd.context      = context;
 #endif
+
     setPlatformData(pd);
 
     if (!bgfx::init(bgfx::RendererType::OpenGL))
@@ -517,6 +522,8 @@ void *SDLWindow::nativeHandle()
 
 #if BX_PLATFORM_WINDOWS
     return wmi.info.win.window;
+#elif BX_PLATFORM_LINUX
+    return (void*)(uintptr_t)wmi.info.x11.window;
 #endif
 
     return nullptr;

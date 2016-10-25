@@ -1,4 +1,4 @@
-#include "profilingmanager.h"
+#include "ProfilingManager.h"
 
 namespace atlas {
 

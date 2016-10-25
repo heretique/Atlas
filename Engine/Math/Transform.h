@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 #include "Matrix.h"
-#include "Components/component.h"
+#include "Components/Component.h"
 
 namespace math
 {

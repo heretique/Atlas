@@ -1,5 +1,5 @@
 #include "MainWindow.h"
-#include <ImGUI/imgui.h>
+#include <imgui/imgui.h>
 
 namespace atlasEditor {
 

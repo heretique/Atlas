@@ -1,7 +1,7 @@
 #ifndef MESHCOMPONENT_H
 #define MESHCOMPONENT_H
 
-#include "component.h"
+#include "Component.h"
 
 namespace atlas {
 

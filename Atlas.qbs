@@ -1,6 +1,9 @@
 import qbs
 
 Project {
+
+    qbsSearchPaths: "qbs"
+
     references: [
         "3rdparty/projects/bgfx/bgfx.qbs",
         "3rdparty/projects/entityx/entityx.qbs",

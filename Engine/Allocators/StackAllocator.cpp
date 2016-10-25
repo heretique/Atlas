@@ -1,4 +1,4 @@
-#include "STackAllocator.h"
+#include "StackAllocator.h"
 
 StackAllocator::StackAllocator(size_t size, void* start) 
 	: Allocator(size, start), _current_pos(start)
