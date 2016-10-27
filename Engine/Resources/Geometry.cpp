@@ -28,6 +28,11 @@ GeometryResource::~GeometryResource()
     release();
 }
 
+bool GeometryResource::load(const char *data, int size)
+{
+    return Resource::load(data, size);
+}
+
 
 Resource *GeometryResource::clone()
 {

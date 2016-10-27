@@ -11,6 +11,7 @@ class ECSManager;
 class AudioManager;
 class PhysicsManager;
 class ProfilingManager;
+class JobManager;
 
 class Engine
 {
@@ -23,6 +24,7 @@ public:
     static PluginManager &plugMan() { return *_pluginManager; }
     static ResourceManager &resMan() { return *_resourceManager; }
     static ECSManager &ecs() { return *_ecsManager; }
+    static JobManager &jobMan() { return *_jobManager; }
 
 private:
     static LogManager       *_logManager;
@@ -30,6 +32,7 @@ private:
     static PluginManager    *_pluginManager;
     static ResourceManager  *_resourceManager;
     static ECSManager       *_ecsManager;
+    static JobManager       *_jobManager;
 };
 
 } // namespace atlas

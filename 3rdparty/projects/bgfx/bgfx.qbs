@@ -42,7 +42,7 @@ StaticLibrary {
         "../../bgfx/3rdparty/dxsdk/include"
     ]
     cpp.cxxLanguageVersion: "c++14"
-    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
+//    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
 //    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
 
     Properties {

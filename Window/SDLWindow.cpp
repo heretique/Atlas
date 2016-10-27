@@ -203,7 +203,7 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h)
     {
         _glContext = SDL_GL_CreateContext(_window);
 
-        if (!bgfxInit(_glContext)) fmt::print("Failed to initialize bgfx\n");
+        if (!bgfxInit(/*_glContext*/)) fmt::print("Failed to initialize bgfx\n");
         _initialized = true;
         _isDefault = true;
     }

@@ -5,8 +5,16 @@
 #include "SDLWindow.h"
 #include "fmt/format.h"
 #include "imgui/imgui.h"
+#include "Engine.h"
+#include "JobManager.h"
+
 
 using namespace atlasEditor;
+using namespace atlas;
+
+void emptyJob(void* data, uint count) {
+
+}
 
 
 class Window1: public SDLWindow
@@ -15,6 +23,22 @@ public:
     Window1(const char *title,
             int x, int y, int w, int h) :
         SDLWindow(title, x, y, w, h) {}
+
+    void init()
+    {
+        Engine::init();
+        cout << "Waiting for jobs..." << endl;
+        for (int i = 0; i < 10000; ++i)
+            Engine::jobMan().addJob(emptyJob, nullptr, 1);
+
+        Engine::jobMan().wait();
+        cout << "Finised waiting for jobs..." << endl;
+    }
+
+    ~Window1()
+    {
+        Engine::release();
+    }
 
     void onGUI() {
         ImGui::Text("Window1");
@@ -57,9 +81,10 @@ int main(int argc, char **argv)
 {
     SDLApp::get().init(SDL_INIT_VIDEO);
 
-    new Window1(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
-    new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
-//    new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
+    Window1* win = new Window1(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
+    win->init();
+    //    new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
+    //    new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
 
     return SDLApp::get().exec();
 }

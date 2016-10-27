@@ -12,6 +12,9 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <thread>
+#include <atomic>
+#include <iostream>
 
 // Bring common functions from C++ into global namespace
 using std::memcpy;
@@ -32,6 +35,11 @@ using std::atoi;
 using std::string;
 using std::vector;
 using std::map;
+using std::thread;
+using std::atomic;
+using std::atomic_flag;
+using std::cout;
+using std::endl;
 
 
 // Types

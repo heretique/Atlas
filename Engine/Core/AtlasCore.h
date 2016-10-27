@@ -93,8 +93,8 @@ struct HandledPackedStorage
 
     HandledPackedStorage()
     {
-        //probably not necessary
-        memset(&_storage, 0x0, StorageSize*sizeof(PackedStorage));
+//        //probably not necessary
+//        memset(&(_storage.array), 0x0, StorageSize*sizeof(PackedStorage::array));
 
         // initialize each cell to point to the next for free list
         // when an index is not used to point to an object we use it

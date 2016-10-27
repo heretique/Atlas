@@ -45,9 +45,11 @@ StaticLibrary {
         "../3rdparty/bgfx/include",
     ]
 
+    Depends { name: "common" }
     Depends { name: "bgfx" }
     Depends { name: "entityx" }
     Depends { name: "AtlasWindow" }
+    Depends { name: "fmt" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")

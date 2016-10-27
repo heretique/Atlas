@@ -13,6 +13,7 @@ Product {
     cpp.includePaths: [
         ".",
         "../Engine/Core",
+        "../Engine/Managers",
         "../Window"
     ]
     cpp.cxxLanguageVersion: "c++14"
@@ -24,6 +25,8 @@ Product {
     Depends { name: "fmt" }
     Depends { name: "wren" }
     Depends { name: "wrenpp" }
+    Depends { name: "AtlasEngine" }
+    Depends { name: "entityx" }
 
 
     Properties {

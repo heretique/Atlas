@@ -34,7 +34,7 @@ void LogManager::writeInfo(const char *msg, ...)
 
     va_list args;
     va_start( args, msg );
-    printf(msg, args);
+    vfprintf(stdout, msg, args);
     va_end( args );
 }
 
@@ -44,7 +44,7 @@ void LogManager::writeWarning(const char *msg, ...)
 
     va_list args;
     va_start( args, msg );
-    printf(msg, args);
+    vfprintf(stdout, msg, args);
     va_end( args );
 }
 
@@ -54,7 +54,7 @@ void LogManager::writeError(const char *msg, ...)
 
     va_list args;
     va_start( args, msg );
-    printf(msg, args);
+    vfprintf(stderr, msg, args);
     va_end( args );
 }
 

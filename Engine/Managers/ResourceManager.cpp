@@ -69,6 +69,24 @@ void Resource::unload()
     _loaded = false;
 }
 
+int Resource::getElemCount(int elem)
+{
+    Engine::log().writeError( "Invalid elem, atlasGetElemCount" );
+    return 0;
+}
+
+int Resource::getElemParamI( int elem, int elemIdx, int param )
+{
+    Engine::log().writeError( "Invalid elem, param or component in atlasGetResParamI" );
+    return std::numeric_limits<float>::quiet_NaN();
+}
+
+void Resource::setElemParamI( int elem, int elemIdx, int param, int value )
+{
+    Engine::log().writeError( "Invalid elem, param or component in atlasSetResParamI" );
+}
+
+
 float Resource::getElemParamF( int elem, int elemIdx, int param, int compIdx )
 {
     Engine::log().writeError( "Invalid elem, param or component in atlasGetResParamF" );

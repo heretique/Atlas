@@ -20,6 +20,7 @@ Module {
         "../3rdparty/bgfx/3rdparty",
         "../3rdparty/bgfx/3rdparty/khronos",
         "../3rdparty/bgfx/3rdparty/dxsdk/include",
+        "../3rdparty/concurrentqueue",
         "../3rdparty/wren/src/include",
         "../3rdparty/wrenpp"
     ]
