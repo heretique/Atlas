@@ -7,13 +7,16 @@
 #include "imgui/imgui.h"
 #include "Engine.h"
 #include "JobManager.h"
-
+#include <thread>
 
 using namespace atlasEditor;
 using namespace atlas;
 
-void emptyJob(void* data, uint count) {
-
+void emptyJob(void* data, uint count)
+{
+    int* testData = static_cast<int*>(data);
+    for (int i = 0;  i < count; ++i)
+        testData[i] = 1;
 }
 
 
@@ -28,10 +31,24 @@ public:
     {
         Engine::init();
         cout << "Waiting for jobs..." << endl;
-        for (int i = 0; i < 10000; ++i)
-            Engine::jobMan().addJob(emptyJob, nullptr, 1);
+
+        int testArray[100000];
+        memset(testArray, 0, sizeof(testArray));
+
+        Engine::jobMan().parallel_for<int, CountSplitter<int, 256>>(emptyJob, testArray, sizeof(testArray)/sizeof(testArray[0]));
 
         Engine::jobMan().wait();
+
+
+        for(int i = 0;  i < sizeof(testArray)/sizeof(testArray[0]); ++i)
+        {
+//            fmt::print("{} ", testArray[i]);
+            if (testArray[i] != 1)
+            {
+                fmt::print("Jobs failed!!!\n");
+                break;
+            }
+        }
         cout << "Finised waiting for jobs..." << endl;
     }
 

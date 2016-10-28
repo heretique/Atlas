@@ -2,6 +2,7 @@
 #include "JobManager.h"
 #include "Engine.h"
 #include "fmt/printf.h"
+#include <thread>
 
 namespace atlas {
 
@@ -44,7 +45,8 @@ void JobManager::release()
 void JobManager::addJob(JobFunc func, void *data, uint count)
 {
     _pendingTasks.fetch_add(1, std::memory_order_release);
-    while (!_jobQueue.try_enqueue(Job{func, data, count}));
+//    while (!_jobQueue.try_enqueue(Job{func, data, count})) continue;    // this doesn't work, can't figure out why :(
+    _jobQueue.enqueue(Job{func, data, count});
 }
 
 void JobManager::wait()
