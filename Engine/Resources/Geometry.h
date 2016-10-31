@@ -27,10 +27,10 @@ private:
     u32                             _vertexCount{0};
     u32                             _indexCount{0};
     bool                            _16BitIndices{true};
-    bgfx::VertexBufferHandle        _vbh{BGFX_INVALID_HANDLE};
-    bgfx::IndexBufferHandle         _ibh{BGFX_INVALID_HANDLE};
-    bgfx::DynamicVertexBufferHandle _dynvbh{BGFX_INVALID_HANDLE};
-    bgfx::DynamicIndexBufferHandle  _dynibh{BGFX_INVALID_HANDLE};
+    bgfx::VertexBufferHandle        _vbh = BGFX_INVALID_HANDLE;
+    bgfx::IndexBufferHandle         _ibh = BGFX_INVALID_HANDLE;
+    bgfx::DynamicVertexBufferHandle _dynvbh = BGFX_INVALID_HANDLE;
+    bgfx::DynamicIndexBufferHandle  _dynibh = BGFX_INVALID_HANDLE;
     math::BoundingBox               _aabb;
 };
 

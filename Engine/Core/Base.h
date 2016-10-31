@@ -14,7 +14,10 @@
 #include <map>
 #include <thread>
 #include <atomic>
+#include <functional>
 #include <iostream>
+#include <fstream>
+#include <fmt/printf.h>
 
 // Bring common functions from C++ into global namespace
 using std::memcpy;
@@ -40,6 +43,9 @@ using std::atomic;
 using std::atomic_flag;
 using std::cout;
 using std::endl;
+using std::istream;
+using std::ifstream;
+using fmt::print;
 
 
 // Types

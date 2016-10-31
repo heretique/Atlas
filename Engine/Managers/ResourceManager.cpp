@@ -44,21 +44,12 @@ void Resource::release()
 }
 
 
-bool Resource::load( const char *data, const uint size )
+bool Resource::load( const istream& data )
 {
-    // Resources can only be loaded once
-    if( _loaded ) return false;
 
-    // A NULL pointer can be used if the file could not be loaded
-    if( data == 0x0 || size <= 0 )
-    {
-        Engine::log().writeWarning( "Resource '%s' of type %i: No data loaded (file not found?)", _name.c_str(), _type );
-        return false;
-    }
+    Engine::log().writeWarning( "Resource '%s' of type %i: No data loaded (file not found?)", _name.c_str(), _type );
 
-    _loaded = true;
-
-    return true;
+    return false;
 }
 
 
@@ -200,6 +191,36 @@ Resource *ResourceManager::getNextResource(int type, ResHandle start)
     }
 
     return res;
+}
+
+bool ResourceManager::loadResources()
+{
+    bool success = true;
+    Resource *res = nullptr;
+    const ResPackedArray &packedRes = _resources.storage();
+    for (u32 i = 0; i < packedRes.count; ++i)
+    {
+        res = packedRes.array[i];
+        if (res != nullptr)
+        {
+            string path = _assetDir + res->getName();
+            ifstream ifs(path, std::ios::in | std::ios::binary);
+            if (ifs)
+            {
+                if (!res->load(ifs))
+                {
+                    success = false;
+                    print("Couldn't load asset: {}", res->getName());
+                }
+            }
+        }
+    }
+    return success;
+}
+
+void ResourceManager::setAssetsDir(const string& path)
+{
+    _assetDir = path;
 }
 
 } // atlas

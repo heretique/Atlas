@@ -30,7 +30,7 @@ ScriptResource::~ScriptResource()
 
 bool ScriptResource::load(const char *data, int size)
 {
-    return Resource::load(data, size);
+    return false;
 }
 
 

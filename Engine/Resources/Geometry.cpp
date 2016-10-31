@@ -3,11 +3,33 @@
 #include "Geometry.h"
 #include <fmt/printf.h>
 
-#define TINYGLTF_LOADER_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION
-#include "tinygltf/tiny_gltf_loader.h"
+#define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
+#include "tinyobj/tiny_obj_loader.h"
+
 
 namespace atlas {
+
+
+
+class membuf : public std::basic_streambuf<char> {
+public:
+  membuf(const char *p, size_t l) {
+    setg((char*)p, (char*)p, (char*)p + l);
+  }
+};
+
+class memstream : public std::istream {
+public:
+  memstream(const char *p, size_t l) :
+    std::istream(&_buffer),
+    _buffer(p, l) {
+    rdbuf(&_buffer);
+  }
+
+private:
+  membuf _buffer;
+};
+
 
 void GeometryResource::initializationFunc()
 {
@@ -33,16 +55,29 @@ GeometryResource::~GeometryResource()
 
 bool GeometryResource::load(const char *data, const uint size)
 {
-    tinygltf::Scene scene;
-    tinygltf::TinyGLTFLoader loader;
+//    tinygltf::Scene scene;
+//    tinygltf::TinyGLTFLoader loader;
+//    string err;
+//    string baseDir = "";
+//    bool ret = loader.LoadASCIIFromString(&scene, &err, data, size, baseDir);
+//    if (!ret)
+//    {
+//        fmt::print("Failed to load geometry resource: {}\n", _name);
+//        fmt::print("{}\n", err);
+//        return false;
+//    }
+
+    memstream is(data, size);
+
+    tinyobj::attrib_t attrib;
+    vector<tinyobj::shape_t> shapes;
+    vector<tinyobj::material_t> materials;
+
     string err;
-    string baseDir = "";
-    bool ret = loader.LoadASCIIFromString(&scene, &err, data, size, baseDir);
+    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, &is);
     if (!ret)
     {
-        fmt::print("Failed to load geometry resource: {}\n", _name);
-        fmt::print("{}\n", err);
-        return false;
+        print("Failed to load OBJ with error: {}", err);
     }
 
 

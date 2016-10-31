@@ -1,10 +1,6 @@
 #ifndef RESOURCEMANAGER_H
 #define RESOURCEMANAGER_H
 
-#include <functional>
-#include <vector>
-#include <map>
-
 #include "Base.h"
 #include "AtlasCore.h"
 
@@ -36,13 +32,13 @@ enum class ResourceTypes {
 class Resource
 {
 public:
-    Resource(int type, const std::string &name, int flags);
+    Resource(int type, const string& name, int flags);
     virtual ~Resource();
     virtual Resource *clone();
 
     virtual void initDefault();
     virtual void release();
-    virtual bool load( const char *data, const uint size );
+    virtual bool load( const istream& data);
     void unload();
 
     int findElem(int elem, int param, const char *value);
@@ -107,12 +103,15 @@ public:
     Resource *resFromHandle(ResHandle handle);
     Resource *getNextResource(int type, ResHandle start);
     Resource *findResource(int type, const std::string &name);
+    bool loadResources();
+    void setAssetsDir(const string& path);
 
 protected:
     ResHandle addResource(Resource *resource);
 private:
     ResStorage _resources;
-    std::map<int, ResourceRegEntry> _registry;
+    map<int, ResourceRegEntry> _registry;
+    string _assetDir;
 };
 
 } // atlas
