@@ -43,6 +43,9 @@ StaticLibrary {
         "../3rdparty/entityx",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",
+        "../3rdparty/stb",
+        "../3rdparty/picojson",
+        "../3rdparty/tinygltf",
     ]
 
     Depends { name: "common" }

@@ -20,7 +20,7 @@ typedef ResStorage::PackedStorage ResPackedArray;
 
 enum class ResourceTypes {
     Undefined = 0,
-    SceneGraph,
+    Scene,
     Geometry,
     Animation,
     Material,
@@ -29,6 +29,7 @@ enum class ResourceTypes {
     Texture,
     ParticleEffect,
     Pipeline,
+    Template, // this can be a combination of any other resource types
     UserDefined // This is last always
 };
 
@@ -41,7 +42,7 @@ public:
 
     virtual void initDefault();
     virtual void release();
-    virtual bool load( const char *data, int size );
+    virtual bool load( const char *data, const uint size );
     void unload();
 
     int findElem(int elem, int param, const char *value);

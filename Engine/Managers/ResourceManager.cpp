@@ -44,7 +44,7 @@ void Resource::release()
 }
 
 
-bool Resource::load( const char *data, int size )
+bool Resource::load( const char *data, const uint size )
 {
     // Resources can only be loaded once
     if( _loaded ) return false;
