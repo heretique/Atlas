@@ -1,7 +1,7 @@
 #include "Base.h"
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "Geometry.h"
-#include <fmt/printf.h>
+#include "LogManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include "tinyobj/tiny_obj_loader.h"
@@ -31,29 +31,19 @@ private:
 };
 
 
-void GeometryResource::initializationFunc()
-{
-}
-
-
-void GeometryResource::releaseFunc()
-{
-}
-
-
-GeometryResource::GeometryResource( const string &name, int flags ) :
-    Resource( (int)ResourceTypes::Geometry, name, flags )
+GeometryAsset::GeometryAsset( const string &name, int flags ) :
+    Asset( (int)AssetTypes::Geometry, name, flags )
 {
     initDefault();
 }
 
 
-GeometryResource::~GeometryResource()
+GeometryAsset::~GeometryAsset()
 {
     release();
 }
 
-bool GeometryResource::load(const char *data, const uint size)
+bool GeometryAsset::load(const istream& is)
 {
 //    tinygltf::Scene scene;
 //    tinygltf::TinyGLTFLoader loader;
@@ -67,17 +57,17 @@ bool GeometryResource::load(const char *data, const uint size)
 //        return false;
 //    }
 
-    memstream is(data, size);
+//    memstream is(data, size);
 
     tinyobj::attrib_t attrib;
     vector<tinyobj::shape_t> shapes;
     vector<tinyobj::material_t> materials;
 
     string err;
-    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, &is);
+    bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, const_cast<istream*>(&is));
     if (!ret)
     {
-        print("Failed to load OBJ with error: {}", err);
+        LOGERROR("Failed to load OBJ with error: %s\n", err.c_str());
     }
 
 
@@ -86,13 +76,13 @@ bool GeometryResource::load(const char *data, const uint size)
 }
 
 
-Resource *GeometryResource::clone()
+Asset *GeometryAsset::clone()
 {
     return nullptr;
 }
 
 
-void GeometryResource::initDefault()
+void GeometryAsset::initDefault()
 {
     _16BitIndices = true;
     _vbh = BGFX_INVALID_HANDLE;
@@ -104,7 +94,7 @@ void GeometryResource::initDefault()
 }
 
 
-void GeometryResource::release()
+void GeometryAsset::release()
 {
     bgfx::destroyVertexBuffer(_vbh);
     bgfx::destroyIndexBuffer(_ibh);

@@ -6,21 +6,19 @@
 
 namespace atlas {
 
-class GeometryResource : public Resource
+class GeometryAsset : public Asset
 {
 public:
-    static void initializationFunc();
-    static void releaseFunc();
-    static Resource *factoryFunc( const std::string &name, int flags )
-        { return new GeometryResource( name, flags ); }
+    static Asset *factoryFunc( const std::string &name, int flags ) { return new GeometryAsset( name, flags ); }
+    static void releaseFunc(Asset* asset) { delete asset; asset = nullptr; }
 
-    GeometryResource( const std::string &name, int flags );
-    ~GeometryResource();
-    Resource *clone();
+    GeometryAsset( const std::string &name, int flags );
+    ~GeometryAsset();
+    Asset *clone();
 
     void initDefault();
     void release();
-    bool load( const char *data, const uint size );
+    bool load( const istream& data) override;
 
 private:
 

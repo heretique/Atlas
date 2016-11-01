@@ -1,52 +1,40 @@
 #include "Base.h"
-#include "ResourceManager.h"
+#include "AssetManager.h"
 #include "Script.h"
 
 namespace atlas {
 
-void ScriptResource::initializationFunc()
-{
-
-}
-
-
-void ScriptResource::releaseFunc()
-{
-
-}
-
-
-ScriptResource::ScriptResource( const string &name, int flags ) :
-    Resource( (int)ResourceTypes::Geometry, name, flags )
+ScriptAsset::ScriptAsset( const string &name, int flags ) :
+    Asset( (int)AssetTypes::Code, name, flags )
 {
     initDefault();
 }
 
 
-ScriptResource::~ScriptResource()
+ScriptAsset::~ScriptAsset()
 {
     release();
 }
 
-bool ScriptResource::load(const char *data, int size)
+bool ScriptAsset::load(const char *data, int size)
 {
     return false;
 }
 
 
-Resource *ScriptResource::clone()
+Asset *ScriptAsset::clone()
 {
     return nullptr;
 }
 
 
-void ScriptResource::initDefault()
+void ScriptAsset::initDefault()
 {
 
 }
 
 
-void ScriptResource::release()
+void ScriptAsset::release()
 {
 
 }

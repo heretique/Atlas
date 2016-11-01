@@ -7,6 +7,7 @@
 #include "imgui/imgui.h"
 #include "Engine.h"
 #include "JobManager.h"
+#include "AssetManager.h"
 #include <thread>
 
 using namespace atlasEditor;
@@ -30,6 +31,9 @@ public:
     void init()
     {
         Engine::init();
+        Engine::assets().setAssetsDir("/home/cata/temp/");
+        AssetHandle cube = Engine::assets().addAsset((int)AssetTypes::Geometry, "base_head.obj", 0);
+
         cout << "Waiting for jobs..." << endl;
 
         int testArray[100000];
@@ -50,6 +54,8 @@ public:
             }
         }
         cout << "Finised waiting for jobs..." << endl;
+
+        Engine::assets().loadAssets();
     }
 
     ~Window1()

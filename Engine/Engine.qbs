@@ -46,6 +46,7 @@ StaticLibrary {
         "../3rdparty/stb",
         "../3rdparty/picojson",
         "../3rdparty/tinygltf",
+        "../3rdparty/signals-cpp",
     ]
 
     Depends { name: "common" }

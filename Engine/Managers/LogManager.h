@@ -1,41 +1,47 @@
 #ifndef LOGMANAGER_H
 #define LOGMANAGER_H
 
+#include "Base.h"
 #include "Logger.h"
-
-#include <functional>
-#include <map>
 
 namespace atlas {
 
-typedef std::function<void ()> LogTypeInitializationFunc;
-typedef std::function<void ()> LogTypeReleaseFunc;
-typedef std::function<ILogger* (const std::string &name, int flags)> LogTypeFactoryFunc;
+typedef std::function<ILogger* (int)> LogTypeFactoryFunc;
+typedef std::function<void (ILogger*)> LogTypeReleaseFunc;
 
 struct LoggerRegEntry
 {
     std::string                typeString;
-    LogTypeInitializationFunc  initializationFunc;  // Called when type is registered
-    LogTypeReleaseFunc         releaseFunc;  // Called when type is unregistered
     LogTypeFactoryFunc         factoryFunc;  // Factory to create resource object
+    LogTypeReleaseFunc         releaseFunc;  // Called when type is unregistered
 };
 
-class LogManager : public ILogger
+class LogManager
 {
 public:
-    LogManager();
-    ~LogManager();
-
-    void registerLoggerType(int type, const std::string &typeString, LogTypeInitializationFunc inf,
-                         LogTypeReleaseFunc rf, LogTypeFactoryFunc ff);
-
-    void writeInfo(const char *msg, ...) override;
-    void writeWarning(const char *msg, ...)override;
-    void writeError(const char *msg, ...) override;
-
+    static void registerLoggerType(const string &name, LogTypeFactoryFunc ff,
+                                   LogTypeReleaseFunc rf);
+    static void init(string logger, int flags);
+    static void writeInfo(const char *msg, ...);
+    static void writeWarning(const char *msg, ...);
+    static void writeError(const char *msg, ...);
+    static void release();
 private:
-    std::map<int, LoggerRegEntry> _registry;
+    static map<string, LoggerRegEntry> _registry;
+    static map<string, ILogger*> _loggers;
 };
+
+
+#ifdef ATLAS_ENABLE_LOGGING
+#define LOGINFO(x, ...) LogManager::writeInfo(x, ##__VA_ARGS__)
+#define LOGWARNING(x, ...) LogManager::writeWarning(x, ##__VA_ARGS__)
+#define LOGERROR(x, ...) LogManager::writeError(x, ##__VA_ARGS__)
+#else
+#define LOGINFO(x, ...)
+#define LOGWARNING(x, ...)
+#define LOGERROR(x, ...)
+#endif
+
 
 } // namespace atlas
 

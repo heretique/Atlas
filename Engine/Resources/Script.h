@@ -5,17 +5,16 @@
 
 namespace atlas {
 
-class ScriptResource : public Resource
+class ScriptAsset : public Asset
 {
 public:
-    static void initializationFunc();
-    static void releaseFunc();
-    static Resource *factoryFunc( const std::string &name, int flags )
-        { return new ScriptResource( name, flags ); }
+    static Asset *factoryFunc( const std::string &name, int flags ) { return new ScriptAsset( name, flags ); }
+    static void releaseFunc(Asset* asset) { delete asset; asset = nullptr; }
 
-    ScriptResource( const std::string &name, int flags );
-    ~ScriptResource();
-    Resource *clone();
+
+    ScriptAsset( const std::string &name, int flags );
+    ~ScriptAsset();
+    Asset *clone();
 
     void initDefault();
     void release();

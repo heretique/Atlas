@@ -18,6 +18,7 @@
 #include <iostream>
 #include <fstream>
 #include <fmt/printf.h>
+#include <signals-cpp/signals.hpp>
 
 // Bring common functions from C++ into global namespace
 using std::memcpy;
