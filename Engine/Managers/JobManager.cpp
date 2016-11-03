@@ -29,7 +29,8 @@ void JobManager::init()
 
                 job.func(job.data, job.count);
 
-                _pendingTasks.fetch_add(-1, std::memory_order_release);
+                if (job.pending)
+                    _pendingTasks.fetch_add(-1, std::memory_order_release);
             }
             fmt::print("Exiting worker thread...\n");
             _running.clear();
@@ -47,6 +48,15 @@ void JobManager::addJob(JobFunc func, void *data, uint count)
     _pendingTasks.fetch_add(1, std::memory_order_release);
 //    while (!_jobQueue.try_enqueue(Job{func, data, count})) continue;    // this doesn't work, can't figure out why :(
     _jobQueue.enqueue(Job{func, data, count});
+}
+
+void JobManager::addSignalingJob(JobFunc func, void *data, uint count, JobDoneFunc callback)
+{
+    auto jobFunc = [=](void* jobData, uint jobCount) {
+        func(jobData, jobCount);
+        callback();
+    };
+    _jobQueue.enqueue(Job{jobFunc, data, count, false});
 }
 
 void JobManager::wait()

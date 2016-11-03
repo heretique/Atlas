@@ -9,6 +9,8 @@
 #include "JobManager.h"
 #include "AssetManager.h"
 #include <thread>
+#include <chrono>
+#include "LogManager.h"
 
 using namespace atlasEditor;
 using namespace atlas;
@@ -40,6 +42,8 @@ public:
         memset(testArray, 0, sizeof(testArray));
 
         Engine::jobMan().parallel_for<int, CountSplitter<int, 256>>(emptyJob, testArray, sizeof(testArray)/sizeof(testArray[0]));
+
+        Engine::jobMan().addSignalingJob([](void *, uint){std::this_thread::sleep_for(std::chrono::seconds(2));}, nullptr, 0, [](){cout << "JOB DONE" << endl;});
 
         Engine::jobMan().wait();
 

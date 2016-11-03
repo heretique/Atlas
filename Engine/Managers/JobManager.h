@@ -2,16 +2,19 @@
 #define JOBMANAGER_H
 
 #include "blockingconcurrentqueue.h"
+#include "signals-cpp/signals.hpp"
 
 namespace atlas {
 
 typedef std::function<void (void*, uint)> JobFunc;
+typedef std::function<void ()> JobDoneFunc;
 
 struct Job
 {
     JobFunc func;
     void* data;
     uint count;
+    bool pending{true}; // used for jobs you wait for
 };
 
 template <typename DataType, int Size>
@@ -49,7 +52,10 @@ public:
     void init();
     void release();
 
+    // you wait for this kind of jobs
     void addJob(JobFunc func, void* data, uint count = 1);
+    // you don't wait for this kind of jobs, they'll signal you when they're done
+    void addSignalingJob(JobFunc func, void* data, uint count, JobDoneFunc callback);
 
     template <typename DataType, typename SplitterType>
     void parallel_for(JobFunc func, void* data, uint count);
