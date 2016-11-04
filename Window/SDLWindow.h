@@ -41,6 +41,9 @@ private:
     void handleWindowEvent(SDL_WindowEvent& e);
     void handleInputEvent(SDL_Event& e);
 
+
+    void releaseFramebuffer();
+
 private:
 
     static bool             _initialized;

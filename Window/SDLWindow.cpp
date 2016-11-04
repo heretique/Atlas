@@ -236,11 +236,7 @@ SDLWindow::~SDLWindow()
 {
     imguiShutdown();
 
-    if (bgfx::isValid(_framebuffer))
-    {
-        bgfx::destroyFrameBuffer(_framebuffer);
-        bgfx::setViewFrameBuffer(_viewId, BGFX_INVALID_HANDLE);
-    }
+    releaseFramebuffer();
 
     if (_isDefault)
     {
@@ -345,6 +341,18 @@ void SDLWindow::handleInputEvent(SDL_Event &e)
         io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
         io.KeySuper = ((SDL_GetModState() & KMOD_GUI) != 0);
         break;
+    }
+}
+
+void SDLWindow::releaseFramebuffer()
+{
+    if (bgfx::isValid(_framebuffer))
+    {
+        bgfx::setViewFrameBuffer(_viewId, BGFX_INVALID_HANDLE);
+
+        bgfx::destroyFrameBuffer(_framebuffer);
+
+        _framebuffer = BGFX_INVALID_HANDLE;
     }
 }
 

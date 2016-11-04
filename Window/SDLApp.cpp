@@ -39,6 +39,7 @@ void SDLApp::quit()
 int SDLApp::exec()
 {
     SDL_Event e;
+    vector<std::unique_ptr<SDLWindow>> killWindows;
 
     while (_running) {
         while(SDL_PollEvent( &e ) != 0) {
@@ -66,6 +67,8 @@ int SDLApp::exec()
                         quit();
                         break;
                     } else {
+                        (*it)->releaseFramebuffer();
+                        killWindows.push_back(std::move(*it));
                         it = _windows.erase(it);
                     }
                 }
@@ -82,7 +85,11 @@ int SDLApp::exec()
             window->doUpdate(1.f/60.f);
         }
         bgfx::frame();
-        SDL_Delay(10);
+
+        for (auto it = killWindows.begin(); it != killWindows.end();)
+        {
+            it = killWindows.erase(it);
+        }
     }
 
     return 0;
