@@ -3,9 +3,6 @@
 
 #include "Base.h"
 
-#include <cstring>
-#include <queue>
-
 
 namespace atlas {
 

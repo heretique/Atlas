@@ -242,6 +242,7 @@ SDLWindow::~SDLWindow()
     {
         bgfx::shutdown();
         SDL_GL_DeleteContext(_glContext);
+        SDLApp::get().quit();
     }
 
     SDL_DestroyWindow(_window);

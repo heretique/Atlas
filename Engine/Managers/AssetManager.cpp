@@ -178,11 +178,11 @@ AssetHandle AssetManager::addAsset(int type, const std::string &name, int flags)
 
 uint AssetManager::removeAsset(AssetHandle handle)
 {
-    Asset* asset =  assetFromHandle(handle);
+    Asset* asset =  getAsset(handle);
     if (asset != nullptr && asset->_refCount > 0) --asset->_refCount;
 }
 
-Asset *AssetManager::assetFromHandle(AssetHandle handle)
+Asset *AssetManager::getAsset(AssetHandle handle)
 {
     return *_assets.get(handle);
 }

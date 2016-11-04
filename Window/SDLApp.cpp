@@ -63,14 +63,9 @@ int SDLApp::exec()
             {
                 if (shouldCloseWindow(e, *(*it).get()))
                 {
-                    if ((*it)->isMain()){
-                        quit();
-                        break;
-                    } else {
-                        (*it)->releaseFramebuffer();
-                        killWindows.push_back(std::move(*it));
-                        it = _windows.erase(it);
-                    }
+                    (*it)->releaseFramebuffer();
+                    killWindows.push_back(std::move(*it));
+                    it = _windows.erase(it);
                 }
                 else
                 {
@@ -82,6 +77,7 @@ int SDLApp::exec()
 
         for (auto& window: _windows)
         {
+            // TODO add proper timing
             window->doUpdate(1.f/60.f);
         }
         bgfx::frame();

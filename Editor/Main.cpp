@@ -57,6 +57,7 @@ public:
                 break;
             }
         }
+
         cout << "Finised waiting for jobs..." << endl;
 
         Engine::assets().loadAssets();

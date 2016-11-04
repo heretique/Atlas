@@ -3,6 +3,7 @@
 
 #include "Base.h"
 #include "AtlasCore.h"
+#include <type_traits>
 
 namespace atlas {
 
@@ -99,7 +100,13 @@ public:
 
     AssetHandle addAsset(int type, const std::string &name, int flags);
     uint removeAsset(AssetHandle handle);
-    Asset *assetFromHandle(AssetHandle handle);
+    Asset *getAsset(AssetHandle handle);
+    template <typename T>
+    typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type
+    *getAsset(AssetHandle handle) {
+        return static_cast<T*>(getAsset(handle));
+    }
+
     Asset *getNextAsset(int type, AssetHandle start);
     Asset *findAsset(int type, const std::string &name);
     bool loadAssets();
@@ -108,8 +115,13 @@ public:
     void releaseUnusedAssets();
     int unusedAssets();
 
+public: // signals
+    signal<void (int)> LoadingProgress;
+    signal<void ()> LoadingDone;
+
 protected:
     AssetHandle addAsset(Asset *resource);
+
 private:
     AssetStorage _assets;
     map<int, AssetRegEntry> _registry;

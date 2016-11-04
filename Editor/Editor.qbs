@@ -12,6 +12,7 @@ Product {
     Depends { name: "cpp" }
     cpp.includePaths: [
         ".",
+        "../Engine",
         "../Engine/Core",
         "../Engine/Managers",
         "../Window"
