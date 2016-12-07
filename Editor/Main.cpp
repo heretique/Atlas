@@ -34,7 +34,7 @@ public:
     {
         Engine::init();
         Engine::assets().setAssetsDir("/home/cata/temp/");
-        AssetHandle cube = Engine::assets().addAsset((int)AssetTypes::Geometry, "base_head.obj", 0);
+        AssetHandle cube = Engine::assets().addAsset(static_cast<int>(AssetTypes::Geometry), "base_head.obj", 0);
 
         cout << "Waiting for jobs..." << endl;
 
@@ -48,7 +48,7 @@ public:
         Engine::jobMan().wait();
 
 
-        for(int i = 0;  i < sizeof(testArray)/sizeof(testArray[0]); ++i)
+        for(uint i = 0;  i < sizeof(testArray)/sizeof(testArray[0]); ++i)
         {
 //            fmt::print("{} ", testArray[i]);
             if (testArray[i] != 1)
@@ -111,8 +111,8 @@ int main(int argc, char **argv)
 
     Window1* win = new Window1(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
     win->init();
-        new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
-        new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
+//        new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
+//        new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
 
     return SDLApp::get().exec();
 }
