@@ -6,8 +6,8 @@ StaticLibrary {
     name: "bgfx"
     files: [
        // "bgfx/src/amalgamated.cpp",
-        "../../bgfx/include/bgfx/bgfxdefines.h",
-        "../../bgfx/include/bgfx/bgfxplatform.h",
+        "../../bgfx/include/bgfx/defines.h",
+        "../../bgfx/include/bgfx/platform.h",
         "../../bgfx/include/bgfx/bgfx.h",
         "../../bgfx/src/bgfx.cpp",
         "../../bgfx/src/glcontext_egl.cpp",

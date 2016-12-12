@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include "SDLApp.h"
 #include <bgfx/bgfx.h>
-#include <bgfx/bgfxplatform.h>
+#include <bgfx/platform.h>
 #include <SDL2/SDL_syswm.h>
 #include <imgui/imgui.h>
 #include <bx/fpumath.h>
