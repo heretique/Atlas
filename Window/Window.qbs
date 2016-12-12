@@ -23,6 +23,12 @@ StaticLibrary {
     Depends { name: "fmt" }
     Depends { name: "imgui" }
 
+    Properties {
+        condition: qbs.targetOS.contains("windows")
+        cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
+        cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
+    }
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: false

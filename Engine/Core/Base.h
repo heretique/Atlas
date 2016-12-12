@@ -47,8 +47,6 @@ using std::endl;
 using std::istream;
 using std::ifstream;
 using fmt::print;
-using sigs::signal;
-using sigs::connections;
 
 
 // Types

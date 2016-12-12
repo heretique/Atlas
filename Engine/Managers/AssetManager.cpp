@@ -180,6 +180,8 @@ uint AssetManager::removeAsset(AssetHandle handle)
 {
     Asset* asset =  getAsset(handle);
     if (asset != nullptr && asset->_refCount > 0) --asset->_refCount;
+
+    return 0;
 }
 
 Asset *AssetManager::getAsset(AssetHandle handle)

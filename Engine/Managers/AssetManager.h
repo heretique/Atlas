@@ -116,8 +116,8 @@ public:
     int unusedAssets();
 
 public: // signals
-    signal<void (int)> LoadingProgress;
-    signal<void ()> LoadingDone;
+    sigs::signal<void (int)> LoadingProgress;
+    sigs::signal<void ()> LoadingDone;
 
 protected:
     AssetHandle addAsset(Asset *resource);
