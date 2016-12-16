@@ -14,15 +14,15 @@ Module {
 
     Depends { name: "cpp" }
     cpp.includePaths: [
-        "../3rdparty",
-        "../3rdparty/bx/include",
-        "../3rdparty/bgfx/include",
-        "../3rdparty/bgfx/3rdparty",
-        "../3rdparty/bgfx/3rdparty/khronos",
-        "../3rdparty/bgfx/3rdparty/dxsdk/include",
-        "../3rdparty/concurrentqueue",
-        "../3rdparty/wren/src/include",
-        "../3rdparty/wrenpp"
+        path + "/../../../3rdparty",
+        path + "/../../../3rdparty/bx/include",
+        path + "/../../../3rdparty/bgfx/include",
+        path + "/../../../3rdparty/bgfx/3rdparty",
+        path + "/../../../3rdparty/bgfx/3rdparty/khronos",
+        path + "/../../../3rdparty/bgfx/3rdparty/dxsdk/include",
+        path + "/../../../3rdparty/concurrentqueue",
+        path + "/../../../3rdparty/wren/src/include",
+        path + "/../../../3rdparty/wrenpp"
     ]
 
 
@@ -35,11 +35,14 @@ Module {
                 return "mingw"
         }
         cpp.includePaths: outer.uniqueConcat([
-            "../3rdparty/sdl/include"
+            path + "/../../../3rdparty/sdl/include"
         ])
     }
 
     Properties {
         condition: qbs.targetOS.contains("linux")
+        cpp.includePaths: outer.uniqueConcat([
+            "/usr/local/include"
+        ])
     }
 }

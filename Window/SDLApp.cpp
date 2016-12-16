@@ -82,14 +82,12 @@ int SDLApp::exec()
         }
         bgfx::frame();
 
-        if (killWindows.size())
+
+        for (auto it = killWindows.begin(); it != killWindows.end();)
         {
-            for (auto it = killWindows.begin(); it != killWindows.end();)
-            {
-                it = killWindows.erase(it);
-            }
-            bgfx::frame();
+            it = killWindows.erase(it);
         }
+
     }
 
     return 0;

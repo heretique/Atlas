@@ -15,6 +15,7 @@ StaticLibrary {
         "../../wren/src/vm",
         "../../wren/src/optional",
     ]
+    cpp.cLanguageVersion: "c11"
     cpp.cxxLanguageVersion: "c++14"
 
     Group {     // Properties for the produced executable

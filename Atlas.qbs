@@ -9,6 +9,7 @@ Project {
         "3rdparty/projects/entityx/entityx.qbs",
         "3rdparty/projects/fmt/fmt.qbs",
         "3rdparty/projects/imgui/imgui.qbs",
+        "3rdparty/projects/nanovg/nanovg.qbs",
         "3rdparty/projects/wren/wren.qbs",
         "3rdparty/projects/wrenpp/wrenpp.qbs",
         "Engine/Engine.qbs",
