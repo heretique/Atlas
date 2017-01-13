@@ -44,6 +44,12 @@ Product {
         cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11", "SDL2" ]
     }
 
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        cpp.frameworks: [ "Cocoa", "OpenGL" ]
+        cpp.dynamicLibraries: [ "SDL2" ]
+    }
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: true

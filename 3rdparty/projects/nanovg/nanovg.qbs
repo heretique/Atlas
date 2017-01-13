@@ -24,6 +24,11 @@ StaticLibrary {
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
     }
 
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/osx" ])
+    }
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: false

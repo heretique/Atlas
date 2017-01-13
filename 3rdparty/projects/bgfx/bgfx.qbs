@@ -55,6 +55,18 @@ StaticLibrary {
         cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/mingw" ])
     }
 
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+
+        files: outer.uniqueConcat([
+                                     "../../bgfx/src/glcontext_eagl.mm",
+                                     "../../bgfx/src/glcontext_nsgl.mm",
+                                     "../../bgfx/src/renderer_mtl.mm",
+                                 ])
+
+        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/osx" ])
+    }
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: false

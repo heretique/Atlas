@@ -9,7 +9,7 @@ Module {
             return "x64"
     }
 
-    property string toolchain: qbs.toolchain
+    property string toolchain: qbs.toolchain[0]
 
 
     Depends { name: "cpp" }
@@ -44,5 +44,13 @@ Module {
         cpp.includePaths: outer.uniqueConcat([
             "/usr/local/include"
         ])
+    }
+
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        toolchain:     {
+            if (qbs.toolchain.contains("clang"))
+                return "clang"
+        }
     }
 }
