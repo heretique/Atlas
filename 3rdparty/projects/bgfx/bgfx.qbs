@@ -67,6 +67,8 @@ StaticLibrary {
         cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/osx" ])
     }
 
+    Depends { name: "bx" }
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: false
