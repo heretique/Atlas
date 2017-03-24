@@ -21,6 +21,7 @@ Product {
 
     Depends { name: "common" }
     Depends { name: "AtlasWindow" }
+    Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
     Depends { name: "fmt" }
@@ -47,7 +48,8 @@ Product {
     Properties {
         condition: qbs.targetOS.contains("osx")
         cpp.frameworks: [ "Cocoa", "OpenGL" ]
-        cpp.dynamicLibraries: [ "SDL2" ]
+        cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
+        cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
     }
 
     Group {     // Properties for the produced executable
