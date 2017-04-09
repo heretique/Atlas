@@ -5,7 +5,7 @@ StaticLibrary {
     id: bgfx
     name: "bgfx"
     files: [
-       // "bgfx/src/amalgamated.cpp",
+        // "bgfx/src/amalgamated.cpp",
         "../../bgfx/include/bgfx/defines.h",
         "../../bgfx/include/bgfx/platform.h",
         "../../bgfx/include/bgfx/bgfx.h",
@@ -14,7 +14,6 @@ StaticLibrary {
         "../../bgfx/src/glcontext_glx.cpp",
         "../../bgfx/src/glcontext_ppapi.cpp",
         "../../bgfx/src/glcontext_wgl.cpp",
-        "../../bgfx/src/image.cpp",
         "../../bgfx/src/hmd.cpp",
         "../../bgfx/src/hmd_ovr.cpp",
         "../../bgfx/src/hmd_openvr.cpp",
@@ -33,41 +32,42 @@ StaticLibrary {
         "../../bgfx/src/vertexdecl.cpp",
         "../../bgfx/src/topology.cpp"
     ]
-    Depends { name: "cpp" }
-
-    cpp.includePaths: [ "../../bx/include",
-        "../../bgfx/include",
-        "../../bgfx/3rdparty",
-        "../../bgfx/3rdparty/khronos",
-        "../../bgfx/3rdparty/dxsdk/include"
-    ]
-    cpp.cxxLanguageVersion: "c++14"
-//    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
-//    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
-
-    Properties {
-        condition: qbs.toolchain.contains("msvc")
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/msvc" ])
-    }
-
-    Properties {
-        condition: qbs.toolchain.contains("mingw")
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/mingw" ])
-    }
 
     Properties {
         condition: qbs.targetOS.contains("osx")
-
         files: outer.uniqueConcat([
-                                     "../../bgfx/src/glcontext_eagl.mm",
-                                     "../../bgfx/src/glcontext_nsgl.mm",
-                                     "../../bgfx/src/renderer_mtl.mm",
-                                 ])
-
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/osx" ])
+                                      "../../bgfx/src/glcontext_eagl.mm",
+                                      "../../bgfx/src/glcontext_nsgl.mm",
+                                      "../../bgfx/src/renderer_mtl.mm",
+                                  ])
     }
 
+    Depends { name: "cpp" }
     Depends { name: "bx" }
+    Depends { name: "bimg" }
+    cpp.includePaths: [
+        path + "/../../bgfx/include",
+        path + "/../../bgfx/3rdparty",
+        path + "/../../bgfx/3rdparty/khronos",
+        path + "/../../bgfx/3rdparty/dxsdk/include"
+    ]
+    cpp.cxxLanguageVersion: "c++14"
+    //    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
+    //    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
+
+    Export {
+        Depends { name: "cpp" }
+        cpp.includePaths: [
+            path + "/../../bgfx/include",
+            path + "/../../bgfx/3rdparty",
+            path + "/../../bgfx/3rdparty/khronos",
+            path + "/../../bgfx/3rdparty/dxsdk/include"
+        ]
+
+    }
+
+
+
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

@@ -13,9 +13,9 @@ StaticLibrary {
         "../../imgui/stb_rect_pack.h",
         "../../imgui/stb_textedit.h",
         "../../imgui/stb_truetype.h",
-        "Imgui.wren.h",
-        "WrenBindings.cpp",
-        "WrenBindings.h"
+//        "Imgui.wren.h",
+//        "WrenBindings.cpp",
+//        "WrenBindings.h"
     ]
     Depends { name: "cpp" }
     Depends { name: "wren" }

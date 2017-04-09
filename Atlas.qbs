@@ -6,6 +6,7 @@ Project {
 
     references: [
         "3rdparty/projects/bx/bx.qbs",
+        "3rdparty/projects/bimg/bimg.qbs",
         "3rdparty/projects/bgfx/bgfx.qbs",
         "3rdparty/projects/entityx/entityx.qbs",
         "3rdparty/projects/fmt/fmt.qbs",

@@ -31,3 +31,6 @@
 [submodule "3rdparty/wrenpp"]
 	path = 3rdparty/wrenpp
 	url = https://github.com/Nelarius/wrenpp.git
+[submodule "3rdparty/bimg"]
+	path = 3rdparty/bimg
+	url = https://github.com/bkaradzic/bimg.git

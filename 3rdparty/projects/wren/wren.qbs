@@ -11,9 +11,9 @@ StaticLibrary {
     Depends { name: "cpp" }
 
     cpp.includePaths: [ 
-        "../../wren/src/include",
-        "../../wren/src/vm",
-        "../../wren/src/optional",
+        path + "/../../wren/src/include",
+        path + "/../../wren/src/vm",
+        path + "/../../wren/src/optional",
     ]
     cpp.cLanguageVersion: "c11"
     cpp.cxxLanguageVersion: "c++14"

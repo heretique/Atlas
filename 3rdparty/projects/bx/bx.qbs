@@ -81,9 +81,8 @@ StaticLibrary {
         "../../bx/src/timer.cpp"
     ]
     Depends { name: "cpp" }
-
     cpp.includePaths: [
-        "../../bx/include"
+        path + "/../../bx/include"
     ]
 
     cpp.cxxLanguageVersion: "c++14"
@@ -95,18 +94,46 @@ StaticLibrary {
 
     Properties {
         condition: qbs.toolchain.contains("msvc")
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/msvc" ])
+        cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/msvc" ])
     }
 
     Properties {
         condition: qbs.toolchain.contains("mingw")
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/mingw" ])
+        cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/mingw" ])
     }
 
     Properties {
         condition: qbs.targetOS.contains("osx")
-        cpp.systemIncludePaths: outer.uniqueConcat([ "../../bx/include/compat/osx" ])
+        cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/osx" ])
     }
+
+    Export {
+        Depends { name: "cpp" }
+        cpp.includePaths: [
+            path + "/../../bx/include"
+        ]
+
+        Properties {
+            condition: qbs.targetOS.contains("windows")
+            cpp.windowsApiCharacterSet: ""
+        }
+
+        Properties {
+            condition: qbs.toolchain.contains("msvc")
+            cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/msvc" ])
+        }
+
+        Properties {
+            condition: qbs.toolchain.contains("mingw")
+            cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/mingw" ])
+        }
+
+        Properties {
+            condition: qbs.targetOS.contains("osx")
+            cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/osx" ])
+        }
+    }
+
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

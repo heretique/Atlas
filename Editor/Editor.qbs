@@ -3,7 +3,7 @@ import qbs
 Product {
     type: "application"
     name: "AtlasEditor"
-    consoleApplication: true
+    consoleApplication: false
     files: [
         "*.cpp",
         "*.h",
