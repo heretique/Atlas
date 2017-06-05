@@ -35,29 +35,22 @@ Product {
     Properties {
         condition: qbs.targetOS.contains("windows")
 
-        property string arch: {
-            if (qbs.architecture == "x86")
-                return "x86"
-            if (qbs.architecture == "x86_64")
-                return "x64"
-        }
-        property string toolchain: {
-            if (qbs.toolchain.contains("msvc"))
-                return "msvc"
-            if (qbs.toolchain.contains("mingw"))
-                return "mingw"
-        }
-
-
         cpp.dynamicLibraries: [ "psapi", "gdi32", "user32", "ole32", "winmm", "imm32", "oleaut32", "version", "shell32" ]
-        cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + toolchain])
-        cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + toolchain + "/" + arch])
+        cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
+        cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
     }
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11" ]
+        cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11", "SDL2" ]
+    }
+
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        cpp.frameworks: [ "Cocoa", "OpenGL" ]
+        cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
+        cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
     }
 
     Group {     // Properties for the produced executable

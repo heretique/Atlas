@@ -16,7 +16,6 @@ StaticLibrary {
         "../Engine/Core"
      ]
     cpp.cxxLanguageVersion: "c++14"
-    cpp.dynamicLibraries: [ "psapi", "gdi32" ]
 
     Depends { name: "common" }
     Depends { name: "bgfx" }
