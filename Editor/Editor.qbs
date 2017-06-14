@@ -7,6 +7,8 @@ Product {
     files: [
         "*.cpp",
         "*.h",
+        "../3rdparty/microbench/*.cpp",
+        "../3rdparty/microbench/*.h",
     ]
 
     Depends { name: "cpp" }

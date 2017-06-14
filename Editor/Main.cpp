@@ -11,15 +11,16 @@
 #include "imgui/imgui.h"
 
 #include <chrono>
+#include <microbench/microbench.h>
 #include <thread>
 
 using namespace atlasEditor;
 using namespace atlas;
 
-void emptyJob(void *data, uint count) {
-  int *testData = static_cast<int *>(data);
+void testJob(void *data, uint count) {
+  float *testData = static_cast<float *>(data);
   for (int i = 0; i < count; ++i)
-    testData[i] = 1;
+    testData[i] = sin((float)i / count) + cos((float)i / count);
 }
 
 class Window1 : public SDLWindow {
@@ -33,33 +34,52 @@ public:
     AssetHandle cube = Engine::assets().addAsset(
         static_cast<int>(AssetTypes::Geometry), "base_head.obj", 0);
 
+    Engine::assets().loadAssets();
+
     cout << "Waiting for jobs..." << endl;
 
-    int testArray[100000];
+    const int COUNT = 30;
+    float testArray[COUNT];
     memset(testArray, 0, sizeof(testArray));
 
-    Engine::jobMan().parallel_for<int, CountSplitter<int, 256>>(
-        emptyJob, testArray, sizeof(testArray) / sizeof(testArray[0]));
+    moodycamel::stats_t stats = moodycamel::microbench_stats(
+        [testArray]() { testJob((float *)testArray, COUNT); }, 100, 100, true);
 
-    Engine::jobMan().addSignalingJob(
-        [](void *, uint) {
-          std::this_thread::sleep_for(std::chrono::seconds(2));
+    double speed = stats.avg();
+    printf("Serial job: %.4f\n", stats.avg());
+
+    memset(testArray, 0, sizeof(testArray));
+
+    stats = moodycamel::microbench_stats(
+        [testArray]() {
+          Engine::jobMan().parallel_for<float, CountSplitter<float, 5>>(
+              testJob, (float *)testArray,
+              sizeof(testArray) / sizeof(testArray[0]));
+          Engine::jobMan().wait();
         },
-        nullptr, 0, []() { cout << "JOB DONE" << endl; });
+        100, 100, true);
 
-    Engine::jobMan().wait();
+    printf("Parallel job: %.4f\n", stats.avg());
+    speed /= stats.avg();
+    printf("Speed parallel vs serial: %.4fx\n", speed);
 
-    for (uint i = 0; i < sizeof(testArray) / sizeof(testArray[0]); ++i) {
-      //            fmt::print("{} ", testArray[i]);
-      if (testArray[i] != 1) {
-        fmt::print("Jobs failed!!!\n");
-        break;
-      }
-    }
+    //    Engine::jobMan().addSignalingJob(
+    //        [](void *, uint) {
+    //          std::this_thread::sleep_for(std::chrono::seconds(2));
+    //        },
+    //        nullptr, 0, []() { cout << "JOB DONE" << endl; });
+
+    //    Engine::jobMan().wait();
+
+    //    for (uint i = 0; i < sizeof(testArray) / sizeof(testArray[0]); ++i) {
+    //      //            fmt::print("{} ", testArray[i]);
+    //      if (testArray[i] != 1) {
+    //        fmt::print("Jobs failed!!!\n");
+    //        break;
+    //      }
+    //    }
 
     cout << "Finised waiting for jobs..." << endl;
-
-    Engine::assets().loadAssets();
   }
 
   ~Window1() { Engine::release(); }
@@ -100,10 +120,10 @@ int main(int argc, char **argv) {
       new Window1(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED,
                   SDL_WINDOWPOS_UNDEFINED, 640, 480);
   win->init();
-  new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED,
-              SDL_WINDOWPOS_UNDEFINED, 640, 480);
-  new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED,
-              SDL_WINDOWPOS_UNDEFINED, 640, 480);
+  //  new Window2(fmt::format("BGFX {}", 2).c_str(), SDL_WINDOWPOS_UNDEFINED,
+  //              SDL_WINDOWPOS_UNDEFINED, 640, 480);
+  //  new Window3(fmt::format("BGFX {}", 3).c_str(), SDL_WINDOWPOS_UNDEFINED,
+  //              SDL_WINDOWPOS_UNDEFINED, 640, 480);
 
   return SDLApp::get().exec();
 }

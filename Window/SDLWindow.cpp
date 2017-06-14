@@ -85,7 +85,7 @@ struct ImGuiBgfx {
 
     {
       float ortho[16];
-      bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f);
+      bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f, 0, false);
       bgfx::setViewTransform(viewId, NULL, ortho);
     }
 
