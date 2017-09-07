@@ -1,15 +1,11 @@
-#ifndef PROFILINGMANAGER_H
-#define PROFILINGMANAGER_H
+#pragma once
 
-namespace atlas {
-
+namespace atlas
+{
 class ProfilingManager
 {
 public:
     ProfilingManager();
 };
 
-} // atlas
-
-
-#endif // PROFILINGMANAGER_H
+}  // atlas

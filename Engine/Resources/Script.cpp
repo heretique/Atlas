@@ -1,42 +1,26 @@
-#include "Base.h"
-#include "AssetManager.h"
 #include "Script.h"
+#include "AssetManager.h"
+#include <string>
 
-namespace atlas {
-
-ScriptAsset::ScriptAsset( const string &name, int flags ) :
-    Asset( (int)AssetTypes::Code, name, flags )
+namespace atlas
 {
-    initDefault();
+ScriptAsset::ScriptAsset(const std::string& name, u32 flags)
+    : Asset((int)AssetTypes::Code, name, flags)
+{
 }
-
 
 ScriptAsset::~ScriptAsset()
 {
-    release();
 }
 
-bool ScriptAsset::load(const char *data, int size)
+bool ScriptAsset::load(const std::istream& data)
 {
     return false;
 }
 
-
-Asset *ScriptAsset::clone()
+AssetPtr ScriptAsset::clone() const
 {
     return nullptr;
 }
 
-
-void ScriptAsset::initDefault()
-{
-
-}
-
-
-void ScriptAsset::release()
-{
-
-}
-
-} // atlas
+}  // atlas

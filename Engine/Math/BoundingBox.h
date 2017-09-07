@@ -1,18 +1,15 @@
-#ifndef BOUNDINGBOX_H_
-#define BOUNDINGBOX_H_
+#pragma once
 
 #include "Frustum.h"
 
 namespace math
 {
-
 /**
  * Defines a 3-dimensional axis-aligned bounding box.
  */
 class BoundingBox
 {
 public:
-
     /**
      * The minimum point.
      */
@@ -38,7 +35,7 @@ public:
 
     /**
      * Constructs a new bounding box from the specified values.
-     * 
+     *
      * @param minX The x coordinate of the minimum point of the bounding box.
      * @param minY The y coordinate of the minimum point of the bounding box.
      * @param minZ The z coordinate of the minimum point of the bounding box.
@@ -100,7 +97,7 @@ public:
      * Tests whether this bounding box intersects the specified bounding object.
      *
      * @param box The bounding box to test intersection with.
-     * 
+     *
      * @return true if the specified bounding box intersects this bounding box; false otherwise.
      */
     bool intersects(const BoundingBox& box) const;
@@ -109,7 +106,7 @@ public:
      * Tests whether this bounding box intersects the specified bounding sphere.
      *
      * @param sphere The bounding sphere to test intersection with.
-     * 
+     *
      * @return true if the specified bounding sphere intersects this bounding box; false otherwise.
      */
     bool intersects(const BoundingSphere& sphere) const;
@@ -118,7 +115,7 @@ public:
      * Tests whether this bounding box intersects the specified frustum.
      *
      * @param frustum The frustum to test intersection with.
-     * 
+     *
      * @return true if this bounding sphere intersects the specified frustum; false otherwise.
      */
     bool intersects(const Frustum& frustum) const;
@@ -127,7 +124,7 @@ public:
      * Tests whether this bounding box intersects the specified plane.
      *
      * @param plane The plane to test intersection with.
-     * 
+     *
      * @return Plane::INTERSECTS_BACK INTERSECTS_BACK if this bounding box is in the negative half-space of
      *  the plane, Plane::INTERSECTS_FRONT INTERSECTS_FRONT if it is in the positive half-space of the plane;
      *  and Plane::INTERSECTS_INTERSECTING INTERSECTS_INTERSECTING if it intersects the plane.
@@ -138,7 +135,7 @@ public:
      * Tests whether this bounding box intersects the specified ray.
      *
      * @param ray The ray to test intersection with.
-     * 
+     *
      * @return The distance from the origin of the ray to this bounding box or
      *  INTERSECTS_NONE INTERSECTS_NONE if the ray does not intersect this bounding box.
      */
@@ -177,7 +174,7 @@ public:
 
     /**
      * Sets this bounding box to the specified values.
-     * 
+     *
      * @param minX The x coordinate of the minimum point of the bounding box.
      * @param minY The y coordinate of the minimum point of the bounding box.
      * @param minZ The z coordinate of the minimum point of the bounding box.
@@ -210,7 +207,7 @@ public:
 
     /**
      * Transforms this bounding box by the given matrix.
-     * 
+     *
      * @param matrix The matrix to transform by.
      * @return This bounding box, after the transformation occurs.
      */
@@ -219,15 +216,12 @@ public:
 
 /**
  * Transforms the given bounding box by the given matrix.
- * 
+ *
  * @param matrix The matrix to transform by.
  * @param box The bounding box to transform.
  * @return The resulting transformed bounding box.
  */
 inline const BoundingBox operator*(const Matrix& matrix, const BoundingBox& box);
-
 }
 
 #include "BoundingBox.inl"
-
-#endif

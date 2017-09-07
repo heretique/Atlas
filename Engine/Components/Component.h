@@ -1,17 +1,13 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
-namespace atlas {
-
-struct Component {
+namespace atlas
+{
+struct Component
+{
     template <class Archive>
-    void serialize(Archive & ar)
+    void serialize(Archive& ar)
     {
     }
 };
 
-}
-
-
-
-#endif // COMPONENT_H
+}  // atlas namespace

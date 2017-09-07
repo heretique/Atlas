@@ -1,14 +1,14 @@
-#ifndef RENDERSYSTEM_H
-#define RENDERSYSTEM_H
+#pragma once
 
 #include <entityx/entityx.h>
 
-namespace math {
- class Transform;
+namespace math
+{
+class Transform;
 }
 
-namespace atlas {
-
+namespace atlas
+{
 class MeshComponent;
 
 class RenderSystem : public entityx::System<RenderSystem>
@@ -17,13 +17,11 @@ public:
     RenderSystem();
     ~RenderSystem();
 
-    void update(entityx::EntityManager &entities, entityx::EventManager &events, entityx::TimeDelta dt) override;
+    void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
 
 private:
-    void updateEntity(entityx::Entity entity, math::Transform &transform, MeshComponent &meshComp, entityx::TimeDelta dt);
+    void updateEntity(entityx::Entity entity, math::Transform& transform, MeshComponent& meshComp,
+                      entityx::TimeDelta dt);
 };
 
-} // namespace atlas
-
-
-#endif // RENDERSYSTEM_H
+}  // namespace atlas

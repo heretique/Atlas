@@ -1,22 +1,25 @@
-#include "Base.h"
 #include "Vector2.h"
+
+#include "Core/Debug.h"
+#include "Math/Utils.h"
 
 namespace math
 {
-
 Vector2::Vector2()
-    : x(0.0f), y(0.0f)
+    : x(0.0f)
+    , y(0.0f)
 {
 }
 
 Vector2::Vector2(float constant)
-    : x(constant), y(constant)
+    : x(constant)
+    , y(constant)
 {
-
 }
 
 Vector2::Vector2(float x, float y)
-    : x(x), y(y)
+    : x(x)
+    , y(y)
 {
 }
 
@@ -87,7 +90,7 @@ void Vector2::add(const Vector2& v)
 
 void Vector2::add(const Vector2& v1, const Vector2& v2, Vector2* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x + v2.x;
     dst->y = v1.y + v2.y;
@@ -95,7 +98,7 @@ void Vector2::add(const Vector2& v1, const Vector2& v2, Vector2* dst)
 
 void Vector2::clamp(const Vector2& min, const Vector2& max)
 {
-    ASSERT(!(min.x > max.x || min.y > max.y ));
+    assert(!(min.x > max.x || min.y > max.y));
 
     // Clamp the x value.
     if (x < min.x)
@@ -112,8 +115,8 @@ void Vector2::clamp(const Vector2& min, const Vector2& max)
 
 void Vector2::clamp(const Vector2& v, const Vector2& min, const Vector2& max, Vector2* dst)
 {
-    ASSERT(dst);
-    ASSERT(!(min.x > max.x || min.y > max.y ));
+    assert(dst);
+    assert(!(min.x > max.x || min.y > max.y));
 
     // Clamp the x value.
     dst->x = v.x;
@@ -179,7 +182,7 @@ Vector2& Vector2::normalize()
 
 void Vector2::normalize(Vector2* dst) const
 {
-    ASSERT(dst);
+    assert(dst);
 
     if (dst != this)
     {
@@ -222,8 +225,8 @@ void Vector2::rotate(const Vector2& point, float angle)
     if (point.isZero())
     {
         float tempX = x * cosAngle - y * sinAngle;
-        y = y * cosAngle + x * sinAngle;
-        x = tempX;
+        y           = y * cosAngle + x * sinAngle;
+        x           = tempX;
     }
     else
     {
@@ -243,7 +246,7 @@ void Vector2::set(float x, float y)
 
 void Vector2::set(const float* array)
 {
-    ASSERT(array);
+    assert(array);
 
     x = array[0];
     y = array[1];
@@ -257,8 +260,8 @@ void Vector2::set(const Vector2& v)
 
 void Vector2::set(const Vector2& p1, const Vector2& p2)
 {
-     x = p2.x - p1.x;
-     y = p2.y - p1.y;
+    x = p2.x - p1.x;
+    y = p2.y - p1.y;
 }
 
 void Vector2::subtract(const Vector2& v)
@@ -269,7 +272,7 @@ void Vector2::subtract(const Vector2& v)
 
 void Vector2::subtract(const Vector2& v1, const Vector2& v2, Vector2* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x - v2.x;
     dst->y = v1.y - v2.y;
@@ -282,5 +285,4 @@ void Vector2::smooth(const Vector2& target, float elapsedTime, float responseTim
         *this += (target - *this) * (elapsedTime / (elapsedTime + responseTime));
     }
 }
-
 }

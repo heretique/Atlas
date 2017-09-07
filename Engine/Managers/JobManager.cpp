@@ -1,26 +1,25 @@
-#include "Base.h"
-#include "JobManager.h"
-#include "Engine.h"
-#include "fmt/printf.h"
+#include "Managers/JobManager.h"
+
+#include "Core/Engine.h"
 #include <thread>
+#include <fmt/printf.h>
 
-namespace atlas {
-
-
+namespace atlas
+{
 void JobManager::init()
 {
-    _cpuCount = thread::hardware_concurrency();
+    _cpuCount = std::thread::hardware_concurrency();
 
     if (_cpuCount > 2)
-        _cpuCount -= 2; // substract main an rendering threads;
+        _cpuCount -= 2;  // substract main an rendering threads;
 
     fmt::print("Starting {} worker threads...\n", _cpuCount);
 
     _running.test_and_set(std::memory_order_acquire);
 
-    for (uint i = 0;  i < _cpuCount; ++i)
+    for (uint i = 0; i < _cpuCount; ++i)
     {
-        _runners.push_back(thread([&](){
+        _runners.push_back(std::thread([&]() {
             fmt::print("Starting worker thread...\n");
             Job job;
             while (_running.test_and_set(std::memory_order_acquire) == true)
@@ -43,14 +42,15 @@ void JobManager::release()
     _running.clear();
 }
 
-void JobManager::addJob(JobFunc func, void *data, uint count)
+void JobManager::addJob(JobFunc func, void* data, uint count)
 {
     _pendingTasks.fetch_add(1, std::memory_order_release);
-//    while (!_jobQueue.try_enqueue(Job{func, data, count})) continue;    // this doesn't work, can't figure out why :(
+    //    while (!_jobQueue.try_enqueue(Job{func, data, count})) continue;    //
+    //    this doesn't work, can't figure out why :(
     _jobQueue.enqueue(Job{func, data, count});
 }
 
-void JobManager::addSignalingJob(JobFunc func, void *data, uint count, JobDoneFunc callback)
+void JobManager::addSignalingJob(JobFunc func, void* data, uint count, JobDoneFunc callback)
 {
     auto jobFunc = [=](void* jobData, uint jobCount) {
         func(jobData, jobCount);
@@ -62,8 +62,10 @@ void JobManager::addSignalingJob(JobFunc func, void *data, uint count, JobDoneFu
 void JobManager::wait()
 {
     Job job;
-    while (_pendingTasks.load(std::memory_order_acquire) != 0) {
-        if (!_jobQueue.try_dequeue(job)) {
+    while (_pendingTasks.load(std::memory_order_acquire) != 0)
+    {
+        if (!_jobQueue.try_dequeue(job))
+        {
             continue;
         }
 
@@ -73,5 +75,4 @@ void JobManager::wait()
     }
 }
 
-
-} // atlas
+}  // atlas

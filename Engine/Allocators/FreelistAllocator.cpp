@@ -1,134 +1,137 @@
-#include "FreelistAllocator.h"
+#include "Allocators/FreelistAllocator.h"
 
-FreeListAllocator::FreeListAllocator(size_t size, void* start) 
-	: Allocator(size, start), _free_blocks((FreeBlock*)start)
+FreeListAllocator::FreeListAllocator(size_t size, void* start)
+    : Allocator(size, start)
+    , _free_blocks((FreeBlock*)start)
 {
-	ASSERT(size > sizeof(FreeBlock));
+    assert(size > sizeof(FreeBlock));
 
-	_free_blocks->size  = size;
-	_free_blocks->next = nullptr;
+    _free_blocks->size = size;
+    _free_blocks->next = nullptr;
 }
 
 FreeListAllocator::~FreeListAllocator()
 {
-	_free_blocks        = nullptr;
+    _free_blocks = nullptr;
 }
 
 void* FreeListAllocator::allocate(size_t size, u8 alignment)
 {
-	ASSERT(size != 0 && alignment != 0);
+    assert(size != 0 && alignment != 0);
 
-	FreeBlock* prev_free_block = nullptr;
-	FreeBlock* free_block     = _free_blocks;
+    FreeBlock* prev_free_block = nullptr;
+    FreeBlock* free_block      = _free_blocks;
 
-	while(free_block != nullptr)
-	{
-		//Calculate adjustment needed to keep object correctly aligned
-		u8 adjustment = pointer_math::alignForwardAdjustmentWithHeader(free_block, alignment, sizeof(AllocationHeader));
+    while (free_block != nullptr)
+    {
+        // Calculate adjustment needed to keep object correctly aligned
+        u8 adjustment = pointer_math::alignForwardAdjustmentWithHeader(free_block, alignment, sizeof(AllocationHeader));
 
-		size_t total_size = size + adjustment;
+        size_t total_size = size + adjustment;
 
-		//If allocation doesn't fit in this FreeBlock, try the next
-		if(free_block->size < total_size)
-		{
-			prev_free_block = free_block;
-			free_block = free_block->next;
-			continue;
-		}
+        // If allocation doesn't fit in this FreeBlock, try the next
+        if (free_block->size < total_size)
+        {
+            prev_free_block = free_block;
+            free_block      = free_block->next;
+            continue;
+        }
 
-		static_assert(sizeof(AllocationHeader) >= sizeof(FreeBlock), "sizeof(AllocationHeader) < sizeof(FreeBlock)");
+        static_assert(sizeof(AllocationHeader) >= sizeof(FreeBlock), "sizeof(AllocationHeader) < sizeof(FreeBlock)");
 
-		//If allocations in the remaining memory will be impossible
-		if(free_block->size - total_size <= sizeof(AllocationHeader))
-		{
-			//Increase allocation size instead of creating a new FreeBlock
-			total_size = free_block->size;
+        // If allocations in the remaining memory will be impossible
+        if (free_block->size - total_size <= sizeof(AllocationHeader))
+        {
+            // Increase allocation size instead of creating a new FreeBlock
+            total_size = free_block->size;
 
-			if(prev_free_block != nullptr)
-				prev_free_block->next = free_block->next;
-			else
-				_free_blocks = free_block->next;
-		}
-		else
-		{
-			//Else create a new FreeBlock containing remaining memory
-			FreeBlock* next_block = (FreeBlock*)( pointer_math::add(free_block, total_size) );
-			next_block->size = free_block->size - total_size;
-			next_block->next = free_block->next;
-			
-			if(prev_free_block != nullptr)
-				prev_free_block->next = next_block;
-			else
-				_free_blocks = next_block;
-		}
+            if (prev_free_block != nullptr)
+                prev_free_block->next = free_block->next;
+            else
+                _free_blocks = free_block->next;
+        }
+        else
+        {
+            // Else create a new FreeBlock containing remaining memory
+            FreeBlock* next_block = (FreeBlock*)(pointer_math::add(free_block, total_size));
+            next_block->size      = free_block->size - total_size;
+            next_block->next      = free_block->next;
 
-		uptr aligned_address = (uptr)free_block + adjustment;
-	
-		AllocationHeader* header = (AllocationHeader*)(aligned_address - sizeof(AllocationHeader));
-		header->size             = total_size;
-		header->adjustment       = adjustment;
+            if (prev_free_block != nullptr)
+                prev_free_block->next = next_block;
+            else
+                _free_blocks = next_block;
+        }
 
-		_used_memory += total_size;
-		_num_allocations++;
+        uptr aligned_address = (uptr)free_block + adjustment;
 
-		ASSERT(pointer_math::alignForwardAdjustment((void*)aligned_address, alignment) == 0);
+        AllocationHeader* header = (AllocationHeader*)(aligned_address - sizeof(AllocationHeader));
+        header->size             = total_size;
+        header->adjustment       = adjustment;
 
-		return (void*)aligned_address;
-	}
+        _used_memory += total_size;
+        _num_allocations++;
 
-	//ASSERT(false && "Couldn't find free block large enough!");
+        assert(pointer_math::alignForwardAdjustment((void*)aligned_address, alignment) == 0);
 
-	return nullptr;
+        return (void*)aligned_address;
+    }
+
+    // assert(false && "Couldn't find free block large enough!");
+
+    return nullptr;
 }
 
 void FreeListAllocator::deallocate(void* p)
 {
-	ASSERT(p != nullptr);
+    assert(p != nullptr);
 
-	AllocationHeader* header = (AllocationHeader*)pointer_math::subtract(p, sizeof(AllocationHeader));
+    AllocationHeader* header = (AllocationHeader*)pointer_math::subtract(p, sizeof(AllocationHeader));
 
-	uptr   block_start = reinterpret_cast<uptr>(p) - header->adjustment;
-	size_t block_size  = header->size;
-	uptr   block_end   = block_start + block_size;
+    uptr   block_start = reinterpret_cast<uptr>(p) - header->adjustment;
+    size_t block_size  = header->size;
+    uptr   block_end   = block_start + block_size;
 
-	FreeBlock* prev_free_block = nullptr;
-	FreeBlock* free_block = _free_blocks;
+    FreeBlock* prev_free_block = nullptr;
+    FreeBlock* free_block      = _free_blocks;
 
-	while(free_block != nullptr)
-	{
-		if( (uptr) free_block >= block_end )
-			break;
+    while (free_block != nullptr)
+    {
+        if ((uptr)free_block >= block_end)
+            break;
 
-		prev_free_block = free_block;
-		free_block = free_block->next;
-	}
+        prev_free_block = free_block;
+        free_block      = free_block->next;
+    }
 
-	if(prev_free_block == nullptr)
-	{
-		prev_free_block = (FreeBlock*) block_start;
-		prev_free_block->size = block_size;
-		prev_free_block->next = _free_blocks;
+    if (prev_free_block == nullptr)
+    {
+        prev_free_block       = (FreeBlock*)block_start;
+        prev_free_block->size = block_size;
+        prev_free_block->next = _free_blocks;
 
-		_free_blocks = prev_free_block;
-	} else if((uptr) prev_free_block + prev_free_block->size == block_start)
-	{
-		prev_free_block->size += block_size;
-	} else
-	{
-		FreeBlock* temp = (FreeBlock*) block_start;
-		temp->size = block_size;
-		temp->next = prev_free_block->next;
-		prev_free_block->next = temp;
+        _free_blocks = prev_free_block;
+    }
+    else if ((uptr)prev_free_block + prev_free_block->size == block_start)
+    {
+        prev_free_block->size += block_size;
+    }
+    else
+    {
+        FreeBlock* temp       = (FreeBlock*)block_start;
+        temp->size            = block_size;
+        temp->next            = prev_free_block->next;
+        prev_free_block->next = temp;
 
-		prev_free_block = temp;
-	}
+        prev_free_block = temp;
+    }
 
-	if( free_block != nullptr && (uptr) free_block == block_end)
-	{
-		prev_free_block->size += free_block->size;
-		prev_free_block->next = free_block->next;
-	}
+    if (free_block != nullptr && (uptr)free_block == block_end)
+    {
+        prev_free_block->size += free_block->size;
+        prev_free_block->next = free_block->next;
+    }
 
-	_num_allocations--;
-	_used_memory -= block_size;
+    _num_allocations--;
+    _used_memory -= block_size;
 }

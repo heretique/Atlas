@@ -10,6 +10,7 @@ Product {
     ]
 
     Depends { name: "cpp" }
+    cpp.architecture: "x86_64"
     cpp.includePaths: [
         ".",
         "../Engine/Core",

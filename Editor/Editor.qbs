@@ -20,6 +20,7 @@ Product {
         "../Window"
     ]
     cpp.cxxLanguageVersion: "c++14"
+    cpp.architecture: "x86_64"
 
     Depends { name: "common" }
     Depends { name: "AtlasWindow" }
@@ -49,7 +50,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("osx")
-        cpp.frameworks: [ "Cocoa", "OpenGL" ]
+        cpp.frameworks: [ "Cocoa", "OpenGL", "Metal", "QuartzCore"]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
     }

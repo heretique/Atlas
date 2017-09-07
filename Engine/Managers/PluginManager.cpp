@@ -1,12 +1,9 @@
-#include "PluginManager.h"
+#include "Managers/PluginManager.h"
 
-namespace atlas {
-
+namespace atlas
+{
 PluginManager::PluginManager()
 {
-
 }
 
-} // atlas
-
-
+}  // atlas

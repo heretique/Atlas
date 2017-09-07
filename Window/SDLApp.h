@@ -1,31 +1,32 @@
 #ifndef SDLAPP_H
 #define SDLAPP_H
 
-#include "Base.h"
+#include "Core/Types.h"
+#include <list>
 
 class SDLWindow;
 union SDL_Event;
 
-class SDLApp
-{
+class SDLApp {
 private:
-    SDLApp() = default;
+  SDLApp() = default;
+
 public:
-    virtual ~SDLApp();
-    static SDLApp& get() {
-        static SDLApp _instance;
-        return _instance;
-    }
+  virtual ~SDLApp();
+  static SDLApp &get() {
+    static SDLApp _instance;
+    return _instance;
+  }
 
-    int init(u32 flags);
-    int addWindow(SDLWindow* window);
-    int exec();
-    bool shouldCloseWindow(SDL_Event &e, SDLWindow& window);
-    void quit();
+  int init(u32 flags);
+  int addWindow(SDLWindow *window);
+  int exec();
+  bool shouldCloseWindow(SDL_Event &e, SDLWindow &window);
+  void quit();
 
 private:
-    bool _running{true};
-    std::list<std::unique_ptr<SDLWindow>> _windows;
+  bool _running{true};
+  std::list<std::unique_ptr<SDLWindow>> _windows;
 };
 
 #endif // SDLAPP_H

@@ -1,8 +1,5 @@
-#include "MeshComponent.h"
+#include "Components/MeshComponent.h"
 
-namespace atlas {
-
-
-} // namespace atlas
-
-
+namespace atlas
+{
+}  // namespace atlas

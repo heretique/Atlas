@@ -1,12 +1,11 @@
-#include "Base.h"
 #include "MathUtil.h"
+#include "Core/Debug.h"
 
 namespace math
 {
-
 void MathUtil::smooth(float* x, float target, float elapsedTime, float responseTime)
 {
-    ASSERT(x);
+    assert(x);
 
     if (elapsedTime > 0)
     {
@@ -16,13 +15,12 @@ void MathUtil::smooth(float* x, float target, float elapsedTime, float responseT
 
 void MathUtil::smooth(float* x, float target, float elapsedTime, float riseTime, float fallTime)
 {
-    ASSERT(x);
-    
+    assert(x);
+
     if (elapsedTime > 0)
     {
         float delta = target - *x;
         *x += delta * elapsedTime / (elapsedTime + (delta > 0 ? riseTime : fallTime));
     }
 }
-
 }

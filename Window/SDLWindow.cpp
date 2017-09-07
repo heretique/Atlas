@@ -8,7 +8,7 @@
 #include <SDL2/SDL_syswm.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
-#include <bx/fpumath.h>
+#include <bx/math.h>
 #include <fmt/printf.h> // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 
@@ -73,9 +73,14 @@ struct ImGuiBgfx {
     i32 texHeight;
     i32 texBits;
     io.Fonts->GetTexDataAsRGBA32(&data, &texWidth, &texHeight, &texBits);
-    _texture = bgfx::createTexture2D(
-        (u16)texWidth, (u16)texHeight, false, 1, bgfx::TextureFormat::BGRA8, 0,
-        bgfx::copy(data, texWidth * texHeight * texBits));
+    _texture =
+        bgfx::createTexture2D((u16)texWidth,              //
+                              (u16)texHeight,             //
+                              false,                      //
+                              1,                          //
+                              bgfx::TextureFormat::BGRA8, //
+                              0,                          //
+                              bgfx::copy(data, texWidth * texHeight * texBits));
   }
 
   void render(u8 viewId, ImDrawData *drawData) {
@@ -84,8 +89,10 @@ struct ImGuiBgfx {
     const float height = io.DisplaySize.y;
 
     {
+      const bgfx::Caps *caps = bgfx::getCaps();
       float ortho[16];
-      bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f, 0, false);
+      bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f, 0,
+                   caps->homogeneousDepth);
       bgfx::setViewTransform(viewId, NULL, ortho);
     }
 
@@ -149,9 +156,9 @@ struct ImGuiBgfx {
   void destroy() {
     ImGui::Shutdown();
 
-    bgfx::destroyUniform(_tex);
-    bgfx::destroyTexture(_texture);
-    bgfx::destroyProgram(_program);
+    bgfx::destroy(_tex);
+    bgfx::destroy(_texture);
+    bgfx::destroy(_program);
   }
 
   bgfx::VertexDecl _vDecl;
@@ -251,7 +258,7 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent &e) {
 
       if (bgfx::isValid(_framebuffer)) {
         bgfx::resetView(_viewId);
-        bgfx::destroyFrameBuffer(_framebuffer);
+        bgfx::destroy(_framebuffer);
         _framebuffer = bgfx::createFrameBuffer(nativeHandle(), _width, _height);
         bgfx::setViewFrameBuffer(_viewId, _framebuffer);
         bgfx::setViewClear(_viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH,
@@ -303,13 +310,15 @@ void SDLWindow::releaseFramebuffer() {
   if (bgfx::isValid(_framebuffer)) {
     bgfx::setViewFrameBuffer(_viewId, BGFX_INVALID_HANDLE);
 
-    bgfx::destroyFrameBuffer(_framebuffer);
+    bgfx::destroy(_framebuffer);
 
     _framebuffer = BGFX_INVALID_HANDLE;
   }
 }
 
-void SDLWindow::update(float dt) {}
+void SDLWindow::update(float dt) {
+  bgfx::dbgTextPrintf(0, 5, 0x2f, "sdfsdgdfgdfhfghg");
+}
 
 void SDLWindow::onGUI() {}
 
@@ -329,14 +338,17 @@ void SDLWindow::doUpdate(float dt) {
 }
 
 bool SDLWindow::imguiInit() {
-  if (_isDefault)
+  if (_isDefault) {
     s_imguiBgfx.init(_width, _height);
+    _imguiCtx = ImGui::GetCurrentContext();
+  } else {
+    _imguiCtx = ImGui::CreateContext();
+  }
 
-  _imguiCtx = ImGui::CreateContext();
+  imguiPushCtx();
   ImGuiIO &io = ImGui::GetIO();
-#if BX_PLATFORM_WINDOWS
+  imguiPopCtx();
   io.ImeWindowHandle = nativeHandle();
-#endif
   io.RenderDrawListsFn = NULL;
 
   io.KeyMap[ImGuiKey_Tab] = SDLK_TAB; // Keyboard mapping. ImGui will use those
@@ -366,9 +378,10 @@ bool SDLWindow::imguiInit() {
 }
 
 void SDLWindow::imguiShutdown() {
-  ImGui::DestroyContext(_imguiCtx);
   if (_isDefault) {
     s_imguiBgfx.destroy();
+  } else {
+    ImGui::DestroyContext(_imguiCtx);
   }
 }
 
@@ -469,6 +482,8 @@ void *SDLWindow::nativeHandle() {
   return wmi.info.win.window;
 #elif BX_PLATFORM_LINUX
   return (void *)(uintptr_t)wmi.info.x11.window;
+#elif BX_PLATFORM_OSX
+  return (void *)wmi.info.cocoa.window;
 #endif
 
   return nullptr;

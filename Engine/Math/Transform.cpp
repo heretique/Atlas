@@ -1,9 +1,8 @@
-#include "Base.h"
 #include "Transform.h"
+#include "Core/Debug.h"
 
 namespace math
 {
-
 Transform::Transform()
     : _matrixDirtyBits(0)
 {
@@ -30,7 +29,6 @@ Transform::Transform(const Transform& copy)
 
 Transform::~Transform()
 {
-
 }
 
 const char* Transform::getTypeName() const
@@ -44,11 +42,13 @@ const Matrix& Transform::getMatrix() const
     {
         if (!isStatic())
         {
-            bool hasScale = !_scale.isOne();
+            bool hasScale    = !_scale.isOne();
             bool hasRotation = !_rotation.isIdentity();
 
-            // Compose the matrix in TRS order since we use column-major matrices with column vectors and
-            // multiply M*v (as opposed to XNA and DirectX that use row-major matrices with row vectors and multiply v*M).
+            // Compose the matrix in TRS order since we use column-major matrices with
+            // column vectors and
+            // multiply M*v (as opposed to XNA and DirectX that use row-major matrices
+            // with row vectors and multiply v*M).
             Matrix::createTranslation(_translation, &_matrix);
             if (hasRotation)
             {
@@ -73,7 +73,7 @@ const Vector3& Transform::getScale() const
 
 void Transform::getScale(Vector3* scale) const
 {
-    ASSERT(scale);
+    assert(scale);
     scale->set(_scale);
 }
 
@@ -99,19 +99,19 @@ const Quaternion& Transform::getRotation() const
 
 void Transform::getRotation(Quaternion* rotation) const
 {
-    ASSERT(rotation);
+    assert(rotation);
     rotation->set(_rotation);
 }
 
 void Transform::getRotation(Matrix* rotation) const
 {
-    ASSERT(rotation);
+    assert(rotation);
     Matrix::createRotation(_rotation, rotation);
 }
 
 float Transform::getRotation(Vector3* axis) const
 {
-    ASSERT(axis);
+    assert(axis);
     return _rotation.toAxisAngle(axis);
 }
 
@@ -122,7 +122,7 @@ const Vector3& Transform::getTranslation() const
 
 void Transform::getTranslation(Vector3* translation) const
 {
-    ASSERT(translation);
+    assert(translation);
     translation->set(_translation);
 }
 
@@ -688,12 +688,12 @@ void Transform::dirty(char matrixDirtyBits)
     {
         if (!isDirty(DIRTY_NOTIFY))
         {
-//            suspendTransformChange(this);
+            //            suspendTransformChange(this);
         }
     }
     else
     {
-//        transformChanged();
+        //        transformChanged();
     }
 }
 
@@ -701,5 +701,4 @@ bool Transform::isDirty(char matrixDirtyBits) const
 {
     return (_matrixDirtyBits & matrixDirtyBits) == matrixDirtyBits;
 }
-
 }

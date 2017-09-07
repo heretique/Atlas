@@ -1,17 +1,21 @@
-#include "Base.h"
 #include "Vector3.h"
+#include "Core/Debug.h"
+#include "Math/Utils.h"
 #include "MathUtil.h"
 
 namespace math
 {
-
 Vector3::Vector3()
-    : x(0.0f), y(0.0f), z(0.0f)
+    : x(0.0f)
+    , y(0.0f)
+    , z(0.0f)
 {
 }
 
 Vector3::Vector3(float x, float y, float z)
-    : x(x), y(y), z(z)
+    : x(x)
+    , y(y)
+    , z(z)
 {
 }
 
@@ -33,10 +37,10 @@ Vector3::Vector3(const Vector3& copy)
 Vector3 Vector3::fromColor(unsigned int color)
 {
     float components[3];
-    int componentIndex = 0;
+    int   componentIndex = 0;
     for (int i = 2; i >= 0; --i)
     {
-        int component = (color >> i*8) & 0x0000ff;
+        int component = (color >> i * 8) & 0x0000ff;
 
         components[componentIndex++] = static_cast<float>(component) / 255.0f;
     }
@@ -107,7 +111,7 @@ void Vector3::add(const Vector3& v)
 
 void Vector3::add(const Vector3& v1, const Vector3& v2, Vector3* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x + v2.x;
     dst->y = v1.y + v2.y;
@@ -116,7 +120,7 @@ void Vector3::add(const Vector3& v1, const Vector3& v2, Vector3* dst)
 
 void Vector3::clamp(const Vector3& min, const Vector3& max)
 {
-    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z));
+    assert(!(min.x > max.x || min.y > max.y || min.z > max.z));
 
     // Clamp the x value.
     if (x < min.x)
@@ -139,8 +143,8 @@ void Vector3::clamp(const Vector3& min, const Vector3& max)
 
 void Vector3::clamp(const Vector3& v, const Vector3& min, const Vector3& max, Vector3* dst)
 {
-    ASSERT(dst);
-    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z));
+    assert(dst);
+    assert(!(min.x > max.x || min.y > max.y || min.z > max.z));
 
     // Clamp the x value.
     dst->x = v.x;
@@ -171,10 +175,12 @@ void Vector3::cross(const Vector3& v)
 
 void Vector3::cross(const Vector3& v1, const Vector3& v2, Vector3* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
-    // NOTE: This code assumes Vector3 struct members are contiguous floats in memory.
-    // We might want to revisit this (and other areas of code that make this assumption)
+    // NOTE: This code assumes Vector3 struct members are contiguous floats in
+    // memory.
+    // We might want to revisit this (and other areas of code that make this
+    // assumption)
     // later to guarantee 100% safety/compatibility.
     MathUtil::crossVector3(&v1.x, &v2.x, &dst->x);
 }
@@ -232,7 +238,7 @@ Vector3& Vector3::normalize()
 
 void Vector3::normalize(Vector3* dst) const
 {
-    ASSERT(dst);
+    assert(dst);
 
     if (dst != this)
     {
@@ -273,7 +279,7 @@ void Vector3::set(float x, float y, float z)
 
 void Vector3::set(const float* array)
 {
-    ASSERT(array);
+    assert(array);
 
     x = array[0];
     y = array[1];
@@ -303,7 +309,7 @@ void Vector3::subtract(const Vector3& v)
 
 void Vector3::subtract(const Vector3& v1, const Vector3& v2, Vector3* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x - v2.x;
     dst->y = v1.y - v2.y;
@@ -317,5 +323,4 @@ void Vector3::smooth(const Vector3& target, float elapsedTime, float responseTim
         *this += (target - *this) * (elapsedTime / (elapsedTime + responseTime));
     }
 }
-
 }

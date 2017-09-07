@@ -1,16 +1,22 @@
-#include "Base.h"
 #include "Vector4.h"
+#include "Core/Debug.h"
+#include "Math/Utils.h"
 
 namespace math
 {
-
 Vector4::Vector4()
-    : x(0.0f), y(0.0f), z(0.0f), w(0.0f)
+    : x(0.0f)
+    , y(0.0f)
+    , z(0.0f)
+    , w(0.0f)
 {
 }
 
 Vector4::Vector4(float x, float y, float z, float w)
-    : x(x), y(y), z(z), w(w)
+    : x(x)
+    , y(y)
+    , z(z)
+    , w(w)
 {
 }
 
@@ -32,10 +38,10 @@ Vector4::Vector4(const Vector4& copy)
 Vector4 Vector4::fromColor(unsigned int color)
 {
     float components[4];
-    int componentIndex = 0;
+    int   componentIndex = 0;
     for (int i = 3; i >= 0; --i)
     {
-        int component = (color >> i*8) & 0x000000ff;
+        int component = (color >> i * 8) & 0x000000ff;
 
         components[componentIndex++] = static_cast<float>(component) / 255.0f;
     }
@@ -113,7 +119,7 @@ void Vector4::add(const Vector4& v)
 
 void Vector4::add(const Vector4& v1, const Vector4& v2, Vector4* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x + v2.x;
     dst->y = v1.y + v2.y;
@@ -123,7 +129,7 @@ void Vector4::add(const Vector4& v1, const Vector4& v2, Vector4* dst)
 
 void Vector4::clamp(const Vector4& min, const Vector4& max)
 {
-    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
+    assert(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
 
     // Clamp the x value.
     if (x < min.x)
@@ -152,8 +158,8 @@ void Vector4::clamp(const Vector4& min, const Vector4& max)
 
 void Vector4::clamp(const Vector4& v, const Vector4& min, const Vector4& max, Vector4* dst)
 {
-    ASSERT(dst);
-    ASSERT(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
+    assert(dst);
+    assert(!(min.x > max.x || min.y > max.y || min.z > max.z || min.w > max.w));
 
     // Clamp the x value.
     dst->x = v.x;
@@ -219,7 +225,6 @@ float Vector4::length() const
     return sqrt(x * x + y * y + z * z + w * w);
 }
 
-
 float Vector4::lengthSquared() const
 {
     return (x * x + y * y + z * z + w * w);
@@ -241,7 +246,7 @@ Vector4& Vector4::normalize()
 
 void Vector4::normalize(Vector4* dst) const
 {
-    ASSERT(dst);
+    assert(dst);
 
     if (dst != this)
     {
@@ -286,7 +291,7 @@ void Vector4::set(float x, float y, float z, float w)
 
 void Vector4::set(const float* array)
 {
-    ASSERT(array);
+    assert(array);
 
     x = array[0];
     y = array[1];
@@ -320,12 +325,11 @@ void Vector4::subtract(const Vector4& v)
 
 void Vector4::subtract(const Vector4& v1, const Vector4& v2, Vector4* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->x = v1.x - v2.x;
     dst->y = v1.y - v2.y;
     dst->z = v1.z - v2.z;
     dst->w = v1.w - v2.w;
 }
-
 }

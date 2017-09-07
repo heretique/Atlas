@@ -1,9 +1,11 @@
 #ifndef SDLWINDOW_H
 #define SDLWINDOW_H
 
-#include "Base.h"
+#include "Core/Debug.h"
+#include "Core/Types.h"
 #include <SDL2/SDL.h>
 #include <bgfx/bgfx.h>
+#include <string>
 
 struct ImDrawData;
 struct ImGuiContext;
@@ -56,7 +58,7 @@ private:
 
   bool _isDefault{false};
 
-  string _title;
+  std::string _title;
   bool _open{true};
   u32 _width{0};
   u32 _height{0};

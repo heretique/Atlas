@@ -1,11 +1,11 @@
-#include "Base.h"
 #include "BoundingBox.h"
 #include "BoundingSphere.h"
+#include "Core/Debug.h"
+#include "Math/Utils.h"
 #include "Plane.h"
 
 namespace math
 {
-
 BoundingBox::BoundingBox()
 {
 }
@@ -37,9 +37,10 @@ const BoundingBox& BoundingBox::empty()
 
 void BoundingBox::getCorners(Vector3* dst) const
 {
-    ASSERT(dst);
+    assert(dst);
 
-    // Near face, specified counter-clockwise looking towards the origin from the positive z-axis.
+    // Near face, specified counter-clockwise looking towards the origin from the
+    // positive z-axis.
     // Left-top-front.
     dst[0].set(min.x, max.y, max.z);
     // Left-bottom-front.
@@ -49,7 +50,8 @@ void BoundingBox::getCorners(Vector3* dst) const
     // Right-top-front.
     dst[3].set(max.x, max.y, max.z);
 
-    // Far face, specified counter-clockwise looking towards the origin from the negative z-axis.
+    // Far face, specified counter-clockwise looking towards the origin from the
+    // negative z-axis.
     // Right-top-back.
     dst[4].set(max.x, max.y, min.z);
     // Right-bottom-back.
@@ -69,7 +71,7 @@ Vector3 BoundingBox::getCenter() const
 
 void BoundingBox::getCenter(Vector3* dst) const
 {
-    ASSERT(dst);
+    assert(dst);
 
     dst->set(min, max);
     dst->scale(0.5f);
@@ -84,13 +86,14 @@ bool BoundingBox::intersects(const BoundingSphere& sphere) const
 bool BoundingBox::intersects(const BoundingBox& box) const
 {
     return ((min.x >= box.min.x && min.x <= box.max.x) || (box.min.x >= min.x && box.min.x <= max.x)) &&
-            ((min.y >= box.min.y && min.y <= box.max.y) || (box.min.y >= min.y && box.min.y <= max.y)) &&
-            ((min.z >= box.min.z && min.z <= box.max.z) || (box.min.z >= min.z && box.min.z <= max.z));
+           ((min.y >= box.min.y && min.y <= box.max.y) || (box.min.y >= min.y && box.min.y <= max.y)) &&
+           ((min.z >= box.min.z && min.z <= box.max.z) || (box.min.z >= min.z && box.min.z <= max.z));
 }
 
 bool BoundingBox::intersects(const Frustum& frustum) const
 {
-    // The box must either intersect or be in the positive half-space of all six planes of the frustum.
+    // The box must either intersect or be in the positive half-space of all six
+    // planes of the frustum.
     return (intersects(frustum.getNear()) != Plane::INTERSECTS_BACK &&
             intersects(frustum.getFar()) != Plane::INTERSECTS_BACK &&
             intersects(frustum.getLeft()) != Plane::INTERSECTS_BACK &&
@@ -103,7 +106,7 @@ float BoundingBox::intersects(const Plane& plane) const
 {
     // Calculate the distance from the center of the box to the plane.
     Vector3 center((min.x + max.x) * 0.5f, (min.y + max.y) * 0.5f, (min.z + max.z) * 0.5f);
-    float distance = plane.distance(center);
+    float   distance = plane.distance(center);
 
     // Get the extents of the box from its center along each axis.
     float extentX = (max.x - min.x) * 0.5f;
@@ -111,8 +114,8 @@ float BoundingBox::intersects(const Plane& plane) const
     float extentZ = (max.z - min.z) * 0.5f;
 
     const Vector3& planeNormal = plane.getNormal();
-    if (fabsf(distance) <= (fabsf(extentX * planeNormal.x) + fabsf(extentY * planeNormal.y) + fabsf(
-        extentZ * planeNormal.z)))
+    if (fabsf(distance) <=
+        (fabsf(extentX * planeNormal.x) + fabsf(extentY * planeNormal.y) + fabsf(extentZ * planeNormal.z)))
     {
         return Plane::INTERSECTS_INTERSECTING;
     }
@@ -124,11 +127,11 @@ float BoundingBox::intersects(const Ray& ray) const
 {
     // Intermediate calculation variables.
     float dnear = 0.0f;
-    float dfar = 0.0f;
-    float tmin = 0.0f;
-    float tmax = 0.0f;
+    float dfar  = 0.0f;
+    float tmin  = 0.0f;
+    float tmax  = 0.0f;
 
-    const Vector3& origin = ray.getOrigin();
+    const Vector3& origin    = ray.getOrigin();
     const Vector3& direction = ray.getDirection();
 
     // X direction.
@@ -144,7 +147,7 @@ float BoundingBox::intersects(const Ray& ray) const
         tmax = (min.x - origin.x) * div;
     }
     dnear = tmin;
-    dfar = tmax;
+    dfar  = tmax;
 
     // Check if the ray misses the box.
     if (dnear > dfar || dfar < 0.0f)
@@ -208,7 +211,8 @@ float BoundingBox::intersects(const Ray& ray) const
     {
         return Ray::INTERSECTS_NONE;
     }
-    // The ray intersects the box (and since the direction of a Ray is normalized, dnear is the distance to the ray).
+    // The ray intersects the box (and since the direction of a Ray is normalized,
+    // dnear is the distance to the ray).
     return dnear;
 }
 
@@ -233,7 +237,7 @@ void BoundingBox::merge(const BoundingBox& box)
 void BoundingBox::merge(const BoundingSphere& sphere)
 {
     const Vector3& center = sphere.center;
-    float radius = sphere.radius;
+    float          radius = sphere.radius;
 
     // Calculate the new minimum point for the merged bounding box.
     min.x = std::min(min.x, center.x - radius);
@@ -260,9 +264,9 @@ void BoundingBox::set(float minX, float minY, float minZ, float maxX, float maxY
 
 static void updateMinMax(Vector3* point, Vector3* min, Vector3* max)
 {
-    ASSERT(point);
-    ASSERT(min);
-    ASSERT(max);
+    assert(point);
+    assert(min);
+    assert(max);
 
     // Leftmost point.
     if (point->x < min->x)
@@ -310,7 +314,7 @@ void BoundingBox::set(const BoundingBox& box)
 void BoundingBox::set(const BoundingSphere& sphere)
 {
     const Vector3& center = sphere.center;
-    float radius = sphere.radius;
+    float          radius = sphere.radius;
 
     // Calculate the minimum point for the box.
     min.x = center.x - radius;
@@ -345,5 +349,4 @@ void BoundingBox::transform(const Matrix& matrix)
     this->max.y = newMax.y;
     this->max.z = newMax.z;
 }
-
 }

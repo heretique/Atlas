@@ -1,21 +1,30 @@
-#include "Base.h"
 #include "Rectangle.h"
+#include "Core/Debug.h"
+#include "Math/Utils.h"
 
 namespace math
 {
-
 Rectangle::Rectangle()
-    : x(0), y(0), width(0), height(0)
+    : x(0)
+    , y(0)
+    , width(0)
+    , height(0)
 {
 }
 
-Rectangle::Rectangle(float width, float height) :
-    x(0), y(0), width(width), height(height)
+Rectangle::Rectangle(float width, float height)
+    : x(0)
+    , y(0)
+    , width(width)
+    , height(height)
 {
 }
 
-Rectangle::Rectangle(float x, float y, float width, float height) :
-    x(x), y(y), width(width), height(height)
+Rectangle::Rectangle(float x, float y, float width, float height)
+    : x(x)
+    , y(y)
+    , width(width)
+    , height(height)
 {
 }
 
@@ -46,9 +55,9 @@ void Rectangle::set(const Rectangle& r)
 
 void Rectangle::set(float x, float y, float width, float height)
 {
-    this->x = x;
-    this->y = y;
-    this->width = width;
+    this->x      = x;
+    this->y      = y;
+    this->width  = width;
     this->height = height;
 }
 
@@ -110,7 +119,7 @@ bool Rectangle::intersects(const Rectangle& r) const
 
 bool Rectangle::intersect(const Rectangle& r1, const Rectangle& r2, Rectangle* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
     float xmin = max(r1.x, r2.x);
     float xmax = min(r1.right(), r2.right());
@@ -131,11 +140,11 @@ bool Rectangle::intersect(const Rectangle& r1, const Rectangle& r2, Rectangle* d
 
 void Rectangle::combine(const Rectangle& r1, const Rectangle& r2, Rectangle* dst)
 {
-    ASSERT(dst);
+    assert(dst);
 
-    dst->x = min(r1.x, r2.x);
-    dst->y = min(r1.y, r2.y);
-    dst->width = max(r1.x + r1.width, r2.x + r2.width) - dst->x;
+    dst->x      = min(r1.x, r2.x);
+    dst->y      = min(r1.y, r2.y);
+    dst->width  = max(r1.x + r1.width, r2.x + r2.width) - dst->x;
     dst->height = max(r1.y + r1.height, r2.y + r2.height) - dst->y;
 }
 
@@ -147,23 +156,22 @@ void Rectangle::inflate(float horizontalAmount, float verticalAmount)
     height += verticalAmount * 2;
 }
 
-Rectangle& Rectangle::operator = (const Rectangle& r)
+Rectangle& Rectangle::operator=(const Rectangle& r)
 {
-    x = r.x;
-    y = r.y;
-    width = r.width;
+    x      = r.x;
+    y      = r.y;
+    width  = r.width;
     height = r.height;
     return *this;
 }
 
-bool Rectangle::operator == (const Rectangle& r) const
+bool Rectangle::operator==(const Rectangle& r) const
 {
     return (x == r.x && width == r.width && y == r.y && height == r.height);
 }
 
-bool Rectangle::operator != (const Rectangle& r) const
+bool Rectangle::operator!=(const Rectangle& r) const
 {
     return (x != r.x || width != r.width || y != r.y || height != r.height);
 }
-
 }

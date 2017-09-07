@@ -6,31 +6,11 @@ StaticLibrary {
     name: "bgfx"
     files: [
         // "bgfx/src/amalgamated.cpp",
-        "../../bgfx/include/bgfx/defines.h",
-        "../../bgfx/include/bgfx/platform.h",
-        "../../bgfx/include/bgfx/bgfx.h",
-        "../../bgfx/src/bgfx.cpp",
-        "../../bgfx/src/glcontext_egl.cpp",
-        "../../bgfx/src/glcontext_glx.cpp",
-        "../../bgfx/src/glcontext_ppapi.cpp",
-        "../../bgfx/src/glcontext_wgl.cpp",
-        "../../bgfx/src/hmd.cpp",
-        "../../bgfx/src/hmd_ovr.cpp",
-        "../../bgfx/src/hmd_openvr.cpp",
-        "../../bgfx/src/debug_renderdoc.cpp",
-        "../../bgfx/src/renderer_d3d11.cpp",
-        "../../bgfx/src/renderer_d3d12.cpp",
-        "../../bgfx/src/renderer_d3d9.cpp",
-        "../../bgfx/src/renderer_gl.cpp",
-        "../../bgfx/src/renderer_gnm.cpp",
-        "../../bgfx/src/renderer_noop.cpp",
-        "../../bgfx/src/renderer_vk.cpp",
-        "../../bgfx/src/shader.cpp",
-        "../../bgfx/src/shader_dx9bc.cpp",
-        "../../bgfx/src/shader_dxbc.cpp",
-        "../../bgfx/src/shader_spirv.cpp",
-        "../../bgfx/src/vertexdecl.cpp",
-        "../../bgfx/src/topology.cpp"
+        "../../bgfx/include/bgfx/*.h",
+        "../../bgfx/src/*.cpp"
+    ]
+    excludeFiles: [
+        "../../bgfx/src/amalgamated.cpp"
     ]
 
     Properties {
@@ -40,11 +20,13 @@ StaticLibrary {
                                       "../../bgfx/src/glcontext_nsgl.mm",
                                       "../../bgfx/src/renderer_mtl.mm",
                                   ])
+
     }
 
     Depends { name: "cpp" }
     Depends { name: "bx" }
     Depends { name: "bimg" }
+
     cpp.includePaths: [
         path + "/../../bgfx/include",
         path + "/../../bgfx/3rdparty",

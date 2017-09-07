@@ -1,12 +1,9 @@
-#include "ProfilingManager.h"
+#include "Managers/ProfilingManager.h"
 
-namespace atlas {
-
+namespace atlas
+{
 ProfilingManager::ProfilingManager()
 {
-
 }
 
-} // atlas
-
-
+}  // atlas

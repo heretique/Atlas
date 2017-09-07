@@ -1,12 +1,11 @@
-#include "ECSManager.h"
+#include "Managers/ECSManager.h"
 #include "Systems/RenderSystem.h"
 
-namespace atlas {
-
+namespace atlas
+{
 void ECSManager::installSystems()
 {
     _systems.add<RenderSystem>();
-
 
     // call this after registering all systems
     _systems.configure();
@@ -19,6 +18,4 @@ void ECSManager::update(entityx::TimeDelta dt)
     _systems.update<RenderSystem>(dt);
 }
 
-} // atlas
-
-
+}  // atlas

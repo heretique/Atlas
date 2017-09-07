@@ -13,7 +13,7 @@ StaticLibrary {
     Depends { name: "cpp" }
     cpp.includePaths: [
         ".",
-        "../Engine/Core"
+        "../Engine"
      ]
     cpp.cxxLanguageVersion: "c++14"
 
