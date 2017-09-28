@@ -8,11 +8,14 @@
 #include "Math/Utils.h"
 #include "SDLApp.h"
 #include "SDLWindow.h"
-#include "fmt/format.h"
 #include "imgui/imgui.h"
 
 #include <chrono>
+#include <cstring>
+#include <iostream>
 #include <thread>
+
+#include <fmt/printf.h>
 #include <microbench/microbench.h>
 
 using namespace atlasEditor;
@@ -41,18 +44,19 @@ public:
 
         Engine::assets().loadAssets();
 
-        cout << "Waiting for jobs..." << endl;
+        std::cout << "Waiting for jobs..."
+                  << "\n";
 
         const int COUNT = 100000;
         float     testArray[COUNT];
-        memset(testArray, 0, sizeof(testArray));
+        std::memset(testArray, 0, sizeof(testArray));
 
         moodycamel::stats_t stats = moodycamel::microbench_stats([testArray]() { testJob((float*)testArray, COUNT); });
 
         double speed = stats.avg();
-        printf("Serial job: %.4f\n", stats.avg());
+        fmt::printf("Serial job: %.4f\n", stats.avg());
 
-        memset(testArray, 0, sizeof(testArray));
+        std::memset(testArray, 0, sizeof(testArray));
 
         stats = moodycamel::microbench_stats([testArray]() {
             Engine::jobMan().parallel_for<float, CountSplitter<float, 1024> >(testJob, (float*)testArray,
@@ -60,10 +64,10 @@ public:
             Engine::jobMan().wait();
         });
 
-        printf("Parallel job: %.4f\n", stats.avg());
+        fmt::printf("Parallel job: %.4f\n", stats.avg());
         speed /= stats.avg();
-        printf("Speed parallel vs serial: %.4fx\n", speed);
-        cout << "Finised waiting for jobs..." << endl;
+        fmt::printf("Speed parallel vs serial: %.4fx\n", speed);
+        fmt::printf("Finised waiting for jobs...\n");
     }
 
     ~Window1()
@@ -117,6 +121,7 @@ int main(int argc, char** argv)
 {
     SDLApp::get().init(SDL_INIT_VIDEO);
 
+    // TODO: refactor this abomination, can't see ownership on windows
     Window1* win =
         new Window1(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480);
     win->init();
