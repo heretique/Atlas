@@ -1,6 +1,7 @@
 #ifndef MATHUTIL_H_
 #define MATHUTIL_H_
 
+#include <cstring>
 #include <memory>
 
 namespace math {
@@ -80,7 +81,7 @@ private:
 
   MathUtil();
 };
-}
+} // namespace math
 
 #define MATRIX_SIZE (sizeof(float) * 16)
 

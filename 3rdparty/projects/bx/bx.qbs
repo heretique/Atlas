@@ -14,17 +14,28 @@ StaticLibrary {
         "../../bx/include/tinystl/*.h",
         "../../bx/src/*.cpp"
     ]
+    excludeFiles : [
+        "../../bx/src/amalgamated.cpp"
+    ]
 
     Depends { name: "cpp" }
     cpp.includePaths: [
         path + "/../../bx/include"
     ]
 
+    Depends { name: "common" }
+
     cpp.cxxLanguageVersion: "c++14"
 
     Properties {
         condition: qbs.targetOS.contains("windows")
         cpp.windowsApiCharacterSet: ""
+    }
+
+
+    Properties {
+        condition: qbs.targetOS.contains("linux")
+        cpp.defines:  outer.uniqueConcat(["BX_PLATFORM_RPI"])
     }
 
     Properties {

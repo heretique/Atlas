@@ -10,7 +10,7 @@ Product {
     ]
 
     Depends { name: "cpp" }
-    cpp.architecture: "x86_64"
+//    cpp.architecture: "x86_64"
     cpp.includePaths: [
         ".",
         "../Engine/Core",
@@ -25,6 +25,7 @@ Product {
     ]
     cpp.cxxLanguageVersion: "c++14"
 
+    Depends { name: "common" }
     Depends { name: "AtlasWindow" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
@@ -44,7 +45,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11", "SDL2" ]
+        cpp.dynamicLibraries: [ "rt", "dl", "EGL", "GLESv2", "pthread",  "SDL2" ]
     }
 
     Properties {
@@ -57,5 +58,6 @@ Product {
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: true
+        qbs.installDir: "home/pi/atlas"
     }
 }

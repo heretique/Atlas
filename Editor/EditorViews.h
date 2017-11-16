@@ -4,24 +4,19 @@
 namespace atlasEditor {
 
 ////////////// EditorView interface ////////
-class EditorView
-{
+class EditorView {
 public:
-    virtual void onGUI() = 0;
+  virtual void onGUI() = 0;
 };
 
 ////////////// SceneView /////////////
-class SceneView : public EditorView
-{
+class SceneView : public EditorView {
 public:
-    SceneView();
+  SceneView();
 
-    void onGUI() override;
+  void onGUI() override;
 };
 
-
-} // atlasEditor
-
-
+} // namespace atlasEditor
 
 #endif // EDITORVIEW_H

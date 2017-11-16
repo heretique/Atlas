@@ -1,3 +1,4 @@
+#include <cstring>
 #include "Quaternion.h"
 #include "Core/Debug.h"
 #include "Math/Utils.h"

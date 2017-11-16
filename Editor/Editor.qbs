@@ -3,7 +3,7 @@ import qbs
 Product {
     type: "application"
     name: "AtlasEditor"
-    consoleApplication: false
+    consoleApplication: true
     files: [
         "*.cpp",
         "*.h",
@@ -17,12 +17,15 @@ Product {
         "../Engine",
         "../Engine/Core",
         "../Engine/Managers",
-        "../Window"
+        "../Window",
+        "../3rdparty/bgfx/examples/17-drawstress",
     ]
     cpp.cxxLanguageVersion: "c++14"
-    cpp.architecture: "x86_64"
+//    cpp.architecture: "x86_64"
+    cpp.defines: ["BUILD_WITH_EASY_PROFILER"]
 
     Depends { name: "common" }
+    Depends { name: "easy_profiler" }
     Depends { name: "AtlasWindow" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
@@ -45,7 +48,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11", "SDL2" ]
+        cpp.dynamicLibraries: [ "rt", "dl", "bcm_host", "EGL", "GLESv2", "pthread", "udev", "SDL2" ]
     }
 
     Properties {
@@ -58,5 +61,6 @@ Product {
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: true
+        qbs.installDir: "home/pi/atlas"
     }
 }

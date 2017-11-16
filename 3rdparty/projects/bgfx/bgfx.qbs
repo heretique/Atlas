@@ -24,18 +24,25 @@ StaticLibrary {
     }
 
     Depends { name: "cpp" }
+    Depends { name: "common" }
     Depends { name: "bx" }
     Depends { name: "bimg" }
+    Depends { name: "easy_profiler" }
 
     cpp.includePaths: [
         path + "/../../bgfx/include",
         path + "/../../bgfx/3rdparty",
-        path + "/../../bgfx/3rdparty/khronos",
+        //        path + "/../../bgfx/3rdparty/khronos",
         path + "/../../bgfx/3rdparty/dxsdk/include"
     ]
     cpp.cxxLanguageVersion: "c++14"
-    //    cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
-    //    cpp.defines: ["BGFX_CONFIG_RENDERER_OPENGLES"]
+    cpp.defines: ["BUILD_WITH_EASY_PROFILER"]
+//        cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
+
+    Properties {
+        condition: qbs.targetOS.contains("linux")
+        cpp.defines:  outer.uniqueConcat(["BX_PLATFORM_RPI", "BGFX_CONFIG_RENDERER_OPENGLES"])
+    }
 
     Export {
         Depends { name: "cpp" }

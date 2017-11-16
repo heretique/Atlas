@@ -9,13 +9,15 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/math.h>
+#include <easy/profiler.h>
 #include <fmt/printf.h> // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 
 bool SDLWindow::_initialized = false;
 SDL_GLContext SDLWindow::_glContext = 0;
-u32 SDLWindow::_debug = BGFX_DEBUG_TEXT;
-u32 SDLWindow::_reset = BGFX_RESET_VSYNC;
+u32 SDLWindow::_debug =
+    BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER;
+u32 SDLWindow::_reset = BGFX_RESET_NONE;
 u8 SDLWindow::_windowCount = 0;
 
 struct ImGuiBgfx {
@@ -84,6 +86,7 @@ struct ImGuiBgfx {
   }
 
   void render(u8 viewId, ImDrawData *drawData) {
+    EASY_FUNCTION(profiler::colors::Teal);
     const ImGuiIO &io = ImGui::GetIO();
     const float width = io.DisplaySize.x;
     const float height = io.DisplaySize.y;
@@ -105,8 +108,9 @@ struct ImGuiBgfx {
       u32 numVertices = (u32)drawList->VtxBuffer.size();
       u32 numIndices = (u32)drawList->IdxBuffer.size();
 
-      if (!bgfx::getAvailTransientVertexBuffer(numVertices, _vDecl) ||
-          !bgfx::getAvailTransientIndexBuffer(numIndices)) {
+      if (numVertices !=
+              bgfx::getAvailTransientVertexBuffer(numVertices, _vDecl) ||
+          numIndices != bgfx::getAvailTransientIndexBuffer(numIndices)) {
         // not enough space in transient buffer just quit drawing the rest...
         break;
       }
@@ -174,16 +178,17 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h) {
   _height = h;
   _title = title;
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  //  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+  //  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+  //  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+  //  SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_DisplayMode current;
   SDL_GetCurrentDisplayMode(0, &current);
   _window = SDL_CreateWindow(title, x, y, w, h,
                              SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE |
                                  SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
   if (_window == nullptr) {
-    fmt::print("SLD Window creation failed, err: {}\n", SDL_GetError());
+    fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
     return;
   }
 
@@ -212,7 +217,6 @@ SDLWindow::SDLWindow(const char *title, int x, int y, int w, int h) {
                      1.0f, 0);
 
   imguiInit();
-  SDLApp::get().addWindow(this);
 }
 
 SDLWindow::~SDLWindow() {
@@ -296,7 +300,7 @@ void SDLWindow::handleInputEvent(SDL_Event &e) {
     break;
   case SDL_KEYDOWN:
   case SDL_KEYUP:
-    int key = e.key.keysym.sym;
+    int key = e.key.keysym.sym & ~SDLK_SCANCODE_MASK;
     io.KeysDown[key] = (e.type == SDL_KEYDOWN);
     io.KeyShift = ((SDL_GetModState() & KMOD_SHIFT) != 0);
     io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
@@ -317,17 +321,18 @@ void SDLWindow::releaseFramebuffer() {
 }
 
 void SDLWindow::update(float dt) {
-  bgfx::dbgTextPrintf(0, 5, 0x2f, "sdfsdgdfgdfhfghg");
+  bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
 void SDLWindow::onGUI() {}
 
+SDLWindow::Size SDLWindow::windowSize() const { return Size{_width, _height}; }
+
 void SDLWindow::doUpdate(float dt) {
+  EASY_FUNCTION(profiler::colors::Amber);
   bgfx::setViewFrameBuffer(_viewId, _framebuffer);
   bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
   bgfx::touch(_viewId);
-  // render content
-  update(dt);
   // GUI
   imguiPushCtx();
   imguiNewFrame();
@@ -335,6 +340,8 @@ void SDLWindow::doUpdate(float dt) {
   onGUI();
   imguiRender();
   imguiPopCtx();
+  // render content
+  update(dt);
 }
 
 bool SDLWindow::imguiInit() {
@@ -386,6 +393,7 @@ void SDLWindow::imguiShutdown() {
 }
 
 void SDLWindow::imguiNewFrame() {
+  EASY_FUNCTION(profiler::colors::Teal);
   ImGuiIO &io = ImGui::GetIO();
   io.DisplaySize = ImVec2((float)_width, (float)_height);
   io.DeltaTime = 1.0f / 60.0f; // TODO
@@ -405,6 +413,7 @@ void SDLWindow::imguiNewFrame() {
 }
 
 void SDLWindow::imguiPushCtx() {
+  EASY_FUNCTION(profiler::colors::Teal);
   _prevImguiCtx = ImGui::GetCurrentContext();
   ImGui::SetCurrentContext(_imguiCtx);
 }
@@ -412,6 +421,8 @@ void SDLWindow::imguiPushCtx() {
 void SDLWindow::imguiPopCtx() { ImGui::SetCurrentContext(_prevImguiCtx); }
 
 void SDLWindow::imguiMoveWindow() {
+  EASY_FUNCTION(profiler::colors::Teal);
+
   if (ImGui::IsMouseClicked(0)) {
     int wx, wy, mx, my;
     SDL_GetWindowPosition(_window, &wx, &wy);
@@ -430,6 +441,8 @@ void SDLWindow::imguiMoveWindow() {
 }
 
 void SDLWindow::imguiRender() {
+  EASY_FUNCTION(profiler::colors::Teal);
+
   ImGui::End();
   ImGui::Render();
   ImDrawData *drawData = ImGui::GetDrawData();
@@ -441,12 +454,15 @@ bool SDLWindow::bgfxInit() {
   bgfx::PlatformData pd;
   SDL_SysWMinfo wmi;
   SDL_VERSION(&wmi.version);
-  if (!SDL_GetWindowWMInfo(_window, &wmi))
-    return false;
+  //  if (!SDL_GetWindowWMInfo(_window, &wmi))
+  //    return false;
 
+  SDL_GetWindowWMInfo(_window, &wmi);
 #if BX_PLATFORM_WINDOWS
   pd.ndt = NULL;
   pd.nwh = wmi.info.win.window;
+#elif BX_PLATFORM_RPI
+
 #elif BX_PLATFORM_LINUX
   pd.ndt = wmi.info.x11.display;
   pd.nwh = (void *)(uintptr_t)wmi.info.x11.window;
@@ -460,7 +476,7 @@ bool SDLWindow::bgfxInit() {
 
   setPlatformData(pd);
 
-  if (!bgfx::init(bgfx::RendererType::OpenGL))
+  if (!bgfx::init(bgfx::RendererType::OpenGLES))
     return false;
 
   bgfx::reset(_width, _height, _reset);

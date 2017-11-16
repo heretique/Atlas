@@ -1,6 +1,7 @@
 #include "SDLApp.h"
 #include "SDL2/SDL.h"
 #include "SDLWindow.h"
+#include <easy/profiler.h>
 #include <vector>
 
 SDLApp::~SDLApp() {
@@ -31,6 +32,7 @@ int SDLApp::exec() {
   std::vector<std::unique_ptr<SDLWindow>> killWindows;
 
   while (_running) {
+    EASY_BLOCK("Main loop", profiler::colors::Green);
     while (SDL_PollEvent(&e) != 0) {
       // User requests quit
       if (e.type == SDL_QUIT) {

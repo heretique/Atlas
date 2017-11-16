@@ -3,6 +3,7 @@
 
 #include "Core/Types.h"
 #include <list>
+#include <memory>
 
 class SDLWindow;
 union SDL_Event;

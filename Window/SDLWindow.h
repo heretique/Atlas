@@ -14,15 +14,21 @@ class SDLWindow {
   friend class SDLApp;
 
 public:
-  SDLWindow(const char *title, int x, int y, int w, int h);
+  struct Size {
+    u32 width;
+    u32 height;
+  };
+
   virtual ~SDLWindow();
   u32 winId() const;
   bool isMain() const;
   virtual void init();
   virtual void update(float dt);
   virtual void onGUI();
+  Size windowSize() const;
 
 protected:
+  SDLWindow(const char *title, int x, int y, int w, int h);
   // imgui related
   bool imguiInit();
   void imguiShutdown();

@@ -34,3 +34,6 @@
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
+[submodule "3rdparty/easy_profiler"]
+	path = 3rdparty/easy_profiler
+	url = https://github.com/yse/easy_profiler.git

@@ -15,16 +15,17 @@ Module {
     Depends { name: "cpp" }
     cpp.includePaths: [
         path + "/../../../3rdparty",
+        path + "/../../../3rdparty/easy_profiler/easy_profiler_core/include",
         path + "/../../../3rdparty/bx/include",
         path + "/../../../3rdparty/bgfx/include",
         path + "/../../../3rdparty/bgfx/3rdparty",
-        path + "/../../../3rdparty/bgfx/3rdparty/khronos",
         path + "/../../../3rdparty/bgfx/3rdparty/dxsdk/include",
         path + "/../../../3rdparty/concurrentqueue",
         path + "/../../../3rdparty/wren/src/include",
         path + "/../../../3rdparty/wrenpp"
     ]
 
+//    cpp.debugInformation: true
 
     Properties {
         condition: qbs.targetOS.contains("windows")
@@ -35,15 +36,20 @@ Module {
                 return "mingw"
         }
         cpp.includePaths: outer.uniqueConcat([
-            path + "/../../../3rdparty/sdl/include"
+            path + "/../../../3rdparty/sdl/include",
+            path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
     }
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.includePaths: outer.uniqueConcat([
-            "/usr/local/include"
+        cpp.systemIncludePaths: outer.uniqueConcat([
+            "/usr/include",
+            "c:/apps/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/usr/local/include",
+            "c:/apps/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/opt/vc/include"
         ])
+        cpp.defines : outer.uniqueConcat(["__VCCOREVER__", "BX_PLATFORM_RPI"]) // for RPI
+        cpp.libraryPaths: outer.uniqueConcat(["c:/apps/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/opt/vc/lib"])
     }
 
     Properties {
