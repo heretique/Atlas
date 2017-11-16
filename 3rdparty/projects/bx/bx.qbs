@@ -20,7 +20,8 @@ StaticLibrary {
 
     Depends { name: "cpp" }
     cpp.includePaths: [
-        path + "/../../bx/include"
+        path + "/../../bx/include",
+        path + "/../../bx/3rdparty"
     ]
 
     Depends { name: "common" }
