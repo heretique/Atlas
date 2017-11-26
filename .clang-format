@@ -69,11 +69,11 @@ SortIncludes: true
 
 # how many empty lines to go through before giving up
 # on unifying multiple include blocks
-IncludeBlocksSearchDistance: 4
+#IncludeBlocksSearchDistance: 4
 
 # if a generated sorted include block is smaller 
 # than the threshold, it won't get separated by newline
-IncludeBlocksSegregationSizeThreshold: 1
+#IncludeBlocksSegregationSizeThreshold: 1
 
 IncludeCategories:
 
