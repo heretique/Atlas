@@ -39,7 +39,9 @@ Module {
             path + "/../../../3rdparty/sdl/include",
             path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
+        cpp.windowsApiCharacterSet: ""
     }
+
 
     Properties {
         condition: qbs.targetOS.contains("linux")

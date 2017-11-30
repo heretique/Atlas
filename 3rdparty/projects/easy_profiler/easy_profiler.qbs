@@ -9,6 +9,7 @@ StaticLibrary {
         "../../easy_profiler/easy_profiler_core/*.cpp"
     ]
     Depends { name: "cpp" }
+    Depends { name: "common" }
     cpp.cxxLanguageVersion: "c++14"
 
     cpp.includePaths: [ "../../easy_profiler/easy_profiler_core/include" ]
@@ -20,10 +21,9 @@ StaticLibrary {
         "EASY_PROFILER_VERSION_PATCH=0"
     ]
 
-
     Properties {
-        condition: qbs.targetOS.contains("windows")
-        cpp.windowsApiCharacterSet: ""
+        condition: qbs.toolchain.contains("mingw")
+        cpp.defines: outer.uniqueConcat(["STRSAFE_NO_DEPRECATE"])
     }
 
     Group {     // Properties for the produced executable
