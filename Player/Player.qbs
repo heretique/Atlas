@@ -50,6 +50,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("osx")
+        cpp.architecture: "x86_64"
         cpp.frameworks: [ "Cocoa", "OpenGL" ]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])

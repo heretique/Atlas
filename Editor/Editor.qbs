@@ -21,7 +21,6 @@ Product {
         "../3rdparty/bgfx/examples/17-drawstress",
     ]
     cpp.cxxLanguageVersion: "c++14"
-//    cpp.architecture: "x86_64"
     cpp.defines: ["BUILD_WITH_EASY_PROFILER"]
 
     Depends { name: "common" }
@@ -53,6 +52,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("osx")
+        cpp.architecture: "x86_64"
         cpp.frameworks: [ "Cocoa", "OpenGL", "Metal", "QuartzCore"]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])

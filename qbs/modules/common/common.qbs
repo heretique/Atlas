@@ -58,6 +58,7 @@ Module {
             if (qbs.toolchain.contains("clang"))
                 return "clang"
         }
+        cpp.architecture: qbs.architecture
         cpp.includePaths: outer.uniqueConcat([
             "/usr/local/opt/sdl2/include"
         ])   
