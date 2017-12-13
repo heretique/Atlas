@@ -16,9 +16,6 @@
 [submodule "3rdparty/wren"]
 	path = 3rdparty/wren
 	url = https://github.com/munificent/wren.git
-[submodule "3rdparty/assimp"]
-	path = 3rdparty/assimp
-	url = https://github.com/assimp/assimp.git
 [submodule "3rdparty/cereal"]
 	path = 3rdparty/cereal
 	url = https://github.com/USCiLab/cereal.git

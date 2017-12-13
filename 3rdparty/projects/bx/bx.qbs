@@ -27,11 +27,7 @@ StaticLibrary {
     Depends { name: "common" }
 
     cpp.cxxLanguageVersion: "c++14"
-
-    Properties {
-        condition: qbs.targetOS.contains("windows")
-        cpp.windowsApiCharacterSet: ""
-    }
+    cpp.defines: ["__STDC_FORMAT_MACROS"]
 
 
     Properties {
