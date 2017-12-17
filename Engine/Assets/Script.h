@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Resources/Asset.h"
+#include "Assets/Asset.h"
 #include "wrenpp/Wren++.h"
 
 namespace atlas

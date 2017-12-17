@@ -9,6 +9,7 @@ StaticLibrary {
         "../../bimg/src/bimg_p.h",
 //        "../../bimg/src/image_decode.cpp",
 //        "../../bimg/src/image_encode.cpp",
+        "../../bimg/src/image_gnf.cpp",
         "../../bimg/src/image.cpp"
     ]
 

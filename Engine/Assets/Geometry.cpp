@@ -1,6 +1,5 @@
 #include "Geometry.h"
-#include "AssetManager.h"
-#include "LogManager.h"
+#include "Managers/LogManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
 #include "tinyobj/tiny_obj_loader.h"

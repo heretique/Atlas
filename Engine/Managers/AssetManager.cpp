@@ -1,6 +1,6 @@
 #include "Managers/AssetManager.h"
+#include "Assets/Asset.h"
 #include "Managers/LogManager.h"
-#include "Resources/Asset.h"
 #include <fstream>
 
 namespace atlas
@@ -9,13 +9,9 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager()
-{
-}
+AssetManager::AssetManager() {}
 
-AssetManager::~AssetManager()
-{
-}
+AssetManager::~AssetManager() {}
 
 void AssetManager::registerAssetType(int assetType, const std::string& typeString, AssetTypeFactoryFunc ff)
 {

@@ -16,10 +16,7 @@ Project {
         "3rdparty/projects/wren/wren.qbs",
         "3rdparty/projects/wrenpp/wrenpp.qbs",
         "Engine/Engine.qbs",
-        "Editor/Editor.qbs",
-        "Player/Player.qbs",
         "Tests/Tests.qbs",
-        "Window/Window.qbs",
     ]
     name: "Atlas"
 }

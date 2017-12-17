@@ -1,13 +1,13 @@
 #include "Engine.h"
 
-#include "AssetManager.h"
-#include "ECSManager.h"
-#include "JobManager.h"
-#include "LogManager.h"
-#include "PluginManager.h"
-#include "ProfilingManager.h"
-#include "Resources/Geometry.h"
-#include "Resources/Script.h"
+#include "Assets/Geometry.h"
+#include "Assets/Script.h"
+#include "Managers/AssetManager.h"
+#include "Managers/ECSManager.h"
+#include "Managers/JobManager.h"
+#include "Managers/LogManager.h"
+#include "Managers/PluginManager.h"
+#include "Managers/ProfilingManager.h"
 
 namespace atlas
 {
@@ -29,9 +29,7 @@ public:
         delete logger;
     }
 
-    virtual ~StdoutLogger() override
-    {
-    }
+    virtual ~StdoutLogger() override {}
     virtual void writeInfo(const char* msg, ...) override
     {
         va_list args;

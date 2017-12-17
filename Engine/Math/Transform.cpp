@@ -684,17 +684,17 @@ bool Transform::isStatic() const
 void Transform::dirty(char matrixDirtyBits)
 {
     _matrixDirtyBits |= matrixDirtyBits;
-    if (isTransformChangedSuspended())
-    {
-        if (!isDirty(DIRTY_NOTIFY))
-        {
-            //            suspendTransformChange(this);
-        }
-    }
-    else
-    {
-        //        transformChanged();
-    }
+    //    if (isTransformChangedSuspended())
+    //    {
+    //        if (!isDirty(DIRTY_NOTIFY))
+    //        {
+    //            //            suspendTransformChange(this);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        //        transformChanged();
+    //    }
 }
 
 bool Transform::isDirty(char matrixDirtyBits) const

@@ -1,5 +1,4 @@
 #include "Script.h"
-#include "AssetManager.h"
 #include <string>
 
 namespace atlas

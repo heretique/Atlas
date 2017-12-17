@@ -33,7 +33,7 @@ struct MeshVertex
     static bgfx::VertexDecl _vertDecl;
 };
 
-u32 packUint32(u8 x, u8 y, u8 z, u8 w)
+inline u32 packUint32(u8 x, u8 y, u8 z, u8 w)
 {
     union {
         u32 ui32;
@@ -48,7 +48,7 @@ u32 packUint32(u8 x, u8 y, u8 z, u8 w)
     return un.ui32;
 }
 
-u32 packF4u(float x, float y = 0.0f, float z = 0.0f, float w = 0.0f)
+inline u32 packF4u(float x, float y = 0.0f, float z = 0.0f, float w = 0.0f)
 {
     const u8 xx = u8(x * 127.0f + 128.0f);
     const u8 yy = u8(y * 127.0f + 128.0f);

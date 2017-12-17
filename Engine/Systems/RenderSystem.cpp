@@ -11,6 +11,10 @@ RenderSystem::RenderSystem()
 {
 }
 
+RenderSystem::~RenderSystem()
+{
+}
+
 void RenderSystem::update(EntityManager& entities, EventManager& events, TimeDelta dt)
 {
     entities.each<math::Transform, MeshComponent>(

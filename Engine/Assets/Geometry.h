@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Math/BoundingBox.h"
-#include "Resources/Asset.h"
+#include "Assets/Asset.h"
 #include "bgfx/bgfx.h"
 
 namespace atlas

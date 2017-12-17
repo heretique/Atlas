@@ -135,10 +135,10 @@ struct ImGuiBgfx
 
                     state |= BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
-                    const u16 xx = u16(bx::fmax(cmd->ClipRect.x, 0.0f));
-                    const u16 yy = u16(bx::fmax(cmd->ClipRect.y, 0.0f));
-                    bgfx::setScissor(xx, yy, u16(bx::fmin(cmd->ClipRect.z, 65535.0f) - xx),
-                                     u16(bx::fmin(cmd->ClipRect.w, 65535.0f) - yy));
+                    const u16 xx = u16(fmax(cmd->ClipRect.x, 0.0f));
+                    const u16 yy = u16(fmax(cmd->ClipRect.y, 0.0f));
+                    bgfx::setScissor(xx, yy, u16(fmin(cmd->ClipRect.z, 65535.0f) - xx),
+                                     u16(fmin(cmd->ClipRect.w, 65535.0f) - yy));
 
                     bgfx::setState(state);
                     bgfx::setTexture(0, _tex, _texture);
@@ -245,7 +245,9 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init() {}
+void SDLWindow::init()
+{
+}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -342,7 +344,9 @@ void SDLWindow::update(float dt)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI() {}
+void SDLWindow::onGUI()
+{
+}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -515,7 +519,7 @@ bool SDLWindow::bgfxInit()
 
     setPlatformData(pd);
 
-    if (!bgfx::init(bgfx::RendererType::OpenGLES))
+    if (!bgfx::init())
         return false;
 
     bgfx::reset(_width, _height, _reset);

@@ -32,7 +32,6 @@ StaticLibrary {
     cpp.includePaths: [
         path + "/../../bgfx/include",
         path + "/../../bgfx/3rdparty",
-        //        path + "/../../bgfx/3rdparty/khronos",
         path + "/../../bgfx/3rdparty/dxsdk/include"
     ]
     cpp.cxxLanguageVersion: "c++14"
@@ -41,8 +40,18 @@ StaticLibrary {
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.defines:  outer.uniqueConcat(["BX_PLATFORM_RPI", "BGFX_CONFIG_RENDERER_OPENGLES"])
+        cpp.defines:  outer.uniqueConcat(["BGFX_CONFIG_RENDERER_OPENGLES"])
     }
+
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        cpp.includePaths: outer.uniqueConcat([
+            path + "/../../bgfx/3rdparty/khronos"
+        ])
+                //
+        cpp.defines:  outer.uniqueConcat(["BGFX_CONFIG_RENDERER_OPENGL"])
+    }
+
 
     Export {
         Depends { name: "cpp" }

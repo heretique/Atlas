@@ -9,7 +9,7 @@ class Transform;
 
 namespace atlas
 {
-class MeshComponent;
+struct MeshComponent;
 
 class RenderSystem : public entityx::System<RenderSystem>
 {
