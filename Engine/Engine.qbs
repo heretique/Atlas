@@ -40,9 +40,10 @@ Product {
         "../3rdparty/picojson",
         "../3rdparty/tinygltf",
         "../3rdparty/signals-cpp",
+        "../3rdparty/spdlog/include",
     ]
 
-    cpp.defines: ["BUILD_WITH_EASY_PROFILER"]
+    cpp.defines: ["BUILD_WITH_EASY_PROFILER, SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
     Depends { name: "easy_profiler" }

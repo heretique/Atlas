@@ -1,7 +1,8 @@
 #include "Managers/AssetManager.h"
 #include "Assets/Asset.h"
-#include "Managers/LogManager.h"
+#include "Core/Engine.h"
 #include <fstream>
+#include <spdlog/spdlog.h>
 
 namespace atlas
 {
@@ -9,9 +10,13 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager() {}
+AssetManager::AssetManager()
+{
+}
 
-AssetManager::~AssetManager() {}
+AssetManager::~AssetManager()
+{
+}
 
 void AssetManager::registerAssetType(int assetType, const std::string& typeString, AssetTypeFactoryFunc ff)
 {
@@ -32,7 +37,7 @@ AssetHandle AssetManager::addAsset(int type, const std::string& name, int flags)
 {
     if (name == "")
     {
-        LOGINFO("Invalid name for added Asset of type %i", type);
+        Engine::log().error("Invalid name for added Asset of type {}", type);
         return kInvalidAssetHandle;
     }
 
@@ -41,14 +46,14 @@ AssetHandle AssetManager::addAsset(int type, const std::string& name, int flags)
     auto     it    = _registry.find(type);
     if (it == _registry.end())
     {
-        LOGERROR("Asset type not registered: %d", type);
+        Engine::log().error("Asset type not registered: {}", type);
     }
 
     asset = it->second.factoryFunc(name, flags);
     if (asset == nullptr)
         return kInvalidAssetHandle;
 
-    LOGINFO("Adding %s Asset '%s'\n", it->second.typeString.c_str(), name.c_str());
+    Engine::log().info("Adding {} Asset '{}'", it->second.typeString.c_str(), name.c_str());
     AssetHandle handle = addAsset(asset);
     if (handle != kInvalidAssetHandle)
         asset->_handle = handle;
@@ -112,13 +117,13 @@ bool AssetManager::loadAssets()
                 if (!asset->load(ifs))
                 {
                     success = false;
-                    LOGWARNING("Couldn't load asset: %s\n", asset->name().c_str());
+                    Engine::log().warn("Couldn't load asset: {}", asset->name().c_str());
                 }
             }
             else
             {
                 success = false;
-                LOGWARNING("Couldn't find asset: %s\n", path.c_str());
+                Engine::log().error("Couldn't find asset: {}", path.c_str());
             }
         }
     }

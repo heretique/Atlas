@@ -1,5 +1,6 @@
 #include "Asset.h"
-#include <Managers/LogManager.h>
+#include "Core/Engine.h"
+#include <spdlog/spdlog.h>
 
 namespace atlas
 {
@@ -21,13 +22,13 @@ Asset::~Asset()
 
 AssetPtr Asset::clone() const
 {
-    LOGINFO("Asset cloning not implemented for type %i", _type);
+    Engine::log().warn("Asset cloning not implemented for type {}", _type);
     return nullptr;
 }
 
 bool Asset::load(const std::istream& data)
 {
-    LOGWARNING("Asset '%s' of type %i: No data loaded (file not found?)", _name.c_str(), _type);
+    Engine::log().warn("Asset '{}' of type {}: No data loaded (file not found?)", _name.c_str(), _type);
 
     return false;
 }

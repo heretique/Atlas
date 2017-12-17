@@ -1,36 +1,60 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
-namespace atlas {
+namespace spdlog
+{
+class logger;
+}
 
+namespace atlas
+{
 // Forward declarations
 class PluginManager;
 class AssetManager;
 class ECSManager;
 class AudioManager;
 class PhysicsManager;
-class ProfilingManager;
 class JobManager;
+class MainWindow;
 
-class Engine {
+class Engine
+{
 public:
-  static bool init();
-  static void release();
-
-  static ProfilingManager &profiler() { return *_profilingManager; }
-  static PluginManager &plugMan() { return *_pluginManager; }
-  static AssetManager &assets() { return *_assetManager; }
-  static ECSManager &ecs() { return *_ecsManager; }
-  static JobManager &jobMan() { return *_jobManager; }
+    static PluginManager& plugins()
+    {
+        return *_pluginManager;
+    }
+    static AssetManager& assets()
+    {
+        return *_assetManager;
+    }
+    static ECSManager& ecs()
+    {
+        return *_ecsManager;
+    }
+    static JobManager& jobs()
+    {
+        return *_jobManager;
+    }
+    static spdlog::logger& log()
+    {
+        return *_logger;
+    }
 
 private:
-  static ProfilingManager *_profilingManager;
-  static PluginManager *_pluginManager;
-  static AssetManager *_assetManager;
-  static ECSManager *_ecsManager;
-  static JobManager *_jobManager;
+    static bool init();
+    static void release();
+
+private:
+    static spdlog::logger* _logger;
+    static PluginManager*  _pluginManager;
+    static AssetManager*   _assetManager;
+    static ECSManager*     _ecsManager;
+    static JobManager*     _jobManager;
+
+    friend class MainWindow;
 };
 
-} // namespace atlas
+}  // namespace atlas
 
-#endif // ENGINE_H
+#endif  // ENGINE_H

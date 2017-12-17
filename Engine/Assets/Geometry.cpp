@@ -1,5 +1,6 @@
 #include "Geometry.h"
-#include "Managers/LogManager.h"
+#include "Core/Engine.h"
+#include <spdlog/spdlog.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
 #include "tinyobj/tiny_obj_loader.h"
@@ -44,21 +45,6 @@ GeometryAsset::~GeometryAsset()
 
 bool GeometryAsset::load(const std::istream& is)
 {
-    //    tinygltf::Scene scene;
-    //    tinygltf::TinyGLTFLoader loader;
-    //    string err;
-    //    string baseDir = "";
-    //    bool ret = loader.LoadASCIIFromString(&scene, &err, data, size,
-    //    baseDir);
-    //    if (!ret)
-    //    {
-    //        fmt::print("Failed to load geometry resource: {}\n", _name);
-    //        fmt::print("{}\n", err);
-    //        return false;
-    //    }
-
-    //    memstream is(data, size);
-
     tinyobj::attrib_t                attrib;
     std::vector<tinyobj::shape_t>    shapes;
     std::vector<tinyobj::material_t> materials;
@@ -67,7 +53,7 @@ bool GeometryAsset::load(const std::istream& is)
     bool        ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, const_cast<std::istream*>(&is));
     if (!ret)
     {
-        LOGERROR("Failed to load OBJ with error: %s\n", err.c_str());
+        Engine::log().error("Failed to load OBJ with error: {}", err.c_str());
     }
 
     return true;

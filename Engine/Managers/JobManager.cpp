@@ -1,8 +1,7 @@
 #include "Managers/JobManager.h"
-
 #include "Core/Engine.h"
 #include <thread>
-#include <fmt/printf.h>
+#include <spdlog/spdlog.h>
 
 namespace atlas
 {
@@ -13,14 +12,14 @@ void JobManager::init()
     if (_cpuCount > 2)
         _cpuCount -= 2;  // substract main an rendering threads;
 
-    fmt::print("Starting {} worker threads...\n", _cpuCount);
+    Engine::log().info("Starting {} worker threads...", _cpuCount);
 
     _running.test_and_set(std::memory_order_acquire);
 
     for (uint i = 0; i < _cpuCount; ++i)
     {
         _runners.push_back(std::thread([&]() {
-            fmt::print("Starting worker thread...\n");
+            Engine::log().info("Starting worker thread...");
             Job job;
             while (_running.test_and_set(std::memory_order_acquire) == true)
             {
@@ -31,7 +30,7 @@ void JobManager::init()
                 if (job.pending)
                     _pendingTasks.fetch_add(-1, std::memory_order_release);
             }
-            fmt::print("Exiting worker thread...\n");
+            Engine::log().info("Exiting worker thread...");
             _running.clear();
         }));
     }

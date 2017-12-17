@@ -1,88 +1,56 @@
 #include "Engine.h"
-
 #include "Assets/Geometry.h"
 #include "Assets/Script.h"
 #include "Managers/AssetManager.h"
 #include "Managers/ECSManager.h"
 #include "Managers/JobManager.h"
-#include "Managers/LogManager.h"
 #include "Managers/PluginManager.h"
-#include "Managers/ProfilingManager.h"
+#include <spdlog/spdlog.h>
 
 namespace atlas
 {
-ProfilingManager* Engine::_profilingManager = 0x0;
-PluginManager*    Engine::_pluginManager    = 0x0;
-AssetManager*     Engine::_assetManager     = 0x0;
-ECSManager*       Engine::_ecsManager       = 0x0;
-JobManager*       Engine::_jobManager       = 0x0;
-
-class StdoutLogger : ILogger
-{
-public:
-    static ILogger* FactoryFunc(int flags)
-    {
-        return new StdoutLogger;
-    }
-    static void ReleaseFunc(ILogger* logger)
-    {
-        delete logger;
-    }
-
-    virtual ~StdoutLogger() override {}
-    virtual void writeInfo(const char* msg, ...) override
-    {
-        va_list args;
-        va_start(args, msg);
-        vfprintf(stdout, msg, args);
-        va_end(args);
-    }
-
-    virtual void writeWarning(const char* msg, ...) override
-    {
-        va_list args;
-        va_start(args, msg);
-        vfprintf(stdout, msg, args);
-        va_end(args);
-    }
-
-    virtual void writeError(const char* msg, ...) override
-    {
-        va_list args;
-        va_start(args, msg);
-        vfprintf(stderr, msg, args);
-        va_end(args);
-    }
-};
+spdlog::logger* Engine::_logger        = nullptr;
+PluginManager*  Engine::_pluginManager = nullptr;
+AssetManager*   Engine::_assetManager  = nullptr;
+ECSManager*     Engine::_ecsManager    = nullptr;
+JobManager*     Engine::_jobManager    = nullptr;
 
 bool Engine::init()
 {
-    LogManager::registerLoggerType("stdout", StdoutLogger::FactoryFunc, StdoutLogger::ReleaseFunc);
-    LogManager::init("stdout", 0);
+    _logger = spdlog::stdout_color_mt("console").get();
 
-    if (_profilingManager == 0x0)
-        _profilingManager = new ProfilingManager();
-    if (_pluginManager == 0x0)
+    if (_pluginManager == nullptr)
         _pluginManager = new PluginManager();
-    if (_assetManager == 0x0)
+    if (_assetManager == nullptr)
         _assetManager = new AssetManager();
-    if (_ecsManager == 0x0)
+    if (_ecsManager == nullptr)
         _ecsManager = new ECSManager();
-    if (_jobManager == 0x0)
+    if (_jobManager == nullptr)
         _jobManager = new JobManager();
 
     assets().registerAssetType((int)AssetTypes::Geometry, "Geometry", GeometryAsset::factoryFunc);
     assets().registerAssetType((int)AssetTypes::Code, "Code", ScriptAsset::factoryFunc);
 
-    jobMan().init();
+    jobs().init();
 
     return true;
 }
 
 void Engine::release()
 {
-    jobMan().release();
-    LogManager::release();
+    jobs().release();
+
+    delete _jobManager;
+    _jobManager = nullptr;
+
+    delete _ecsManager;
+    _ecsManager = nullptr;
+
+    delete _assetManager;
+    _assetManager = nullptr;
+
+    delete _pluginManager;
+    _pluginManager = nullptr;
 }
 
 }  // namespace Atlas
