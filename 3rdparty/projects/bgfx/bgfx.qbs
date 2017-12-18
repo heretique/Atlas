@@ -5,7 +5,6 @@ StaticLibrary {
     id: bgfx
     name: "bgfx"
     files: [
-        // "bgfx/src/amalgamated.cpp",
         "../../bgfx/include/bgfx/*.h",
         "../../bgfx/src/*.cpp"
     ]

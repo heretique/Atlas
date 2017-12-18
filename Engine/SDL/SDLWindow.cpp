@@ -1,5 +1,6 @@
 #include "SDLWindow.h"
 
+#include "Core/Engine.h"
 #include "SDLApp.h"
 #include "fs_ocornut_imgui.bin.h"
 #include "vs_ocornut_imgui.bin.h"
@@ -12,7 +13,10 @@
 #include <easy/profiler.h>
 #include <fmt/printf.h>  // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
+#include <spdlog/spdlog.h>
 
+namespace atlas
+{
 bool          SDLWindow::_initialized = false;
 SDL_GLContext SDLWindow::_glContext   = 0;
 u32           SDLWindow::_debug       = BGFX_DEBUG_NONE;  // BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER;
@@ -181,8 +185,8 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(title, x, y, w, h,
-                               SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS);
+    _window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL |
+                                                      SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -217,6 +221,8 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     bgfx::setViewClear(_viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
 
     imguiInit();
+
+    SDL_AddEventWatch(&SDLWindow::SDLEventCallback, (void*)this);
 }
 
 SDLWindow::~SDLWindow()
@@ -251,13 +257,6 @@ void SDLWindow::init()
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
-    // If an event was detected for this window
-    if (e.type == SDL_WINDOWEVENT && e.window.windowID == _windowId)
-    {
-        handleWindowEvent(e.window);
-        return;
-    }
-
     u32 flags = SDL_GetWindowFlags(_window);
     if (flags & SDL_WINDOW_INPUT_FOCUS || flags & SDL_WINDOW_MOUSE_FOCUS)
     {
@@ -265,12 +264,12 @@ void SDLWindow::handleEvent(SDL_Event& e)
     }
 }
 
-void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
+int SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
 {
     switch (e.event)
     {
         // Get new dimensions and recreate framebuffer
-        case SDL_WINDOWEVENT_SIZE_CHANGED:
+        case SDL_WINDOWEVENT_RESIZED:
             if (_width != e.data1 || _height != e.data2)
             {
                 _width  = e.data1;
@@ -290,11 +289,12 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
                 }
 
                 bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
-                //            fmt::print("Resize event, window: {}, view: {}, size({},
-                //            {})\n", _windowId, _viewId, _width, _height);
+                Engine::log().info("Resize event, window: {}, view: {}, size({},{})\n ", _windowId, _viewId, _width,
+                                   _height);
             }
             break;
     }
+    return 1;
 }
 
 void SDLWindow::handleInputEvent(SDL_Event& e)
@@ -324,6 +324,16 @@ void SDLWindow::handleInputEvent(SDL_Event& e)
             io.KeyAlt        = ((SDL_GetModState() & KMOD_ALT) != 0);
             io.KeySuper      = ((SDL_GetModState() & KMOD_GUI) != 0);
             break;
+    }
+}
+
+int SDLWindow::SDLEventCallback(void* data, SDL_Event* e)
+{
+    SDLWindow* win = (SDLWindow*)data;
+    // If an event was detected for this window
+    if (e->type == SDL_WINDOWEVENT && e->window.windowID == win->winId())
+    {
+        return win->handleWindowEvent(e->window);
     }
 }
 
@@ -434,9 +444,10 @@ void SDLWindow::imguiNewFrame()
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
     ImGui::NewFrame();
     ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
-    ImGui::SetNextWindowSize(ImVec2(_width, _height));
     ImGui::Begin(_title.c_str(), &_open, ImVec2(_width, _height), 0.0f,
                  ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::SetWindowSize(_title.c_str(), ImVec2(_width, _height));
+
     if (!_open)
     {
         SDL_Event event;
@@ -548,3 +559,4 @@ void* SDLWindow::nativeHandle()
 
     return nullptr;
 }
+}  // namespace atlas
