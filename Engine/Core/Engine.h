@@ -6,6 +6,11 @@ namespace spdlog
 class logger;
 }
 
+namespace wrenpp
+{
+class VM;
+}
+
 namespace atlas
 {
 // Forward declarations
@@ -40,6 +45,10 @@ public:
     {
         return *_logger;
     }
+    static wrenpp::VM& vm()
+    {
+        return *_vm;
+    }
 
 private:
     static bool init();
@@ -51,6 +60,7 @@ private:
     static AssetManager*   _assetManager;
     static ECSManager*     _ecsManager;
     static JobManager*     _jobManager;
+    static wrenpp::VM*     _vm;
 
     friend class MainWindow;
 };

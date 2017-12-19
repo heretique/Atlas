@@ -148,6 +148,8 @@ public:
      */
     bool isEmpty() const;
 
+    void extend(Vector3 point);
+
     /**
      * Sets this bounding box to the smallest bounding box
      * that contains both this bounding box and the specified bounding sphere.

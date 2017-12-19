@@ -7,6 +7,7 @@ StaticLibrary {
     files: [
         "../../wren/src/vm/*.c",
         "../../wren/src/optional/*.c",
+        "../../wren/src/include/*.h",
     ]
     Depends { name: "cpp" }
 

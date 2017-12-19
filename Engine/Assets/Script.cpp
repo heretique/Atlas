@@ -4,7 +4,7 @@
 namespace atlas
 {
 ScriptAsset::ScriptAsset(const std::string& name, u32 flags)
-    : Asset((int)AssetTypes::Code, name, flags)
+    : Asset(AssetTypes::Code, name, flags)
 {
 }
 
@@ -12,14 +12,15 @@ ScriptAsset::~ScriptAsset()
 {
 }
 
-bool ScriptAsset::load(const std::istream& data)
+bool ScriptAsset::loadImpl(const std::istream& data)
 {
-    return false;
+    _buffer = std::string(std::istreambuf_iterator<char>(data.rdbuf()), {});
+    return true;
 }
 
-AssetPtr ScriptAsset::clone() const
+const std::string& ScriptAsset::script() const
 {
-    return nullptr;
+    return _buffer;
 }
 
 }  // atlas

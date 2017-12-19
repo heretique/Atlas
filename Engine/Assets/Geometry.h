@@ -1,34 +1,33 @@
 #pragma once
 
-#include "Math/BoundingBox.h"
 #include "Assets/Asset.h"
+#include "Math/BoundingBox.h"
 #include "bgfx/bgfx.h"
+#include <vector>
 
 namespace atlas
 {
 class GeometryAsset : public Asset
 {
 public:
-    static AssetPtr factoryFunc(const std::string& name, u32 flags)
+    static AssetPtr factoryFunc(const std::string& filename, u32 flags)
     {
-        return std::make_shared<GeometryAsset>(name, flags);
+        return std::make_shared<GeometryAsset>(filename, flags);
     }
 
-    GeometryAsset(const std::string& name, u32 flags);
-    virtual ~GeometryAsset() override;
+    GeometryAsset(const std::string& filename, u32 flags);
+    ~GeometryAsset() override;
 
-    virtual bool load(const std::istream& data) override;
-    virtual AssetPtr clone() const override;
+    bool loadImpl(const std::istream& data) override;
 
 private:
-    u32                             _vertexCount{0};
-    u32                             _indexCount{0};
-    bool                            _16BitIndices{true};
-    bgfx::VertexBufferHandle        _vbh    = BGFX_INVALID_HANDLE;
-    bgfx::IndexBufferHandle         _ibh    = BGFX_INVALID_HANDLE;
-    bgfx::DynamicVertexBufferHandle _dynvbh = BGFX_INVALID_HANDLE;
-    bgfx::DynamicIndexBufferHandle  _dynibh = BGFX_INVALID_HANDLE;
-    math::BoundingBox               _aabb;
+    bool                     _16BitIndices{true};
+    bgfx::VertexBufferHandle _vbh = BGFX_INVALID_HANDLE;
+    bgfx::IndexBufferHandle  _ibh = BGFX_INVALID_HANDLE;
+    math::BoundingBox        _aabb;
+    std::vector<float>       _vertices;
+    std::vector<u16>         _indices;
+    AssetHandle              _texture{AssetHandle::invalid};
 };
 
 }  // atlas

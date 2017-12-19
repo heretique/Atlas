@@ -18,27 +18,41 @@ AssetManager::~AssetManager()
 {
 }
 
-void AssetManager::registerAssetType(int assetType, const std::string& typeString, AssetTypeFactoryFunc ff)
+void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
 {
-    AssetRegEntry entry;
-    entry.typeString     = typeString;
-    entry.factoryFunc    = ff;
-    _registry[assetType] = entry;
+    if (_registry.find(assetType) != _registry.end())
+    {
+        Engine::log().warn("Asset type {}, already registered", assetType);
+        return;
+    }
+
+    _registry.insert(make_pair(assetType, f));
 }
 
 AssetHandle AssetManager::addAsset(AssetPtr resource)
 {
     AssetHandle handle     = _assets.alloc();
-    *(_assets.get(handle)) = resource;
+    _assets.getRef(handle) = resource;
+    // FIXME: proper check here
+    _hashedAssets.insert(std::make_pair(resource->filename(), handle));
     return handle;
 }
 
-AssetHandle AssetManager::addAsset(int type, const std::string& name, int flags)
+AssetHandle AssetManager::getHandle(StringHash hash) const
 {
-    if (name == "")
+    auto it = _hashedAssets.find(hash);
+    if (it != _hashedAssets.end())
+        return it->second;
+
+    return AssetHandle::invalid;
+}
+
+AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, u32 flags)
+{
+    if (filename == "")
     {
         Engine::log().error("Invalid name for added Asset of type {}", type);
-        return kInvalidAssetHandle;
+        return AssetHandle::invalid;
     }
 
     // Create Asset
@@ -49,60 +63,52 @@ AssetHandle AssetManager::addAsset(int type, const std::string& name, int flags)
         Engine::log().error("Asset type not registered: {}", type);
     }
 
-    asset = it->second.factoryFunc(name, flags);
+    asset = it->second(filename, flags);
     if (asset == nullptr)
-        return kInvalidAssetHandle;
+        return AssetHandle::invalid;
 
-    Engine::log().info("Adding {} Asset '{}'", it->second.typeString.c_str(), name.c_str());
+    Engine::log().info("Adding asset: '{}' of type: {}", filename.c_str(), type);
     AssetHandle handle = addAsset(asset);
-    if (handle != kInvalidAssetHandle)
+    if (handle != AssetHandle::invalid)
         asset->_handle = handle;
+
+    // FIXME: proper check here
+    _hashedAssets.insert(std::make_pair(filename, handle));
+
     return handle;
 }
 
-uint AssetManager::removeAsset(AssetHandle handle)
+void AssetManager::removeAsset(AssetHandle handle)
 {
     AssetPtr asset = getAsset(handle);
     if (asset != nullptr)
     {
+        auto it = _hashedAssets.find(asset->hash());
+        if (it != _hashedAssets.end())
+            _hashedAssets.erase(it);
+        asset = nullptr;  // TODO: check to see if this unloads (call destructor on Asset)
+        _assets.remove(handle);
     }
+}
 
-    return 0;
+void AssetManager::removeAsset(StringHash hash)
+{
+    AssetHandle handle = getHandle(hash);
+    removeAsset(handle);
 }
 
 const AssetPtr& AssetManager::getAsset(AssetHandle handle) const
 {
-    return *_assets.get(handle);
+    return _assets.getRef(handle);
 }
 
 AssetPtr& AssetManager::getAsset(AssetHandle handle)
 {
-    return *_assets.get(handle);
+    return _assets.getRef(handle);
 }
 
-AssetPtr AssetManager::getNextAsset(int type, AssetHandle start) const
+void AssetManager::loadAssets()
 {
-    AssetPtr                res          = nullptr;
-    const AssetPackedArray& packedAssets = _assets.storage();
-    u32                     startIndex   = _assets.getPackedIndex(start);
-    if (startIndex == kInvalidPackedIndex)
-    {
-        for (auto i = startIndex + 1; i < packedAssets.count; ++i)
-        {
-            res = packedAssets.array[i];
-            if (res != nullptr && (type == (int)AssetTypes::Undefined || res->_type == type))
-            {
-                return res;
-            }
-        }
-    }
-
-    return res;
-}
-
-bool AssetManager::loadAssets()
-{
-    bool                    success      = true;
     AssetPtr                asset        = nullptr;
     const AssetPackedArray& packedAssets = _assets.storage();
     for (u32 i = 0; i < packedAssets.count; ++i)
@@ -110,24 +116,28 @@ bool AssetManager::loadAssets()
         asset = packedAssets.array[i];
         if (asset != nullptr && !asset->isLoaded())
         {
-            std::string   path = _assetDir + asset->name();
+            std::string   path = _assetsDir + asset->filename();
             std::ifstream ifs(path, std::ios::in | std::ios::binary);
             if (ifs)
             {
                 if (!asset->load(ifs))
                 {
-                    success = false;
-                    Engine::log().warn("Couldn't load asset: {}", asset->name().c_str());
+                    Engine::log().warn("Couldn't load asset: {}", asset->filename());
+                }
+                else
+                {
+                    if (asset->isGPUResource() && !asset->uploadGPU())
+                    {
+                        Engine::log().warn("Couldn't upload asset: {}, to GPU", asset->filename());
+                    }
                 }
             }
             else
             {
-                success = false;
                 Engine::log().error("Couldn't find asset: {}", path.c_str());
             }
         }
     }
-    return success;
 }
 
 void AssetManager::loadAssetsAsync()
@@ -137,7 +147,7 @@ void AssetManager::loadAssetsAsync()
 
 void AssetManager::setAssetsDir(const std::string& path)
 {
-    _assetDir = path;
+    _assetsDir = path;
 }
 
 void AssetManager::releaseUnusedAssets()

@@ -50,10 +50,8 @@ private:
     void* nativeHandle();
     void doUpdate(float dt);
     void handleEvent(SDL_Event& e);
-    int handleWindowEvent(SDL_WindowEvent& e);
+    void handleWindowEvent(SDL_WindowEvent& e);
     void handleInputEvent(SDL_Event& e);
-    static int SDLEventCallback(void* data, SDL_Event* e);
-
     void releaseFramebuffer();
 
 private:

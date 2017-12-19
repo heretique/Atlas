@@ -7,12 +7,11 @@ namespace atlas
 //
 // Asset
 //
-Asset::Asset(int type, const std::string& name, u32 flags)
+Asset::Asset(AssetType type, const std::string& filename, u32 flags)
     : _type(type)
-    , _name(name)
+    , _filename(filename)
+    , _hash(filename)
     , _flags(flags)
-    , _loaded(false)
-    , _handle(kInvalidAssetHandle)
 {
 }
 
@@ -20,16 +19,28 @@ Asset::~Asset()
 {
 }
 
-AssetPtr Asset::clone() const
-{
-    Engine::log().warn("Asset cloning not implemented for type {}", _type);
-    return nullptr;
-}
-
 bool Asset::load(const std::istream& data)
 {
-    Engine::log().warn("Asset '{}' of type {}: No data loaded (file not found?)", _name.c_str(), _type);
+    bool loaded = loadImpl(data);
+    if (!isGPUResource())
+        _loaded = loaded;
 
+    return _loaded;
+}
+
+bool Asset::uploadGPU()
+{
+    _loaded = uploadGPUImpl();
+    return _loaded;
+}
+
+bool Asset::isGPUResource()
+{
+    return false;
+}
+
+bool Asset::uploadGPUImpl()
+{
     return false;
 }
 

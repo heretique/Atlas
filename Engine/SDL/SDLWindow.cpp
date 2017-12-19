@@ -10,7 +10,10 @@
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/math.h>
-#include <easy/profiler.h>
+//#include <easy/profiler.h>
+#include <chrono>
+#include <thread>
+
 #include <fmt/printf.h>  // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
@@ -87,7 +90,7 @@ struct ImGuiBgfx
 
     void render(u8 viewId, ImDrawData* drawData)
     {
-        EASY_FUNCTION(profiler::colors::Teal);
+        //        EASY_FUNCTION(profiler::colors::Teal);
         const ImGuiIO& io     = ImGui::GetIO();
         const float    width  = io.DisplaySize.x;
         const float    height = io.DisplaySize.y;
@@ -221,8 +224,6 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     bgfx::setViewClear(_viewId, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
 
     imguiInit();
-
-    SDL_AddEventWatch(&SDLWindow::SDLEventCallback, (void*)this);
 }
 
 SDLWindow::~SDLWindow()
@@ -257,6 +258,13 @@ void SDLWindow::init()
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
+    // If an event was detected for this window
+    if (e.type == SDL_WINDOWEVENT && e.window.windowID == _windowId)
+    {
+        handleWindowEvent(e.window);
+        return;
+    }
+
     u32 flags = SDL_GetWindowFlags(_window);
     if (flags & SDL_WINDOW_INPUT_FOCUS || flags & SDL_WINDOW_MOUSE_FOCUS)
     {
@@ -264,7 +272,7 @@ void SDLWindow::handleEvent(SDL_Event& e)
     }
 }
 
-int SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
+void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
 {
     switch (e.event)
     {
@@ -294,7 +302,6 @@ int SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
             }
             break;
     }
-    return 1;
 }
 
 void SDLWindow::handleInputEvent(SDL_Event& e)
@@ -327,16 +334,6 @@ void SDLWindow::handleInputEvent(SDL_Event& e)
     }
 }
 
-int SDLWindow::SDLEventCallback(void* data, SDL_Event* e)
-{
-    SDLWindow* win = (SDLWindow*)data;
-    // If an event was detected for this window
-    if (e->type == SDL_WINDOWEVENT && e->window.windowID == win->winId())
-    {
-        return win->handleWindowEvent(e->window);
-    }
-}
-
 void SDLWindow::releaseFramebuffer()
 {
     if (bgfx::isValid(_framebuffer))
@@ -365,7 +362,7 @@ SDLWindow::Size SDLWindow::windowSize() const
 
 void SDLWindow::doUpdate(float dt)
 {
-    EASY_FUNCTION(profiler::colors::Amber);
+    //    EASY_FUNCTION(profiler::colors::Amber);
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
     bgfx::touch(_viewId);
@@ -438,7 +435,7 @@ void SDLWindow::imguiShutdown()
 
 void SDLWindow::imguiNewFrame()
 {
-    EASY_FUNCTION(profiler::colors::Teal);
+    //    EASY_FUNCTION(profiler::colors::Teal);
     ImGuiIO& io    = ImGui::GetIO();
     io.DisplaySize = ImVec2((float)_width, (float)_height);
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
@@ -460,7 +457,7 @@ void SDLWindow::imguiNewFrame()
 
 void SDLWindow::imguiPushCtx()
 {
-    EASY_FUNCTION(profiler::colors::Teal);
+    //    EASY_FUNCTION(profiler::colors::Teal);
     _prevImguiCtx = ImGui::GetCurrentContext();
     ImGui::SetCurrentContext(_imguiCtx);
 }
@@ -472,7 +469,7 @@ void SDLWindow::imguiPopCtx()
 
 void SDLWindow::imguiMoveWindow()
 {
-    EASY_FUNCTION(profiler::colors::Teal);
+    //    EASY_FUNCTION(profiler::colors::Teal);
 
     if (ImGui::IsMouseClicked(0))
     {
@@ -494,7 +491,7 @@ void SDLWindow::imguiMoveWindow()
 
 void SDLWindow::imguiRender()
 {
-    EASY_FUNCTION(profiler::colors::Teal);
+    //    EASY_FUNCTION(profiler::colors::Teal);
 
     ImGui::End();
     ImGui::Render();

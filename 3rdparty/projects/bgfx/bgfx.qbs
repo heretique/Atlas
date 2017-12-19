@@ -26,7 +26,7 @@ StaticLibrary {
     Depends { name: "common" }
     Depends { name: "bx" }
     Depends { name: "bimg" }
-    Depends { name: "easy_profiler" }
+//    Depends { name: "easy_profiler" }
 
     cpp.includePaths: [
         path + "/../../bgfx/include",

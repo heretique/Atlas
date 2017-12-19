@@ -13,13 +13,15 @@ public:
         return std::make_shared<ScriptAsset>(name, flags);
     }
 
-    ScriptAsset(const std::string& name, u32 flags);
-    virtual ~ScriptAsset() override;
+    ScriptAsset(const std::string& filename, u32 flags);
+    ~ScriptAsset() override;
 
-    virtual bool load(const std::istream& data) override;
-    virtual AssetPtr clone() const override;
+    bool loadImpl(const std::istream& data) override;
+
+    const std::string& script() const;
 
 private:
+    std::string _buffer{};
 };
 
 }  // atlas

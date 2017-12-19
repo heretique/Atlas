@@ -69,12 +69,23 @@ struct FreeList
 
     T* get(const H& handle)
     {
-        return isValid(handle) ? &(_storage[handle.index()]) : 0x0;
+        return const_cast<T*>(static_cast<const FreeList*>(this)->get(handle));
     }
 
     const T* get(const H& handle) const
     {
         return isValid(handle) ? &(_storage[handle.index()]) : 0x0;
+    }
+
+    T& getRef(const H& handle)
+    {
+        return const_cast<T&>(static_cast<const FreeList*>(this)->getRef(handle));
+    }
+
+    const T& getRef(const H& handle) const
+    {
+        assert(isValid(handle));
+        return _storage[handle.index()];
     }
 
 public:
@@ -168,12 +179,7 @@ struct PackedFreeList
 
     T* get(const H& handle)
     {
-        // double indirection because of the free list but
-        // we gained cache friendly packed object array
-        if (isValid(handle))
-            return &(_storage.array[_freeList[handle.index()].index()]);
-
-        return 0x0;
+        return const_cast<T*>(static_cast<const PackedFreeList*>(this)->get(handle));
     }
 
     const T* get(const H& handle) const
@@ -185,6 +191,17 @@ struct PackedFreeList
             return &(_storage.array[_freeList[handle.index()].index()]);
 
         return 0x0;
+    }
+
+    T& getRef(const H& handle)
+    {
+        return const_cast<T&>(static_cast<const PackedFreeList*>(this)->getRef(handle));
+    }
+
+    const T& getRef(const H& handle) const
+    {
+        assert(isValid(handle));
+        return _storage.array[_freeList[handle.index()].index()];
     }
 
     u32 getPackedIndex(const H& handle) const

@@ -5,8 +5,8 @@ Product {
     name: "AtlasEngine"
     consoleApplication: false
     files: [
-    	"*.cpp",
-    	"*.h",
+        "*.cpp",
+        "*.h",
         "Allocators/*.cpp",
         "Allocators/*.h",
         "Assets/*.cpp",
@@ -15,13 +15,17 @@ Product {
         "Components/*.h",
         "Core/*.cpp",
         "Core/*.h",
-    	"Math/*.cpp",
-    	"Math/*.h",
-    	"Math/*.inl",
+        "Math/*.cpp",
+        "Math/*.h",
+        "Math/*.inl",
         "Managers/*.cpp",
         "Managers/*.h",
+        "Scripting/*.cpp",
+        "Scripting/*.h",
         "SDL/*.cpp",
         "SDL/*.h",
+        "Scripting/wren/imgui.wren",
+        "Scripting/wren/main.wren",
         "Systems/*cpp",
         "Systems/*.h",
     ]
@@ -46,7 +50,7 @@ Product {
     cpp.defines: ["BUILD_WITH_EASY_PROFILER, SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
-    Depends { name: "easy_profiler" }
+//    Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }

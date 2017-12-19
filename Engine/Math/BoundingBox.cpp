@@ -221,6 +221,14 @@ bool BoundingBox::isEmpty() const
     return min.x == max.x && min.y == max.y && min.z == max.z;
 }
 
+void BoundingBox::extend(Vector3 point)
+{
+    if (point < min)
+        min = point;
+    else if (max < point)
+        max = point;
+}
+
 void BoundingBox::merge(const BoundingBox& box)
 {
     // Calculate the new minimum point.

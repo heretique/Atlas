@@ -1,69 +1,77 @@
 #pragma once
 
-#include "Core/FreeList.h"
-#include "Core/Handle.h"
+#include "Assets/Types.h"
+#include "Core/StringHash.h"
+#include "Core/Types.h"
 
-#include <Core/Types.h>
+#include <functional>
 #include <memory>
 #include <string>
 
-namespace atlas {
-enum class AssetTypes {
-  Undefined = 0,
-  Scene,
-  Geometry,
-  Animation,
-  Material,
-  Code,
-  Shader,
-  Texture,
-  ParticleEffect,
-  Pipeline,
-  Template,   // this can be a combination of any other resource types
-  UserDefined // This is last always
-};
-
-// do not change bitfields size without changing the API handle bitfield size
-// these need to be the same
-class Asset;
-typedef std::shared_ptr<Asset> AssetPtr;
-typedef Handle<20, 12> AssetHandle;
-typedef PackedFreeList<AssetPtr, AssetHandle, 4096> AssetStorage;
-typedef AssetStorage::PackedStorage AssetPackedArray;
-static const AssetHandle kInvalidAssetHandle{0, 0};
-
-class Asset {
+namespace atlas
+{
+class Asset
+{
 public:
-  Asset(int type, const std::string &name, u32 flags);
-  virtual ~Asset();
+    Asset(AssetType type, const std::string& filename, u32 flags);
+    virtual ~Asset();
 
-  virtual bool load(const std::istream &data);
-  virtual AssetPtr clone() const;
+    AssetHandle        handle() const;
+    StringHash         hash() const;
+    AssetType          type() const;
+    u32                flags() const;
+    const std::string& filename() const;
+    bool               isLoaded() const;
 
-  AssetHandle handle() const;
-  int type() const;
-  u32 flags() const;
-  const std::string &name() const;
-  bool isLoaded() const;
+    bool load(const std::istream& data);
+    bool uploadGPU();
 
 protected:
-  int _type;
-  std::string _name;
-  u32 _flags;
-  bool _loaded;
-  AssetHandle _handle;
+    virtual bool loadImpl(const std::istream& data) = 0;
+    virtual bool isGPUResource();
+    virtual bool uploadGPUImpl();
 
-  friend class AssetManager;
+protected:
+    AssetType   _type{AssetTypes::Undefined};
+    std::string _filename{};
+    StringHash  _hash{};
+    u32         _flags{0};
+    bool        _loaded{false};
+    AssetHandle _handle{AssetHandle::invalid};
+
+    friend class AssetManager;
 };
 
-inline AssetHandle Asset::handle() const { return _handle; }
+inline AssetHandle Asset::handle() const
+{
+    return _handle;
+}
 
-inline int Asset::type() const { return _type; }
+inline StringHash Asset::hash() const
+{
+    return _hash;
+}
 
-inline u32 Asset::flags() const { return _flags; }
+inline AssetType Asset::type() const
+{
+    return _type;
+}
 
-inline const std::string &Asset::name() const { return _name; }
+inline u32 Asset::flags() const
+{
+    return _flags;
+}
 
-inline bool Asset::isLoaded() const { return _loaded; }
+inline const std::string& Asset::filename() const
+{
+    return _filename;
+}
 
-} // namespace atlas
+inline bool Asset::isLoaded() const
+{
+    return _loaded;
+}
+
+typedef std::function<AssetPtr(const std::string& filename, int flags)> AssetFactoryFunc;
+
+}  // namespace atlas

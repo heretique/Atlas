@@ -5,14 +5,14 @@
 #include "SDLApp.h"
 #include "SDLWindow.h"
 
-#include <easy/profiler.h>
+//#include <easy/profiler.h>
 #include <fmt/printf.h>
 
 using namespace atlas;
 
 int main(int argc, char** argv)
 {
-    EASY_MAIN_THREAD;
+    //    EASY_MAIN_THREAD;
 
     SDLApp& app = SDLApp::get();
     if (0 < app.init(SDL_INIT_VIDEO))
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
     win->init();
     app.addWindow(win);
 
-    profiler::startListen();
+    //    profiler::startListen();
 
     return SDLApp::get().exec();
 }

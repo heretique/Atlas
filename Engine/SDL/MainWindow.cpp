@@ -1,11 +1,11 @@
 #include "MainWindow.h"
 
 #include "Core/Engine.h"
+#include "Managers/AssetManager.h"
 #include "Managers/JobManager.h"
-
 #include <cmath>
 
-#include <easy/profiler.h>
+//#include <easy/profiler.h>
 #include <imgui/imgui.h>
 
 namespace atlas
@@ -29,7 +29,19 @@ MainWindow::~MainWindow()
 void MainWindow::init()
 {
     Engine::init();
-    //    Engine::assets().setAssetsDir("/home/cata/temp/");
+    Engine::assets().setAssetsDir("/Users/catalinm2/temp/");
+    Engine::assets().addAsset(AssetTypes::Code, "atlas/main.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "atlas/imgui.wren");
+    Engine::assets().loadAssets();
+
+    _vmResult = Engine::vm().executeModule("atlas/main");
+    if (_vmResult == wrenpp::Result::Success)
+    {
+        _init   = Engine::vm().method("main", "Main", "init()");
+        _update = Engine::vm().method("main", "Main", "update(_)");
+        _ongui  = Engine::vm().method("main", "Main", "onGUI()");
+    }
+
     //    AssetHandle cube = Engine::assets().addAsset(static_cast<int>(AssetTypes::Geometry), "base_head.obj", 0);
 
     //    Engine::assets().loadAssets();
@@ -64,15 +76,23 @@ void MainWindow::init()
 
 void MainWindow::update(float dt)
 {
-    EASY_FUNCTION(profiler::colors::Amber);
-}  // namespace atlasEditor
+    //    EASY_FUNCTION(profiler::colors::Amber);
+    if (_vmResult == wrenpp::Result::Success)
+    {
+        _update(dt);
+    }
+}
 
 void MainWindow::onGUI()
 {
-    EASY_FUNCTION(profiler::colors::Amber);
-    if (ImGui::Button("Test", ImVec2(50, 20)))
+    //    EASY_FUNCTION(profiler::colors::Amber);
+    //    if (ImGui::Button("Test", ImVec2(50, 20)))
+    //    {
+    //        ImGui::Text("Clicked");
+    //    }
+    if (_vmResult == wrenpp::Result::Success)
     {
-        ImGui::Text("Clicked");
+        _ongui();
     }
 }
 
