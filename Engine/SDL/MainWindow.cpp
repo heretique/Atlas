@@ -32,6 +32,7 @@ void MainWindow::init()
     Engine::assets().setAssetsDir("/Users/catalinm2/temp/");
     Engine::assets().addAsset(AssetTypes::Code, "atlas/main.wren");
     Engine::assets().addAsset(AssetTypes::Code, "atlas/imgui.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "atlas/vector.wren");
     Engine::assets().loadAssets();
 
     _vmResult = Engine::vm().executeModule("atlas/main");
@@ -40,6 +41,9 @@ void MainWindow::init()
         _init   = Engine::vm().method("main", "Main", "init()");
         _update = Engine::vm().method("main", "Main", "update(_)");
         _ongui  = Engine::vm().method("main", "Main", "onGUI()");
+
+        // call init
+        _init();
     }
 
     //    AssetHandle cube = Engine::assets().addAsset(static_cast<int>(AssetTypes::Geometry), "base_head.obj", 0);

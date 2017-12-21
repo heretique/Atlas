@@ -26,6 +26,7 @@ Product {
         "SDL/*.h",
         "Scripting/wren/imgui.wren",
         "Scripting/wren/main.wren",
+        "Scripting/wren/vector.wren",
         "Systems/*cpp",
         "Systems/*.h",
     ]

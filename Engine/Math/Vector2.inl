@@ -2,7 +2,6 @@
 
 namespace math
 {
-
 inline const Vector2 Vector2::operator+(const Vector2& v) const
 {
     Vector2 result(*this);
@@ -65,12 +64,12 @@ inline bool Vector2::operator<(const Vector2& v) const
 
 inline bool Vector2::operator==(const Vector2& v) const
 {
-    return x==v.x && y==v.y;
+    return x == v.x && y == v.y;
 }
 
 inline bool Vector2::operator!=(const Vector2& v) const
 {
-    return x!=v.x || y!=v.y;
+    return x != v.x || y != v.y;
 }
 
 inline const Vector2 operator*(float x, const Vector2& v)
@@ -79,5 +78,4 @@ inline const Vector2 operator*(float x, const Vector2& v)
     result.scale(x);
     return result;
 }
-
 }

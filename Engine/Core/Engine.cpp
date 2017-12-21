@@ -68,6 +68,7 @@ bool Engine::init()
 
     // bind wren modules
     wren::bindImguiModule();
+    wren::bindVectorModule();
 
     return true;
 }

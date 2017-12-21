@@ -5,5 +5,6 @@ namespace atlas
 namespace wren
 {
     void bindImguiModule();
+    void bindVectorModule();
 }
 }
