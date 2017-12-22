@@ -18,7 +18,7 @@ public:
     StringHash(const char* str);
     StringHash(const std::string& str);
     bool operator==(const StringHash& other) const;
-    operator size_t() const;
+         operator size_t() const;
 
 private:
     size_t _hash;
@@ -62,11 +62,14 @@ inline uint32_t fmix32(uint32_t h)
 }
 }  // atlas namespace
 
+namespace std
+{
 template <>
-struct std::hash<atlas::StringHash>
+struct hash<atlas::StringHash>
 {
     size_t operator()(const atlas::StringHash& s) const
     {
         return s;
     }
 };
+}

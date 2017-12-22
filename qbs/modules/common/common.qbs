@@ -13,6 +13,7 @@ Module {
 
 
     Depends { name: "cpp" }
+    cpp.cxxLanguageVersion: "c++14"
     cpp.includePaths: [
         path + "/../../../3rdparty",
         path + "/../../../3rdparty/easy_profiler/easy_profiler_core/include",
@@ -40,6 +41,7 @@ Module {
             path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
         cpp.windowsApiCharacterSet: ""
+        cpp.architecture: "x86_64"
     }
 
 
@@ -52,6 +54,7 @@ Module {
         ])
         cpp.defines : outer.uniqueConcat(["__VCCOREVER__", "BX_PLATFORM_RPI"]) // for RPI
         cpp.libraryPaths: outer.uniqueConcat(["c:/apps/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/opt/vc/lib"])
+        cpp.architecture: "arm"
     }
 
     Properties {

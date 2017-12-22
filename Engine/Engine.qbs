@@ -24,9 +24,6 @@ Product {
         "Scripting/*.h",
         "SDL/*.cpp",
         "SDL/*.h",
-        "Scripting/wren/imgui.wren",
-        "Scripting/wren/main.wren",
-        "Scripting/wren/vector.wren",
         "Systems/*cpp",
         "Systems/*.h",
     ]
@@ -48,7 +45,7 @@ Product {
         "../3rdparty/spdlog/include",
     ]
 
-    cpp.defines: ["BUILD_WITH_EASY_PROFILER, SPDLOG_FMT_EXTERNAL"]
+    cpp.defines: [/*"BUILD_WITH_EASY_PROFILER",*/ "SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
 //    Depends { name: "easy_profiler" }
@@ -67,6 +64,7 @@ Product {
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
         cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
+        cpp.architecture: "x86_64"
 
         Properties {
             condition: qbs.toolchain.contains("msvc")
@@ -82,11 +80,12 @@ Product {
     Properties {
         condition: qbs.targetOS.contains("linux")
         cpp.dynamicLibraries: [ "rt", "dl", "bcm_host", "EGL", "GLESv2", "pthread", "udev", "SDL2" ]
+        cpp.architecture: "arm"
     }
 
     Properties {
         condition: qbs.targetOS.contains("osx")
-        cpp.architecture: "x86_64"
+
         cpp.frameworks: [ "Cocoa", "OpenGL", "Metal", "QuartzCore"]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
@@ -96,6 +95,15 @@ Product {
         fileTagsFilter: product.type
         qbs.install: true
         qbs.installDir: "home/pi/atlas"
+    }
+
+    Group {
+        name: "Wren scripts"
+        files: [
+        "Scripting/wren/*.wren"
+        ]
+        qbs.install: true
+        qbs.installDir: "home/pi/atlas/scripts"
     }
 }
 

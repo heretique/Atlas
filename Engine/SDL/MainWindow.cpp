@@ -13,8 +13,8 @@ namespace atlas
 void testJob(void* data, uint count)
 {
     float* testData = static_cast<float*>(data);
-    for (uint i     = 0; i < count; ++i)
-        testData[i] = std::sinf((float)i / count) + std::cosf((float)i / count);
+    for (uint i = 0; i < count; ++i)
+        testData[i] = std::sin((float)i / count) + std::cos((float)i / count);
 }
 
 MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
@@ -22,20 +22,18 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 {
 }
 
-MainWindow::~MainWindow()
-{
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::init()
 {
     Engine::init();
-    Engine::assets().setAssetsDir("/Users/catalinm2/temp/");
-    Engine::assets().addAsset(AssetTypes::Code, "atlas/main.wren");
-    Engine::assets().addAsset(AssetTypes::Code, "atlas/imgui.wren");
-    Engine::assets().addAsset(AssetTypes::Code, "atlas/vector.wren");
+    Engine::assets().setAssetsDir("/home/pi/atlas/");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/main.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/imgui.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/vector.wren");
     Engine::assets().loadAssets();
 
-    _vmResult = Engine::vm().executeModule("atlas/main");
+    _vmResult = Engine::vm().executeModule("scripts/main");
     if (_vmResult == wrenpp::Result::Success)
     {
         _init   = Engine::vm().method("main", "Main", "init()");
@@ -45,37 +43,6 @@ void MainWindow::init()
         // call init
         _init();
     }
-
-    //    AssetHandle cube = Engine::assets().addAsset(static_cast<int>(AssetTypes::Geometry), "base_head.obj", 0);
-
-    //    Engine::assets().loadAssets();
-
-    //    std::cout << "Waiting for jobs..."
-    //              << "\n";
-
-    //    const int COUNT = 100000;
-    //    float testArray[COUNT];
-    //    std::memset(testArray, 0, sizeof(testArray));
-
-    //    moodycamel::stats_t stats = moodycamel::microbench_stats(
-    //        [testArray]() { testJob((float *)testArray, COUNT); });
-
-    //    double speed = stats.avg();
-    //    fmt::printf("Serial job: %.4f\n", stats.avg());
-
-    //    std::memset(testArray, 0, sizeof(testArray));
-
-    //    stats = moodycamel::microbench_stats([testArray]() {
-    //      Engine::jobMan().parallel_for<float, CountSplitter<float, 1024>>(
-    //          testJob, (float *)testArray,
-    //          sizeof(testArray) / sizeof(testArray[0]));
-    //      Engine::jobMan().wait();
-    //    });
-
-    //    fmt::printf("Parallel job: %.4f\n", stats.avg());
-    //    speed /= stats.avg();
-    //    fmt::printf("Speed parallel vs serial: %.4fx\n", speed);
-    //    fmt::printf("Finised waiting for jobs...\n");
 }
 
 void MainWindow::update(float dt)

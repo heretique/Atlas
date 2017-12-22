@@ -1,6 +1,8 @@
 #include "StringHash.h"
 #include "Types.h"
 
+#include <cstring>
+
 namespace atlas
 {
 uint32_t MurmurHash3_32(const void* key, uint len, uint32_t seed)

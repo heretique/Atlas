@@ -188,8 +188,9 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL |
-                                                      SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
+    _window = SDL_CreateWindow(
+        title, x, y, w, h,
+        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -252,9 +253,7 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init()
-{
-}
+void SDLWindow::init() {}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -351,9 +350,7 @@ void SDLWindow::update(float dt)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI()
-{
-}
+void SDLWindow::onGUI() {}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -366,15 +363,15 @@ void SDLWindow::doUpdate(float dt)
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
     bgfx::touch(_viewId);
+    // render content
+    update(dt);
     // GUI
     imguiPushCtx();
     imguiNewFrame();
-    imguiMoveWindow();
+    //    imguiMoveWindow();
     onGUI();
     imguiRender();
     imguiPopCtx();
-    // render content
-    update(dt);
 }
 
 bool SDLWindow::imguiInit()
@@ -440,19 +437,19 @@ void SDLWindow::imguiNewFrame()
     io.DisplaySize = ImVec2((float)_width, (float)_height);
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
     ImGui::NewFrame();
-    ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
-    ImGui::Begin(_title.c_str(), &_open, ImVec2(_width, _height), 0.0f,
-                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-    ImGui::SetWindowSize(_title.c_str(), ImVec2(_width, _height));
+    //    ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
+    //    ImGui::Begin(_title.c_str(), &_open, ImVec2(_width, _height), 0.0f,
+    //                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    //    ImGui::SetWindowSize(_title.c_str(), ImVec2(_width, _height));
 
-    if (!_open)
-    {
-        SDL_Event event;
-        event.type            = SDL_WINDOWEVENT;
-        event.window.event    = SDL_WINDOWEVENT_CLOSE;
-        event.window.windowID = _windowId;
-        SDL_PushEvent(&event);
-    }
+    //    if (!_open)
+    //    {
+    //        SDL_Event event;
+    //        event.type            = SDL_WINDOWEVENT;
+    //        event.window.event    = SDL_WINDOWEVENT_CLOSE;
+    //        event.window.windowID = _windowId;
+    //        SDL_PushEvent(&event);
+    //    }
 }
 
 void SDLWindow::imguiPushCtx()
@@ -493,7 +490,7 @@ void SDLWindow::imguiRender()
 {
     //    EASY_FUNCTION(profiler::colors::Teal);
 
-    ImGui::End();
+    //    ImGui::End();
     ImGui::Render();
     ImDrawData* drawData = ImGui::GetDrawData();
 

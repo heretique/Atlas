@@ -1,9 +1,9 @@
 #include "WrenBindings.h"
 #include "Core/Engine.h"
+#include "WrenBindingsImpl.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
-#include "WrenBindingsImpl.h"
 
 #include <imgui/imgui.h>
 #include <wrenpp/Wren++.h>
@@ -17,7 +17,7 @@ namespace wren
     void bindImguiModule()
     {
         Engine::vm()
-            .beginModule("atlas/imgui")
+            .beginModule("scripts/imgui")
             .bindClass<wren::ImGuiWindowFlag>("ImguiFlag")
             .bindCFunction(false, "setTitleBar()", &wren::setTitleBar)
             .bindCFunction(false, "unsetTitleBar()", &wren::unsetTitleBar)
@@ -63,7 +63,7 @@ namespace wren
     void bindVectorModule()
     {
         Engine::vm()
-                .beginModule("atlas/vector")
+                .beginModule("scripts/vector")
                 .bindClass<math::Vector2, float, float>("Vec2")
                 .bindGetter<decltype(math::Vector2::x), &math::Vector2::x>("x")
                 .bindSetter<decltype(math::Vector2::x), &math::Vector2::x>("x=(_)")

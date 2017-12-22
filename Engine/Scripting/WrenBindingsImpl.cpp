@@ -1,4 +1,5 @@
 #include "WrenBindingsImpl.h"
+#include "math/Vector2.h"
 #include <imgui/imgui.h>
 #include <wrenpp/Wren++.h>
 
@@ -8,23 +9,23 @@ namespace wren
 {
     void begin(WrenVM* vm)
     {
-        ImGui::Begin((const char*)wrenGetSlotString(vm, 1), NULL, 0);
+        ImGui::Begin(static_cast<const char*>(wrenGetSlotString(vm, 1)), nullptr, 0);
     }
 
     void beginWithFlags(WrenVM* vm)
     {
-        ImGui::Begin((const char*)wrenGetSlotString(vm, 1), NULL,
-                     *(u32*)wrenpp::getSlotForeign<ImGuiWindowFlag>(vm, 2));
+        ImGui::Begin(static_cast<const char*>(wrenGetSlotString(vm, 1)), NULL,
+                     *reinterpret_cast<u32*>(wrenpp::getSlotForeign<ImGuiWindowFlag>(vm, 2)));
     }
 
     void setWindowPos(WrenVM* vm)
     {
-        ImGui::SetNextWindowPos(*wrenpp::getSlotForeign<ImVec2>(vm, 1));
+        ImGui::SetNextWindowPos(*reinterpret_cast<const ImVec2*>(wrenpp::getSlotForeign<math::Vector2>(vm, 1)));
     }
 
     void setWindowSize(WrenVM* vm)
     {
-        ImGui::SetNextWindowSize(*wrenpp::getSlotForeign<ImVec2>(vm, 1));
+        ImGui::SetNextWindowSize(*reinterpret_cast<const ImVec2*>(wrenpp::getSlotForeign<math::Vector2>(vm, 1)));
     }
 
     void text(WrenVM* vm)
@@ -39,7 +40,7 @@ namespace wren
         ImGui::Dummy(*v);
     }
 
-    void textColored(WrenVM* vm)
+    void textColored(WrenVM*)
     {
         // do nothing for now
         // const math::Vector2f* v = (const math::Vector2f*)wrenGetSlotForeign( vm, 1 );
@@ -49,12 +50,12 @@ namespace wren
 
     void bulletText(WrenVM* vm)
     {
-        ImGui::BulletText((const char*)wrenGetSlotString(vm, 1));
+        ImGui::BulletText(static_cast<const char*>(wrenGetSlotString(vm, 1)));
     }
 
     void button(WrenVM* vm)
     {
-        bool pressed = ImGui::Button((const char*)wrenGetSlotString(vm, 1));
+        bool pressed = ImGui::Button(static_cast<const char*>(wrenGetSlotString(vm, 1)));
         wrenSetSlotBool(vm, 0, pressed);
     }
 
@@ -68,7 +69,7 @@ namespace wren
 
     void buttonSized(WrenVM* vm)
     {
-        ImGui::Button((const char*)wrenGetSlotString(vm, 1), *wrenpp::getSlotForeign<ImVec2>(vm, 2));
+        ImGui::Button(static_cast<const char*>(wrenGetSlotString(vm, 1)), *wrenpp::getSlotForeign<ImVec2>(vm, 2));
     }
 
     void plotNumberArray(WrenVM* vm)
@@ -139,13 +140,13 @@ namespace wren
         *bits |= ImGuiWindowFlags_NoResize;
     }
 
-    void setShowBorders(WrenVM* vm)
+    void setShowBorders(WrenVM*)
     {
         //    u32* bits = reinterpret_cast<u32*>(wrenpp::getSlotForeign<ImGuiWindowFlag>(vm, 0));
         //    *bits |= ImGuiWindowFlags_ShowBorders;
     }
 
-    void unsetShowBorders(WrenVM* vm)
+    void unsetShowBorders(WrenVM*)
     {
         //    u32* bits = reinterpret_cast<u32*>(wrenpp::getSlotForeign<ImGuiWindowFlag>(vm, 0));
         //    *bits &= ~ImGuiWindowFlags_ShowBorders;
