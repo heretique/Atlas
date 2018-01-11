@@ -13,7 +13,7 @@ namespace atlas
 void testJob(void* data, uint count)
 {
     float* testData = static_cast<float*>(data);
-    for (uint i = 0; i < count; ++i)
+    for (uint i     = 0; i < count; ++i)
         testData[i] = std::sin((float)i / count) + std::cos((float)i / count);
 }
 
@@ -22,12 +22,15 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 {
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow()
+{
+}
 
 void MainWindow::init()
 {
+    std::string basePath = SDL_GetBasePath();
     Engine::init();
-    Engine::assets().setAssetsDir("/home/pi/atlas/");
+    Engine::assets().setAssetsDir(basePath);
     Engine::assets().addAsset(AssetTypes::Code, "scripts/main.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/imgui.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/vector.wren");

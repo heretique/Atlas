@@ -89,6 +89,7 @@ Product {
         cpp.frameworks: [ "Cocoa", "OpenGL", "Metal", "QuartzCore"]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
+        cpp.architecture: "x86_64"
     }
 
     Group {     // Properties for the produced executable
