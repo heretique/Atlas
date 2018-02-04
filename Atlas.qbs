@@ -5,6 +5,7 @@ Project {
     qbsSearchPaths: "qbs"
 
     references: [
+        "3rdparty/projects/angelscript/angelscript.qbs",
         "3rdparty/projects/bx/bx.qbs",
         "3rdparty/projects/bimg/bimg.qbs",
         "3rdparty/projects/bgfx/bgfx.qbs",

@@ -188,9 +188,8 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(
-        title, x, y, w, h,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
+    _window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL |
+                                                      SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -253,7 +252,9 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init() {}
+void SDLWindow::init()
+{
+}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -350,7 +351,9 @@ void SDLWindow::update(float dt)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI() {}
+void SDLWindow::onGUI()
+{
+}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -397,13 +400,15 @@ bool SDLWindow::imguiInit()
                                          // array that we will update during the
                                          // application lifetime.
     io.KeyMap[ImGuiKey_LeftArrow]  = SDLK_LEFT;
-    io.KeyMap[ImGuiKey_RightArrow] = SDLK_RIGHT;
-    io.KeyMap[ImGuiKey_UpArrow]    = SDLK_UP;
-    io.KeyMap[ImGuiKey_DownArrow]  = SDLK_DOWN;
-    io.KeyMap[ImGuiKey_PageUp]     = SDLK_PAGEUP;
-    io.KeyMap[ImGuiKey_PageDown]   = SDLK_PAGEDOWN;
-    io.KeyMap[ImGuiKey_Home]       = SDLK_HOME;
-    io.KeyMap[ImGuiKey_End]        = SDLK_END;
+    io.KeyMap[ImGuiKey_LeftArrow]  = SDL_SCANCODE_LEFT;
+    io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
+    io.KeyMap[ImGuiKey_UpArrow]    = SDL_SCANCODE_UP;
+    io.KeyMap[ImGuiKey_DownArrow]  = SDL_SCANCODE_DOWN;
+    io.KeyMap[ImGuiKey_PageUp]     = SDL_SCANCODE_PAGEUP;
+    io.KeyMap[ImGuiKey_PageDown]   = SDL_SCANCODE_PAGEDOWN;
+    io.KeyMap[ImGuiKey_Home]       = SDL_SCANCODE_HOME;
+    io.KeyMap[ImGuiKey_End]        = SDL_SCANCODE_END;
+    io.KeyMap[ImGuiKey_Insert]     = SDL_SCANCODE_INSERT;
     io.KeyMap[ImGuiKey_Delete]     = SDLK_DELETE;
     io.KeyMap[ImGuiKey_Backspace]  = SDLK_BACKSPACE;
     io.KeyMap[ImGuiKey_Enter]      = SDLK_RETURN;
