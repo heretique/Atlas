@@ -28,6 +28,12 @@ namespace wren
         ImGui::SetNextWindowSize(*reinterpret_cast<const ImVec2*>(wrenpp::getSlotForeign<math::Vector2>(vm, 1)));
     }
 
+    void getWindowSize(WrenVM* vm)
+    {
+        ImVec2 size = ImGui::GetWindowSize();
+        wrenpp::setSlotForeignValue<math::Vector2>(vm, 0, *reinterpret_cast<math::Vector2*>(&size));
+    }
+
     void text(WrenVM* vm)
     {
         const char* str = wrenGetSlotString(vm, 1);

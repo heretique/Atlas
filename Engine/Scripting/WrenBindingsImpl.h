@@ -18,6 +18,7 @@ namespace wren
     void beginWithFlags(WrenVM*);
     void setWindowPos(WrenVM*);
     void setWindowSize(WrenVM*);
+    void getWindowSize(WrenVM*);
     void text(WrenVM*);
     void dummy(WrenVM*);
     void textColored(WrenVM*);

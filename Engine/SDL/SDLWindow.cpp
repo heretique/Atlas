@@ -5,15 +5,15 @@
 #include "fs_ocornut_imgui.bin.h"
 #include "vs_ocornut_imgui.bin.h"
 
+#include <chrono>
+#include <thread>
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 #include <bgfx/bgfx.h>
 #include <bgfx/platform.h>
 #include <bx/math.h>
-//#include <easy/profiler.h>
-#include <chrono>
-#include <thread>
-
+#include <easy/profiler.h>
 #include <fmt/printf.h>  // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
@@ -90,7 +90,7 @@ struct ImGuiBgfx
 
     void render(u8 viewId, ImDrawData* drawData)
     {
-        //        EASY_FUNCTION(profiler::colors::Teal);
+        EASY_FUNCTION(profiler::colors::Teal);
         const ImGuiIO& io     = ImGui::GetIO();
         const float    width  = io.DisplaySize.x;
         const float    height = io.DisplaySize.y;
@@ -362,7 +362,7 @@ SDLWindow::Size SDLWindow::windowSize() const
 
 void SDLWindow::doUpdate(float dt)
 {
-    //    EASY_FUNCTION(profiler::colors::Amber);
+    EASY_FUNCTION(profiler::colors::Amber);
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
     bgfx::touch(_viewId);
@@ -437,7 +437,7 @@ void SDLWindow::imguiShutdown()
 
 void SDLWindow::imguiNewFrame()
 {
-    //    EASY_FUNCTION(profiler::colors::Teal);
+    EASY_FUNCTION(profiler::colors::Teal);
     ImGuiIO& io    = ImGui::GetIO();
     io.DisplaySize = ImVec2((float)_width, (float)_height);
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
@@ -459,7 +459,7 @@ void SDLWindow::imguiNewFrame()
 
 void SDLWindow::imguiPushCtx()
 {
-    //    EASY_FUNCTION(profiler::colors::Teal);
+    EASY_FUNCTION(profiler::colors::Teal);
     _prevImguiCtx = ImGui::GetCurrentContext();
     ImGui::SetCurrentContext(_imguiCtx);
 }
@@ -471,7 +471,7 @@ void SDLWindow::imguiPopCtx()
 
 void SDLWindow::imguiMoveWindow()
 {
-    //    EASY_FUNCTION(profiler::colors::Teal);
+    EASY_FUNCTION(profiler::colors::Teal);
 
     if (ImGui::IsMouseClicked(0))
     {
@@ -493,7 +493,7 @@ void SDLWindow::imguiMoveWindow()
 
 void SDLWindow::imguiRender()
 {
-    //    EASY_FUNCTION(profiler::colors::Teal);
+    EASY_FUNCTION(profiler::colors::Teal);
 
     //    ImGui::End();
     ImGui::Render();

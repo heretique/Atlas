@@ -5,14 +5,12 @@
 
 namespace math
 {
-
 /**
  * Defines a 3-dimensional bounding sphere.
  */
 class BoundingSphere
 {
 public:
-
     /**
      * The center point.
      */
@@ -57,7 +55,7 @@ public:
      * Tests whether this bounding sphere intersects the specified bounding sphere.
      *
      * @param sphere The bounding sphere to test intersection with.
-     * 
+     *
      * @return true if the specified bounding sphere intersects this bounding sphere; false otherwise.
      */
     bool intersects(const BoundingSphere& sphere) const;
@@ -66,7 +64,7 @@ public:
      * Tests whether this bounding sphere intersects the specified bounding box.
      *
      * @param box The bounding box to test intersection with.
-     * 
+     *
      * @return true if the specified bounding box intersects this bounding sphere; false otherwise.
      */
     bool intersects(const BoundingBox& box) const;
@@ -75,7 +73,7 @@ public:
      * Tests whether this bounding sphere intersects the specified frustum.
      *
      * @param frustum The frustum to test intersection with.
-     * 
+     *
      * @return true if this bounding sphere intersects the specified frustum; false otherwise.
      */
     bool intersects(const Frustum& frustum) const;
@@ -84,7 +82,7 @@ public:
      * Tests whether this bounding sphere intersects the specified plane.
      *
      * @param plane The plane to test intersection with.
-     * 
+     *
      * @return Plane::INTERSECTS_BACK INTERSECTS_BACK if this bounding sphere is in the negative half-space of
      *  the plane, Plane::INTERSECTS_FRONT INTERSECTS_FRONT if it is in the positive half-space of the plane,
      *  and Plane::INTERSECTS_INTERSECTING INTERSECTS_INTERSECTING if it intersects the plane.
@@ -95,7 +93,7 @@ public:
      * Tests whether this bounding sphere intersects the specified ray.
      *
      * @param ray The ray to test intersection with.
-     * 
+     *
      * @return The distance from the origin of the ray to this bounding sphere or
      *  Ray::INTERSECTS_NONE INTERSECTS_NONE if the ray does not intersect this bounding sphere.
      */
@@ -155,14 +153,19 @@ public:
 
     /**
      * Transforms this bounding sphere by the given matrix.
-     * 
+     *
      * @param matrix The matrix to transform by.
      * @return This bounding sphere, after the transformation occurs.
      */
     inline BoundingSphere& operator*=(const Matrix& matrix);
 
-private:
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(center, radius);
+    }
 
+private:
     float distance(const BoundingSphere& sphere, const Vector3&);
 
     bool contains(const BoundingSphere& sphere, Vector3* points, unsigned int count);
@@ -170,13 +173,12 @@ private:
 
 /**
  * Transforms the given bounding sphere by the given matrix.
- * 
+ *
  * @param matrix The matrix to transform by.
  * @param sphere The bounding sphere to transform.
  * @return The resulting transformed bounding sphere.
  */
 inline const BoundingSphere operator*(const Matrix& matrix, const BoundingSphere& sphere);
-
 }
 
 #include "BoundingSphere.inl"

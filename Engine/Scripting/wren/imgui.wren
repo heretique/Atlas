@@ -26,6 +26,8 @@ class Imgui {
     foreign static setNextWindowPos( size )
     foreign static setNextWindowSize( size )    // call before begin()
 
+    foreign static getWindowSize()
+
     // formatting
     foreign static spacing()
     foreign static dummy( size )    // add a dummy of a given size, as Vec2

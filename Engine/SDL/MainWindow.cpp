@@ -5,7 +5,7 @@
 #include "Managers/JobManager.h"
 #include <cmath>
 
-//#include <easy/profiler.h>
+#include <easy/profiler.h>
 #include <imgui/imgui.h>
 
 namespace atlas
@@ -50,7 +50,7 @@ void MainWindow::init()
 
 void MainWindow::update(float dt)
 {
-    //    EASY_FUNCTION(profiler::colors::Amber);
+    EASY_FUNCTION(profiler::colors::Amber);
     if (_vmResult == wrenpp::Result::Success)
     {
         _update(dt);
@@ -59,7 +59,7 @@ void MainWindow::update(float dt)
 
 void MainWindow::onGUI()
 {
-    //    EASY_FUNCTION(profiler::colors::Amber);
+    EASY_FUNCTION(profiler::colors::Amber);
     //    if (ImGui::Button("Test", ImVec2(50, 20)))
     //    {
     //        ImGui::Text("Clicked");

@@ -16,9 +16,10 @@ class Main {
 
     static onGUI() {
                 Imgui.setNextWindowSize(WindowSize)
-                Imgui.begin("Ce faci Alin?")
-                Imgui.text("Test ALIN: " + Test.toString())
-                Imgui.button("Test")
+                Imgui.begin("Wren IMGUI")
+                Imgui.text("Test : " + Test.toString())
+                if (Imgui.button("Test")) Imgui.text("Pressed")
+                WindowSize = Imgui.getWindowSize()
 		Imgui.end()
     }
  }

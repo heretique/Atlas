@@ -454,6 +454,12 @@ public:
      * @return True if this vector is not equal to the given vector, false otherwise.
      */
     inline bool operator!=(const Vector3& v) const;
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(x, y, z);
+    }
 };
 
 /**

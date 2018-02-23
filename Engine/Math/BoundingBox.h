@@ -214,6 +214,12 @@ public:
      * @return This bounding box, after the transformation occurs.
      */
     inline BoundingBox& operator*=(const Matrix& matrix);
+
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(min, max);
+    }
 };
 
 /**

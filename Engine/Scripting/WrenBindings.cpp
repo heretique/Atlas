@@ -1,9 +1,10 @@
 #include "WrenBindings.h"
+
 #include "Core/Engine.h"
-#include "WrenBindingsImpl.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
+#include "WrenBindingsImpl.h"
 
 #include <imgui/imgui.h>
 #include <wrenpp/Wren++.h>
@@ -35,6 +36,7 @@ namespace wren
             .bindFunction<decltype(&ig::End), &ig::End>(true, "end()")
             .bindCFunction(true, "setNextWindowPos(_)", &wren::setWindowPos)
             .bindCFunction(true, "setNextWindowSize(_)", &wren::setWindowSize)
+            .bindCFunction(true, "getWindowSize()", &wren::getWindowSize)
             .bindFunction<decltype(static_cast<bool (*)(const char*)>(&ig::TreeNode)), &ig::TreeNode>(true,
                                                                                                       "treeNode(_)")
             .bindFunction<decltype(&ig::Spacing), &ig::Spacing>(true, "spacing()")
@@ -133,7 +135,47 @@ namespace wren
                     .bindMethod<const math::Vector3 (math::Vector3::*)(const math::Vector3&) const,
                                 (&math::Vector3::operator-)>(false, "-(_)")
                     .bindMethod < const math::Vector3 (math::Vector3::*)(float) const,
-            &math::Vector3::operator*>(false, "*(_)").endClass().endModule();
+            &math::Vector3::operator*>(false, "*(_)")
+                    .endClass()
+                    .bindClass<math::Vector4, float, float, float, float>("Vec4")
+                    .bindGetter<decltype(math::Vector4::x), &math::Vector4::x>("x")
+                    .bindSetter<decltype(math::Vector4::x), &math::Vector4::x>("x=(_)")
+                    .bindGetter<decltype(math::Vector4::y), &math::Vector4::y>("y")
+                    .bindSetter<decltype(math::Vector4::y), &math::Vector4::y>("y=(_)")
+                    .bindGetter<decltype(math::Vector4::z), &math::Vector4::z>("z")
+                    .bindSetter<decltype(math::Vector4::z), &math::Vector4::z>("z=(_)")
+                    .bindGetter<decltype(math::Vector4::z), &math::Vector4::z>("w")
+                    .bindSetter<decltype(math::Vector4::z), &math::Vector4::z>("w=(_)")
+                    .bindGetter<decltype(math::Vector4::x), &math::Vector4::x>("r")
+                    .bindSetter<decltype(math::Vector4::x), &math::Vector4::x>("r=(_)")
+                    .bindGetter<decltype(math::Vector4::y), &math::Vector4::y>("g")
+                    .bindSetter<decltype(math::Vector4::y), &math::Vector4::y>("g=(_)")
+                    .bindGetter<decltype(math::Vector4::z), &math::Vector4::z>("b")
+                    .bindSetter<decltype(math::Vector4::z), &math::Vector4::z>("b=(_)")
+                    .bindGetter<decltype(math::Vector4::z), &math::Vector4::z>("a")
+                    .bindSetter<decltype(math::Vector4::z), &math::Vector4::z>("a=(_)")
+                    .bindMethod<decltype(&math::Vector4::angle), &math::Vector4::angle>(true, "angle(_,_)")
+                    .bindMethod<void (math::Vector4::*)(const math::Vector4&, const math::Vector4&),
+                                &math::Vector4::clamp>(false, "clamp(_,_)")
+                    .bindMethod<decltype(&math::Vector4::distance), &math::Vector4::distance>(false, "distance(_)")
+                    .bindMethod<decltype(&math::Vector4::distanceSquared), &math::Vector4::distanceSquared>(
+                        false, "distanceSquared(_)")
+                    .bindMethod<float (math::Vector4::*)(const math::Vector4&) const, &math::Vector4::dot>(false,
+                                                                                                           "dot(_)")
+                    .bindMethod<float (*)(const math::Vector4&, const math::Vector4&), &math::Vector4::dot>(true,
+                                                                                                            "dot(_,_)")
+                    .bindMethod<decltype(&math::Vector4::length), &math::Vector4::length>(false, "length()")
+                    .bindMethod<decltype(&math::Vector4::lengthSquared), &math::Vector4::lengthSquared>(
+                        false, "lengthSquared()")
+                    .bindMethod<decltype(&math::Vector4::negate), &math::Vector4::negate>(false, "negate()")
+                    .bindMethod<math::Vector4& (math::Vector4::*)(), &math::Vector4::normalize>(false, "normalize()")
+                    .bindMethod<void (math::Vector4::*)(float), &math::Vector4::scale>(false, "scale(_)")
+                    .bindMethod < const math::Vector4 (math::Vector4::*)(const math::Vector4&) const,
+            &math::Vector4::operator+>(false, "+(_)")
+                    .bindMethod<const math::Vector4 (math::Vector4::*)(const math::Vector4&) const,
+                                (&math::Vector4::operator-)>(false, "-(_)")
+                    .bindMethod < const math::Vector4 (math::Vector4::*)(float) const,
+            &math::Vector4::operator*>(false, "*(_)").endClass().endModule();
     }
 }
 }

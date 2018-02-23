@@ -1,14 +1,13 @@
 #ifndef TRANSFORM_H_
 #define TRANSFORM_H_
 
-#include "Vector3.h"
-#include "Quaternion.h"
-#include "Matrix.h"
 #include "Components/Component.h"
+#include "Matrix.h"
+#include "Quaternion.h"
+#include "Vector3.h"
 
 namespace math
 {
-
 class BoundingBox;
 class BoundingSphere;
 
@@ -26,10 +25,9 @@ class BoundingSphere;
  * those arguments to the appropriate constructor or set methods of Transform.
  */
 
-class Transform: public atlas::Component
+class Transform : public atlas::Component
 {
 public:
-
     /**
      * Scale animation property. Data=scale
      */
@@ -110,7 +108,7 @@ public:
      */
     static void resumeTransformChanged();
 
-    /** 
+    /**
      * Gets whether all transform changed events are suspended.
      *
      * @return TRUE if transform changed events are suspended; FALSE if transform changed events are not suspended.
@@ -123,8 +121,9 @@ public:
     class Listener
     {
     public:
-
-        virtual ~Listener() { }
+        virtual ~Listener()
+        {
+        }
 
         /**
          * Handles when an transform has changed.
@@ -169,12 +168,6 @@ public:
      * Destructor.
      */
     virtual ~Transform();
-
-
-    template <class Archive>
-    void serialize(Archive & ar)
-    {
-    }
 
     /**
      * Extends ScriptTarget::getTypeName() to return the type name of this class.
@@ -255,7 +248,7 @@ public:
      * of this transform in the specified Vector3.
      *
      * @param axis The vector to store the axis of rotation.
-     * 
+     *
      * @return The angle of rotation.
      */
     float getRotation(Vector3* axis) const;
@@ -292,7 +285,7 @@ public:
      * @return The translation factor along the z-axis.
      */
     float getTranslationZ() const;
-    
+
     /**
      * Returns the forward vector for this Transform.
      */
@@ -300,7 +293,7 @@ public:
 
     /**
      * Returns the forward vector for this Transform.
-     * 
+     *
      * @param dst The vector to store the result in.
      */
     void getForwardVector(Vector3* dst) const;
@@ -324,7 +317,7 @@ public:
 
     /**
      * Returns the up vector for this Transform.
-     * 
+     *
      * @param dst The vector to store the result in.
      */
     void getUpVector(Vector3* dst) const;
@@ -348,7 +341,7 @@ public:
 
     /**
      * Returns the left vector for this Transform.
-     * 
+     *
      * @param dst The vector to store the result in.
      */
     void getLeftVector(Vector3* dst) const;
@@ -768,8 +761,13 @@ public:
      */
     virtual bool isStatic() const;
 
-protected:
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(_scale, _rotation, _translation);
+    }
 
+protected:
     /**
      * Transform Listener.
      */
@@ -793,9 +791,9 @@ protected:
     enum MatrixDirtyBits
     {
         DIRTY_TRANSLATION = 0x01,
-        DIRTY_SCALE = 0x02,
-        DIRTY_ROTATION = 0x04,
-        DIRTY_NOTIFY = 0x08
+        DIRTY_SCALE       = 0x02,
+        DIRTY_ROTATION    = 0x04,
+        DIRTY_NOTIFY      = 0x08
     };
 
     /**
@@ -803,7 +801,7 @@ protected:
      */
     void dirty(char matrixDirtyBits);
 
-    /** 
+    /**
      * Determines if the specified matrix dirty bit is set.
      *
      * @param matrixDirtyBits the matrix dirty bit to check for dirtiness.
@@ -811,33 +809,31 @@ protected:
      */
     bool isDirty(char matrixDirtyBits) const;
 
-
     /**
      * The scale component of the Transform.
      */
     Vector3 _scale;
 
-    /** 
+    /**
      * The rotation component of the Transform.
      */
     Quaternion _rotation;
-    
-    /** 
+
+    /**
      * The translation component of the Transform.
      */
     Vector3 _translation;
-    
-    /** 
+
+    /**
      * The Matrix representation of the Transform.
      */
     mutable Matrix _matrix;
-    
-    /** 
+
+    /**
      * Matrix dirty bits flag.
      */
-    mutable char _matrixDirtyBits;   
+    mutable char _matrixDirtyBits;
 };
-
 }
 
 #endif

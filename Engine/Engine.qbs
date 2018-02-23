@@ -45,14 +45,15 @@ Product {
         "../3rdparty/spdlog/include",
     ]
 
-    cpp.defines: [/*"BUILD_WITH_EASY_PROFILER",*/ "SPDLOG_FMT_EXTERNAL"]
+    cpp.defines: ["BUILD_WITH_EASY_PROFILER", "SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
-//    Depends { name: "easy_profiler" }
+    Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
     Depends { name: "fmt" }
+//    Depends { name: "angelscript" }
     Depends { name: "wren" }
     Depends { name: "wrenpp" }
     Depends { name: "entityx" }

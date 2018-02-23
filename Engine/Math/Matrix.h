@@ -6,7 +6,6 @@
 
 namespace math
 {
-
 class Plane;
 class Quaternion;
 
@@ -44,7 +43,6 @@ class Quaternion;
 class Matrix
 {
 public:
-
     /**
      * Stores the columns of this 4x4 matrix.
      * */
@@ -80,8 +78,8 @@ public:
      * @param m43 The third element of the fourth row.
      * @param m44 The fourth element of the fourth row.
      */
-    Matrix(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,
-           float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44);
+    Matrix(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31, float m32,
+           float m33, float m34, float m41, float m42, float m43, float m44);
 
     /**
      * Creates a matrix initialized to the specified column-major array.
@@ -152,9 +150,8 @@ public:
      * @param upZ The up vector z-coordinate value.
      * @param dst A matrix to store the result in.
      */
-    static void createLookAt(float eyePositionX, float eyePositionY, float eyePositionZ,
-                             float targetCenterX, float targetCenterY, float targetCenterZ,
-                             float upX, float upY, float upZ, Matrix* dst);
+    static void createLookAt(float eyePositionX, float eyePositionY, float eyePositionZ, float targetCenterX,
+                             float targetCenterY, float targetCenterZ, float upX, float upY, float upZ, Matrix* dst);
 
     /**
      * Builds a perspective projection matrix based on a field of view and returns by value.
@@ -211,8 +208,8 @@ public:
      * @param zFarPlane The maximum z-value of the view volume.
      * @param dst A matrix to store the result in.
      */
-    static void createOrthographicOffCenter(float left, float right, float bottom, float top,
-                                            float zNearPlane, float zFarPlane, Matrix* dst);
+    static void createOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane,
+                                            float zFarPlane, Matrix* dst);
 
     /**
      * Creates a spherical billboard that rotates around a specified object position.
@@ -248,8 +245,7 @@ public:
      * @param dst A matrix to store the result in.
      */
     static void createBillboard(const Vector3& objectPosition, const Vector3& cameraPosition,
-                                const Vector3& cameraUpVector, const Vector3& cameraForwardVector,
-                                Matrix* dst);
+                                const Vector3& cameraUpVector, const Vector3& cameraForwardVector, Matrix* dst);
 
     /**
      * Fills in an existing Matrix so that it reflects the coordinate system about a specified Plane.
@@ -318,16 +314,15 @@ public:
      */
     static void createRotationZ(float angle, Matrix* dst);
 
-	/**
-	* Creates a matrix describing the yaw, pitch and roll rotations
-	*
-	* @param yaw The yaw angle (in radians)
-	* @param pitch The pitch angle (in radians)
-	* @param roll The roll angle (in radians)
-	* @param dst A matrix to store the result in.
-	*/
-	static void createFromEuler(float yaw, float pitch, float roll, Matrix* dst);
-
+    /**
+    * Creates a matrix describing the yaw, pitch and roll rotations
+    *
+    * @param yaw The yaw angle (in radians)
+    * @param pitch The pitch angle (in radians)
+    * @param roll The roll angle (in radians)
+    * @param dst A matrix to store the result in.
+    */
+    static void createFromEuler(float yaw, float pitch, float roll, Matrix* dst);
 
     /**
      * Creates a translation matrix.
@@ -410,7 +405,7 @@ public:
      * Gets the rotational component of this matrix in the specified quaternion.
      *
      * @param rotation A quaternion to receive the rotation.
-     * 
+     *
      * @return true if the rotation is successfully extracted, false otherwise.
      */
     bool getRotation(Quaternion* rotation) const;
@@ -475,7 +470,7 @@ public:
      * Stores the inverse of this matrix in the specified matrix.
      *
      * @param dst A matrix to store the invert of this matrix in.
-     * 
+     *
      * @return true if the the matrix can be inverted, false otherwise.
      */
     bool invert(Matrix* dst) const;
@@ -701,8 +696,8 @@ public:
      * @param m43 The third element of the fourth row.
      * @param m44 The fourth element of the fourth row.
      */
-    void set(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,
-             float m31, float m32, float m33, float m34, float m41, float m42, float m43, float m44);
+    void set(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24, float m31,
+             float m32, float m33, float m34, float m41, float m42, float m43, float m44);
 
     /**
      * Sets the values of this matrix to those in the specified column-major array.
@@ -862,17 +857,17 @@ public:
 
     /**
      * Calculates the sum of this matrix with the given matrix.
-     * 
+     *
      * Note: this does not modify this matrix.
-     * 
+     *
      * @param m The matrix to add.
      * @return The matrix sum.
      */
     inline const Matrix operator+(const Matrix& m) const;
-    
+
     /**
      * Adds the given matrix to this matrix.
-     * 
+     *
      * @param m The matrix to add.
      * @return This matrix, after the addition occurs.
      */
@@ -880,9 +875,9 @@ public:
 
     /**
      * Calculates the difference of this matrix with the given matrix.
-     * 
+     *
      * Note: this does not modify this matrix.
-     * 
+     *
      * @param m The matrix to subtract.
      * @return The matrix difference.
      */
@@ -890,7 +885,7 @@ public:
 
     /**
      * Subtracts the given matrix from this matrix.
-     * 
+     *
      * @param m The matrix to subtract.
      * @return This matrix, after the subtraction occurs.
      */
@@ -898,18 +893,18 @@ public:
 
     /**
      * Calculates the negation of this matrix.
-     * 
+     *
      * Note: this does not modify this matrix.
-     * 
+     *
      * @return The negation of this matrix.
      */
     inline const Matrix operator-() const;
 
     /**
      * Calculates the matrix product of this matrix with the given matrix.
-     * 
+     *
      * Note: this does not modify this matrix.
-     * 
+     *
      * @param m The matrix to multiply by.
      * @return The matrix product.
      */
@@ -917,24 +912,28 @@ public:
 
     /**
      * Right-multiplies this matrix by the given matrix.
-     * 
+     *
      * @param m The matrix to multiply by.
      * @return This matrix, after the multiplication occurs.
      */
     inline Matrix& operator*=(const Matrix& m);
-    
-private:
 
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(m);
+    }
+
+private:
     static void createBillboardHelper(const Vector3& objectPosition, const Vector3& cameraPosition,
-                                      const Vector3& cameraUpVector, const Vector3* cameraForwardVector,
-                                      Matrix* dst);
+                                      const Vector3& cameraUpVector, const Vector3* cameraForwardVector, Matrix* dst);
 };
 
 /**
  * Transforms the given vector by the given matrix.
- * 
+ *
  * Note: this treats the given vector as a vector and not as a point.
- * 
+ *
  * @param v The vector to transform.
  * @param m The matrix to transform by.
  * @return This vector, after the transformation occurs.
@@ -943,9 +942,9 @@ inline Vector3& operator*=(Vector3& v, const Matrix& m);
 
 /**
  * Transforms the given vector by the given matrix.
- * 
+ *
  * Note: this treats the given vector as a vector and not as a point.
- * 
+ *
  * @param m The matrix to transform by.
  * @param v The vector to transform.
  * @return The resulting transformed vector.
@@ -954,9 +953,9 @@ inline const Vector3 operator*(const Matrix& m, const Vector3& v);
 
 /**
  * Transforms the given vector by the given matrix.
- * 
+ *
  * Note: this treats the given vector as a vector and not as a point.
- * 
+ *
  * @param v The vector to transform.
  * @param m The matrix to transform by.
  * @return This vector, after the transformation occurs.
@@ -965,15 +964,14 @@ inline Vector4& operator*=(Vector4& v, const Matrix& m);
 
 /**
  * Transforms the given vector by the given matrix.
- * 
+ *
  * Note: this treats the given vector as a vector and not as a point.
- * 
+ *
  * @param m The matrix to transform by.
  * @param v The vector to transform.
  * @return The resulting transformed vector.
  */
 inline const Vector4 operator*(const Matrix& m, const Vector4& v);
-
 }
 
 #include "Matrix.inl"

@@ -2,12 +2,11 @@
 #define FRUSTUM_H_
 
 #include "Matrix.h"
-#include "Ray.h"
 #include "Plane.h"
+#include "Ray.h"
 
 namespace math
 {
-
 /**
  * Defines a 3-dimensional frustum.
  *
@@ -28,7 +27,6 @@ namespace math
 class Frustum
 {
 public:
-
     /**
      * Constructs the default frustum (corresponds to the identity matrix).
      */
@@ -43,7 +41,7 @@ public:
 
     /**
      * Constructs a new frustum from the given frustum.
-     * 
+     *
      * @param frustum The frustum to create this frustum from.
      */
     Frustum(const Frustum& frustum);
@@ -97,7 +95,7 @@ public:
 
     /**
      * Gets the projection matrix corresponding to the frustum in the specified matrix.
-     * 
+     *
      * @param dst The projection matrix to copy into.
      */
     void getMatrix(Matrix* dst) const;
@@ -108,7 +106,7 @@ public:
      * The corners are stored in the following order:
      * (N-near, F-far, L-left, R-right, B-bottom, T-top)
      * LTN, LBN, RBN, RTN, RTF, RBF, LBF, LTF.
-     * 
+     *
      * @param corners The array (of at least size 8) to store the corners in.
      */
     void getCorners(Vector3* corners) const;
@@ -157,7 +155,7 @@ public:
      * Tests whether this frustum intersects the specified bounding sphere.
      *
      * @param sphere The bounding sphere to test intersection with.
-     * 
+     *
      * @return true if the specified bounding sphere intersects this frustum; false otherwise.
      */
     bool intersects(const BoundingSphere& sphere) const;
@@ -166,7 +164,7 @@ public:
      * Tests whether this frustum intersects the specified bounding box.
      *
      * @param box The bounding box to test intersection with.
-     * 
+     *
      * @return true if the specified bounding box intersects this frustum; false otherwise.
      */
     bool intersects(const BoundingBox& box) const;
@@ -175,7 +173,7 @@ public:
      * Tests whether this frustum intersects the specified plane.
      *
      * @param plane The plane to test intersection with.
-     * 
+     *
      * @return Plane::INTERSECTS_BACK if the specified bounding object is in the negative half-space of
      *  this plane, Plane::INTERSECTS_FRONT if it is in the positive half-space of this plane,
      *  and Plane::INTERSECTS_INTERSECTING if it intersects this plane.
@@ -186,7 +184,7 @@ public:
      * Tests whether this frustum intersects the specified ray.
      *
      * @param ray The ray to test intersection with.
-     * 
+     *
      * @return Plane::INTERSECTS_BACK if the specified ray is in the negative half-space of
      *  this plane, Plane::INTERSECTS_FRONT if it is in the positive half-space of this plane,
      *  and Plane::INTERSECTS_INTERSECTING if it intersects this plane.
@@ -207,22 +205,26 @@ public:
      */
     void set(const Matrix& matrix);
 
-private:
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(_matrix);
+    }
 
+private:
     /**
      * Updates the planes of the frustum.
      */
     void updatePlanes();
 
-    Plane _near;
-    Plane _far;
-    Plane _bottom;
-    Plane _top;
-    Plane _left;
-    Plane _right;
+    Plane  _near;
+    Plane  _far;
+    Plane  _bottom;
+    Plane  _top;
+    Plane  _left;
+    Plane  _right;
     Matrix _matrix;
 };
-
 }
 
 #endif
