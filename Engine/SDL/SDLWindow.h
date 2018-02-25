@@ -72,8 +72,8 @@ private:
     bool          _open{true};
     u32           _width{0};
     u32           _height{0};
-    ImGuiContext* _imguiCtx;
-    ImGuiContext* _prevImguiCtx;
+    ImGuiContext* _imguiCtx{nullptr};
+    ImGuiContext* _prevImguiCtx{nullptr};
 
     int _moveOffsetX{0};
     int _moveOffsetY{0};

@@ -138,7 +138,7 @@ struct ImGuiBgfx
                 }
                 else if (0 != cmd->ElemCount)
                 {
-                    u64 state = 0 | BGFX_STATE_RGB_WRITE | BGFX_STATE_ALPHA_WRITE | BGFX_STATE_MSAA;
+                    u64 state = 0 | BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_MSAA;
 
                     state |= BGFX_STATE_BLEND_FUNC(BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA);
 
@@ -161,8 +161,6 @@ struct ImGuiBgfx
 
     void destroy()
     {
-        ImGui::Shutdown();
-
         bgfx::destroy(_tex);
         bgfx::destroy(_texture);
         bgfx::destroy(_program);
@@ -188,8 +186,8 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL |
-                                                      SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
+    _window = SDL_CreateWindow(title, x, y, w, h,
+                               SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -346,7 +344,7 @@ void SDLWindow::releaseFramebuffer()
     }
 }
 
-void SDLWindow::update(float dt)
+void SDLWindow::update(float /*dt*/)
 {
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
@@ -379,14 +377,11 @@ void SDLWindow::doUpdate(float dt)
 
 bool SDLWindow::imguiInit()
 {
+    assert(_imguiCtx == nullptr);
+    _imguiCtx = ImGui::CreateContext();
     if (_isDefault)
     {
         s_imguiBgfx.init(_width, _height);
-        _imguiCtx = ImGui::GetCurrentContext();
-    }
-    else
-    {
-        _imguiCtx = ImGui::CreateContext();
     }
 
     imguiPushCtx();
@@ -425,13 +420,10 @@ bool SDLWindow::imguiInit()
 
 void SDLWindow::imguiShutdown()
 {
+    ImGui::DestroyContext(_imguiCtx);
     if (_isDefault)
     {
         s_imguiBgfx.destroy();
-    }
-    else
-    {
-        ImGui::DestroyContext(_imguiCtx);
     }
 }
 
