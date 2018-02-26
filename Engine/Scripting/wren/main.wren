@@ -16,7 +16,7 @@ class Main {
 
     static onGUI() {
                 Imgui.setNextWindowSize(WindowSize)
-                Imgui.begin("Wren IMGUI TestSSH")
+                Imgui.begin("Wren IMGUI")
                 Imgui.text("Test : " + Test.toString())
                 if (Imgui.button("Test")) Imgui.text("Pressed")
                 WindowSize = Imgui.getWindowSize()
