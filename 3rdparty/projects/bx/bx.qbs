@@ -27,7 +27,11 @@ StaticLibrary {
     Depends { name: "common" }
 
     cpp.cxxLanguageVersion: "c++14"
-    cpp.defines: ["__STDC_FORMAT_MACROS"]
+    cpp.defines: [
+        "__STDC_LIMIT_MACROS",
+        "__STDC_FORMAT_MACROS",
+        "__STDC_CONSTANT_MACROS"
+        ]
 
 
     Properties {
