@@ -8,7 +8,8 @@ Project {
         "fcpp.qbs",
         "glsl-optimizer.qbs",
         "glslang.qbs",
-        "shaderc.qbs"
+        "shaderc.qbs",
+        "shaderc_lib.qbs"
     ]
     name: "bgfx_shaderc"
 }

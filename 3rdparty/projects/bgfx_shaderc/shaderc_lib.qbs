@@ -1,15 +1,8 @@
 import qbs
 
-CppApplication {
-    consoleApplication: true
-	name: "shaderc"
-    cpp.cxxLanguageVersion: "c++14"
-	Depends { name: "cpp" }
-	Depends { name: "bx" }
-	Depends { name: "fcpp" }
-	Depends { name: "glslang" }
-	Depends { name: "glsl-optimizer" }
-
+StaticLibrary {
+    id: shaderc_lib
+	name: "shaderc_lib"
 
     files: [
         "../../bgfx/src/shader_spirv.cpp",
@@ -23,15 +16,24 @@ CppApplication {
         "../../bgfx/tools/shaderc/shaderc_hlsl.cpp",
         "../../bgfx/tools/shaderc/shaderc_pssl.cpp",
         "../../bgfx/tools/shaderc/shaderc_spirv.cpp",
-        ]
+        "shaderc_lib.cpp",
+        "shaderc_lib.h",
+    ]
 
-    cpp.windowsApiCharacterSet: ""
+	Depends { name: "cpp" }
+    Depends { name: "bx" }
+    Depends { name: "fcpp" }
+    Depends { name: "glslang" }
+    Depends { name: "glsl-optimizer" }
+
+    cpp.cxxLanguageVersion: "c++14"
     cpp.defines: [
         "__STDC_LIMIT_MACROS",
         "__STDC_FORMAT_MACROS",
-        "__STDC_CONSTANT_MACROS"
+        "__STDC_CONSTANT_MACROS",
+        "SHADERC_LIB"
         ]
-    cpp.includePaths: [
+        cpp.includePaths: [
         "../../bimg/include",
         "../../bx/include",
         "../../bgfx/3rdparty/dxsdk/include",
@@ -44,16 +46,8 @@ CppApplication {
         "../../bgfx/include",
         ]
 
-
-    Properties {
-        condition: qbs.targetOS.contains("osx")
-        cpp.frameworks: [ "Cocoa"]
-    }
-
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
-        qbs.install: true
-        qbs.installDir: "home/pi/atlas"
+        qbs.install: false
     }
-
 }
