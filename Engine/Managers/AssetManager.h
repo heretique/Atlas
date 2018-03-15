@@ -21,7 +21,7 @@ public:
     void registerAssetType(AssetType type, AssetFactoryFunc f);
     AssetHandle addAsset(AssetType type, const std::string& filename, u32 flags = 0);
     void removeAsset(AssetHandle handle);
-    void removeAsset(StringHash hash);
+    void removeAssetByHash(StringHash hash);
 
     const AssetPtr& getAsset(AssetHandle handle) const;
     AssetPtr& getAsset(AssetHandle handle);
@@ -51,7 +51,7 @@ public:  // signals
     sigs::signal<void()>    LoadingDone;
 
 protected:
-    AssetHandle addAsset(AssetPtr resource);
+    AssetHandle addAssetImpl(AssetPtr resource);
     AssetHandle getHandle(StringHash hash) const;
 
 private:
@@ -61,5 +61,10 @@ private:
     std::unordered_map<AssetType, AssetFactoryFunc> _registry;
     std::string _assetsDir{};
 };
+
+namespace wren
+{
+    void bindAssetManager();
+}
 
 }  // atlas

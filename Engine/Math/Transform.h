@@ -25,7 +25,7 @@ class BoundingSphere;
  * those arguments to the appropriate constructor or set methods of Transform.
  */
 
-class Transform : public atlas::Component
+class Transform
 {
 public:
     /**

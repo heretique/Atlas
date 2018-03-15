@@ -2,14 +2,18 @@
 
 namespace atlas
 {
-struct Component
+class Component
 {
-};
+public:
+    virtual ~Component()
+    {
+    }
+    template <class Archive>
+    void serialize(Archive&)
+    {
+    }
 
-template <class Archive>
-void serialize(Archive& ar, Component&)
-{
-    ar();
-}
+private:
+};
 
 }  // atlas namespace

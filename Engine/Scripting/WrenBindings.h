@@ -6,5 +6,7 @@ namespace wren
 {
     void bindImguiModule();
     void bindVectorModule();
+    void bindUtilsModule();
+    void bindAssetsModule();
 }
 }

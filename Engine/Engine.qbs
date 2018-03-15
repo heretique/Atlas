@@ -20,6 +20,8 @@ Product {
         "Math/*.inl",
         "Managers/*.cpp",
         "Managers/*.h",
+        "Nodes/*.h",
+        "Nodes/*.cpp",
         "Scripting/*.cpp",
         "Scripting/*.h",
         "SDL/*.cpp",

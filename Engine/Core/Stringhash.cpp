@@ -77,4 +77,9 @@ StringHash::StringHash(const std::string& str)
 {
 }
 
+size_t StringHash::hash() const
+{
+    return _hash;
+}
+
 }  // atlas namespace

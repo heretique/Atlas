@@ -32,8 +32,11 @@ void MainWindow::init()
     Engine::init();
     Engine::assets().setAssetsDir(basePath);
     Engine::assets().addAsset(AssetTypes::Code, "scripts/main.wren");
-    Engine::assets().addAsset(AssetTypes::Code, "scripts/imgui.wren");
-    Engine::assets().addAsset(AssetTypes::Code, "scripts/vector.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/ImGui.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/Vector.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/Utils.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/Assets.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/Engine.wren");
     Engine::assets().loadAssets();
 
     _vmResult = Engine::vm().executeModule("scripts/main");

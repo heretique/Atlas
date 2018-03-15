@@ -1,6 +1,8 @@
 #include "WrenBindings.h"
 
+#include "Assets/Types.h"
 #include "Core/Engine.h"
+#include "Core/StringHash.h"
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
@@ -18,7 +20,7 @@ namespace wren
     void bindImguiModule()
     {
         Engine::vm()
-            .beginModule("scripts/imgui")
+            .beginModule("scripts/ImGui")
             .bindClass<wren::ImGuiWindowFlag>("ImguiFlag")
             .bindCFunction(false, "setTitleBar()", &wren::setTitleBar)
             .bindCFunction(false, "unsetTitleBar()", &wren::unsetTitleBar)
@@ -65,7 +67,7 @@ namespace wren
     void bindVectorModule()
     {
         Engine::vm()
-                .beginModule("scripts/vector")
+                .beginModule("scripts/Vector")
                 .bindClass<math::Vector2, float, float>("Vec2")
                 .bindGetter<decltype(math::Vector2::x), &math::Vector2::x>("x")
                 .bindSetter<decltype(math::Vector2::x), &math::Vector2::x>("x=(_)")
@@ -177,5 +179,21 @@ namespace wren
                     .bindMethod < const math::Vector4 (math::Vector4::*)(float) const,
             &math::Vector4::operator*>(false, "*(_)").endClass().endModule();
     }
-}
-}
+
+    void bindUtilsModule()
+    {
+        Engine::vm()
+            .beginModule("scripts/Utils")
+            .bindClass<StringHash, const std::string&>("StringHash")
+            .bindMethod<decltype(&StringHash::hash), &StringHash::hash>(false, "hash()")
+            .endClass()
+            .endModule();
+    }
+
+    void bindAssetsModule()
+    {
+        bindAssetTypes();
+    }
+
+}  // wren namespace
+}  // atlas namespace

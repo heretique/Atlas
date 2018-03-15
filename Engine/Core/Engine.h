@@ -20,6 +20,7 @@ class ECSManager;
 class AudioManager;
 class PhysicsManager;
 class JobManager;
+class SceneManager;
 class MainWindow;
 
 class Engine
@@ -32,6 +33,10 @@ public:
     static AssetManager& assets()
     {
         return *_assetManager;
+    }
+    static SceneManager& scene()
+    {
+        return *_sceneManager;
     }
     static ECSManager& ecs()
     {
@@ -52,18 +57,27 @@ public:
 
 private:
     static bool init();
+    static void initVertDecl();
+    static void initVM();
+    static void registerAssetTypes();
     static void release();
 
 private:
     static spdlog::logger* _logger;
     static PluginManager*  _pluginManager;
     static AssetManager*   _assetManager;
+    static SceneManager*   _sceneManager;
     static ECSManager*     _ecsManager;
     static JobManager*     _jobManager;
     static wrenpp::VM*     _vm;
 
     friend class MainWindow;
 };
+
+namespace wren
+{
+    void bindEngine();
+}
 
 }  // namespace atlas
 

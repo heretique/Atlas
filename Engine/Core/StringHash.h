@@ -18,7 +18,9 @@ public:
     StringHash(const char* str);
     StringHash(const std::string& str);
     bool operator==(const StringHash& other) const;
-         operator size_t() const;
+    operator size_t() const;
+
+    size_t hash() const;
 
 private:
     size_t _hash;

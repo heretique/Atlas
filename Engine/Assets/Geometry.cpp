@@ -3,6 +3,7 @@
 #include "Assets/Types.h"
 #include "Core/Engine.h"
 #include "Core/Hash.h"
+#include "Core/PackUtils.h"
 #include "Managers/AssetManager.h"
 #include "Math/Vector3.h"
 
@@ -109,27 +110,54 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     _vertices.reserve(uniqueVerticesCombination.size() * 3 * 3 * 2);
     for (const index_t& index : uniqueVerticesCombination)
     {
-        math::Vector3 vertex(static_cast<size_t>(index.vertex_index * 3),
-                             static_cast<size_t>(index.vertex_index * 3 + 1),
-                             static_cast<size_t>(index.vertex_index * 3 + 2));
-        _vertices.push_back(vertexData.vertices[vertex.x]);
-        _vertices.push_back(vertexData.vertices[vertex.y]);
-        _vertices.push_back(vertexData.vertices[vertex.z]);
-        _vertices.push_back(vertexData.normals[static_cast<size_t>(index.normal_index * 3)]);
-        _vertices.push_back(vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)]);
-        _vertices.push_back(vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)]);
-        _vertices.push_back(vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)]);
-        _vertices.push_back(1.0f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)]);
+        SimpleMeshVertex vertex;
+        vertex.x      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
+        vertex.y      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
+        vertex.z      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
+        vertex.normal = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
+                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
+                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
+                                0.f);
+        vertex.tangent = packF4u(0.f, 0.f, 0.f, 0.f);
+        vertex.color   = packF4u(0.f, 0.f, 0.f, 0.f);
+
+        vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
+        vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
         // update bbox
-        _aabb.extend(vertex);
+        _aabb.extend(math::Vector3(vertex.x, vertex.y, vertex.z));
     }
 
     material_t material = materials.front();
     _texture            = Engine::assets().addAsset(AssetTypes::Texture, material.diffuse_texname);
 
     return true;
-
-    return true;
 }
 
 }  // atlas
+
+bool atlas::GeometryAsset::isGPUResource()
+{
+    return true;
+}
+
+bool atlas::GeometryAsset::uploadGPUImpl()
+{
+    bgfx::Memory vertexData;
+    vertexData.data = reinterpret_cast<u8*>(_vertices.data());
+    vertexData.size = _vertices.size() * SimpleMeshVertex::size();
+
+    _vbh = bgfx::createVertexBuffer(&vertexData, SimpleMeshVertex::vertDecl);
+
+    bgfx::Memory indexData;
+    indexData.data = reinterpret_cast<u8*>(_indices.data());
+    indexData.size = _indices.size() * sizeof(u16);
+    _ibh           = bgfx::createIndexBuffer(&indexData);
+
+    assert(bgfx::isValid(_vbh));
+    assert(bgfx::isValid(_ibh));
+
+    _vertices.clear();
+    _indices.clear();
+
+    return true;
+}

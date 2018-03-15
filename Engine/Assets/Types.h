@@ -22,6 +22,7 @@ namespace AssetTypes
     static AssetType Scene{"Scene"};
     static AssetType Geometry{"Geometry"};
     static AssetType Animation{"Animation"};
+    static AssetType Audio{"Audio"};
     static AssetType Material{"Material"};
     static AssetType Code{"Code"};
     static AssetType Shader{"Shader"};
@@ -30,5 +31,10 @@ namespace AssetTypes
     static AssetType Pipeline{"Pipeline"};
     static AssetType Template{"Template"};
 }  // AssetTypes namespace
+
+namespace wren
+{
+    void bindAssetTypes();
+}
 
 }  // atlas namespace

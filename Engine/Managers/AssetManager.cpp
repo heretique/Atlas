@@ -3,6 +3,7 @@
 #include "Core/Engine.h"
 #include <fstream>
 #include <spdlog/spdlog.h>
+#include <wrenpp/Wren++.h>
 
 namespace atlas
 {
@@ -29,7 +30,7 @@ void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
     _registry.insert(make_pair(assetType, f));
 }
 
-AssetHandle AssetManager::addAsset(AssetPtr resource)
+AssetHandle AssetManager::addAssetImpl(AssetPtr resource)
 {
     AssetHandle handle     = _assets.alloc();
     _assets.getRef(handle) = resource;
@@ -68,7 +69,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
         return AssetHandle::invalid;
 
     Engine::log().info("Adding asset: '{}' of type: {}", filename.c_str(), type);
-    AssetHandle handle = addAsset(asset);
+    AssetHandle handle = addAssetImpl(asset);
     if (handle != AssetHandle::invalid)
         asset->_handle = handle;
 
@@ -91,7 +92,7 @@ void AssetManager::removeAsset(AssetHandle handle)
     }
 }
 
-void AssetManager::removeAsset(StringHash hash)
+void AssetManager::removeAssetByHash(StringHash hash)
 {
     AssetHandle handle = getHandle(hash);
     removeAsset(handle);
@@ -190,6 +191,22 @@ int AssetManager::unusedAssets()
     }
 
     return unusedAssets;
+}
+
+void wren::bindAssetManager()
+{
+    Engine::vm()
+        .beginModule("scripts/Assets")
+        .bindClass<AssetManager>("AssetManager")
+        .bindMethod<decltype(&AssetManager::addAsset), &AssetManager::addAsset>(false, "addAsset(_,_,_)")
+        .bindMethod<decltype(&AssetManager::removeAsset), &AssetManager::removeAsset>(false, "removeAsset(_)")
+        .bindMethod<decltype(&AssetManager::removeAssetByHash), &AssetManager::removeAssetByHash>(
+            false, "removeAssetByHash(_)")
+        .bindMethod<decltype(&AssetManager::loadAssets), &AssetManager::loadAssets>(false, "loadAssets()")
+        .bindMethod<decltype(&AssetManager::loadAssetsAsync), &AssetManager::loadAssetsAsync>(false,
+                                                                                              "loadAssetsAsync()")
+        .endClass()
+        .endModule();
 }
 
 }  // atlas

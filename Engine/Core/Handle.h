@@ -12,20 +12,20 @@ struct Handle
     static const Handle<StorageBits, GenerationBits> invalid;
 
     Handle()
-        : m_index(0)
-        , m_generation(0)
+        : _index(0)
+        , _generation(0)
     {
     }
 
     Handle(const Handle<StorageBits, GenerationBits>& other)
-        : m_index(other.m_index)
-        , m_generation(other.m_generation)
+        : _index(other._index)
+        , _generation(other._generation)
     {
     }
 
     Handle(uint32_t index, uint32_t generation)
-        : m_index(index)
-        , m_generation(generation)
+        : _index(index)
+        , _generation(generation)
     {
         assert(index <= MaxIndex);
     }
@@ -40,8 +40,8 @@ struct Handle
     bool valid() const;
 
 private:
-    uint32_t m_index : StorageBits;
-    uint32_t m_generation : GenerationBits;
+    uint32_t _index : StorageBits;
+    uint32_t _generation : GenerationBits;
 
     static const uint32_t MaxIndex = (1 << StorageBits) - 1;
 };
@@ -52,39 +52,39 @@ const Handle<I, G>         Handle<I, G>::invalid;
 template <size_t I, size_t G>
 inline uint32_t Handle<I, G>::index() const
 {
-    return m_index;
+    return _index;
 }
 
 template <size_t I, size_t G>
 inline uint32_t Handle<I, G>::generation() const
 {
-    return m_generation;
+    return _generation;
 }
 
 template <size_t I, size_t G>
 inline void Handle<I, G>::setIndex(uint32_t index)
 {
     assert(index <= MaxIndex);
-    m_index = index;
+    _index = index;
 }
 
 template <size_t I, size_t G>
 inline void Handle<I, G>::setGeneration(uint32_t generation)
 {
     // generation can wrap-around we're not worried about this
-    m_generation = generation;
+    _generation = generation;
 }
 
 template <size_t I, size_t G>
 inline bool Handle<I, G>::operator!=(const Handle& other) const
 {
-    return m_index != other.m_index || m_generation != other.m_generation;
+    return _index != other._index || _generation != other._generation;
 }
 
 template <size_t I, size_t G>
 inline bool Handle<I, G>::operator==(const Handle& other) const
 {
-    return m_index == other.m_index && m_generation == other.m_generation;
+    return _index == other._index && _generation == other._generation;
 }
 template <size_t I, size_t G>
 inline bool Handle<I, G>::valid() const
@@ -95,27 +95,27 @@ inline bool Handle<I, G>::valid() const
 template <size_t I, size_t G>
 inline bool Handle<I, G>::operator<(const Handle& other) const
 {
-    const bool maybe = m_index != other.m_index;
+    const bool maybe = _index != other._index;
 
     if (maybe)
-        return m_index < other.m_index;
+        return _index < other._index;
 
-    return m_generation < other.m_generation;
+    return _generation < other._generation;
 }
 
 template <size_t StorageBits, size_t GenerationBits, size_t TypeBits>
 struct TypedHandle
 {
     TypedHandle()
-        : m_index(0)
-        , m_generation(0)
+        : _index(0)
+        , _generation(0)
         , m_type(0)
     {
     }
 
     TypedHandle(uint32_t index, uint32_t generation, uint32_t type)
-        : m_index(index)
-        , m_generation(generation)
+        : _index(index)
+        , _generation(generation)
         , m_type(type)
     {
         assert(index <= MaxIndex);
@@ -130,8 +130,8 @@ struct TypedHandle
     void setType(uint32_t type);
 
 private:
-    uint32_t m_index : StorageBits;
-    uint32_t m_generation : GenerationBits;
+    uint32_t _index : StorageBits;
+    uint32_t _generation : GenerationBits;
     uint32_t m_type : TypeBits;
 
     static const uint32_t MaxIndex = (1 << StorageBits) - 1;
@@ -141,13 +141,13 @@ private:
 template <size_t I, size_t G, size_t T>
 inline uint32_t TypedHandle<I, G, T>::index() const
 {
-    return m_index;
+    return _index;
 }
 
 template <size_t I, size_t G, size_t T>
 inline uint32_t TypedHandle<I, G, T>::generation() const
 {
-    return m_generation;
+    return _generation;
 }
 
 template <size_t I, size_t G, size_t T>
@@ -160,14 +160,14 @@ template <size_t I, size_t G, size_t T>
 inline void TypedHandle<I, G, T>::setIndex(uint32_t index)
 {
     assert(index <= MaxIndex);
-    m_index = index;
+    _index = index;
 }
 
 template <size_t I, size_t G, size_t T>
 inline void TypedHandle<I, G, T>::setGeneration(uint32_t generation)
 {
     // generation can wrap-around we're not worried about this
-    m_generation = generation;
+    _generation = generation;
 }
 
 template <size_t I, size_t G, size_t T>

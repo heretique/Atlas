@@ -2,10 +2,13 @@
 
 #include "Assets/Geometry.h"
 #include "Assets/Script.h"
+#include "Core/SerializationArchives.h"
+#include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
 #include "Managers/ECSManager.h"
 #include "Managers/JobManager.h"
 #include "Managers/PluginManager.h"
+#include "Managers/SceneManager.h"
 #include "Scripting/WrenBindings.h"
 
 #include <spdlog/spdlog.h>
@@ -13,26 +16,45 @@
 
 namespace atlas
 {
-spdlog::logger* Engine::_logger        = nullptr;
-PluginManager*  Engine::_pluginManager = nullptr;
-AssetManager*   Engine::_assetManager  = nullptr;
-ECSManager*     Engine::_ecsManager    = nullptr;
-JobManager*     Engine::_jobManager    = nullptr;
-wrenpp::VM*     Engine::_vm            = nullptr;
+spdlog::logger*  Engine::_logger        = nullptr;
+PluginManager*   Engine::_pluginManager = nullptr;
+AssetManager*    Engine::_assetManager  = nullptr;
+SceneManager*    Engine::_sceneManager  = nullptr;
+ECSManager*      Engine::_ecsManager    = nullptr;
+JobManager*      Engine::_jobManager    = nullptr;
+wrenpp::VM*      Engine::_vm            = nullptr;
+bgfx::VertexDecl SimpleMeshVertex::vertDecl;
 
 bool Engine::init()
 {
     _logger = spdlog::stdout_color_mt("console").get();
 
+    if (_jobManager == nullptr)
+        _jobManager = new JobManager();
     if (_pluginManager == nullptr)
         _pluginManager = new PluginManager();
     if (_assetManager == nullptr)
         _assetManager = new AssetManager();
     if (_ecsManager == nullptr)
         _ecsManager = new ECSManager();
-    if (_jobManager == nullptr)
-        _jobManager = new JobManager();
+    if (_sceneManager == nullptr)
+        _sceneManager = new SceneManager();
 
+    initVertDecl();
+    registerAssetTypes();
+    jobs().init();
+    initVM();
+
+    return true;
+}
+
+void Engine::initVertDecl()
+{
+    SimpleMeshVertex::init();
+}
+
+void Engine::initVM()
+{
     // initialize wren vm
     wrenpp::VM::loadModuleFn = [](const char* mod) -> char* {
         std::string path(mod);
@@ -61,27 +83,31 @@ bool Engine::init()
     if (_vm == nullptr)
         _vm = new wrenpp::VM();
 
-    assets().registerAssetType(AssetTypes::Geometry, GeometryAsset::factoryFunc);
-    assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
-
-    jobs().init();
-
     // bind wren modules
     wren::bindImguiModule();
     wren::bindVectorModule();
+    wren::bindUtilsModule();
+    wren::bindAssetsModule();
+    wren::bindAssetTypes();
+    wren::bindAssetManager();
+    wren::bindEngine();
+}
 
-    return true;
+void Engine::registerAssetTypes()
+{
+    assets().registerAssetType(AssetTypes::Geometry, GeometryAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
 }
 
 void Engine::release()
 {
     jobs().release();
 
-    delete _jobManager;
-    _jobManager = nullptr;
-
     delete _vm;
     _vm = nullptr;
+
+    delete _sceneManager;
+    _sceneManager = nullptr;
 
     delete _ecsManager;
     _ecsManager = nullptr;
@@ -91,6 +117,23 @@ void Engine::release()
 
     delete _pluginManager;
     _pluginManager = nullptr;
+
+    delete _jobManager;
+    _jobManager = nullptr;
+}
+
+namespace wren
+{
+    void bindEngine()
+    {
+        Engine::vm()
+            .beginModule("scripts/Engine")
+            .beginClass("Engine")
+            .bindFunction<decltype(Engine::assets), &Engine::assets>(true, "assets()")
+            .bindFunction<decltype(Engine::scene), &Engine::scene>(true, "scene()")
+            .endClass()
+            .endModule();
+    }
 }
 
 }  // namespace Atlas
