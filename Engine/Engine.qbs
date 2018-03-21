@@ -109,5 +109,16 @@ Product {
         qbs.install: true
         qbs.installDir: "home/pi/atlas/scripts"
     }
+
+    Group {
+        name: "Test Assets"
+        files: [
+            "../Assets/Models/caruta.obj",
+            "../Assets/Models/caruta.mtl",
+            "../Assets/Textures/caruta.png"
+        ]
+        qbs.install: true
+        qbs.installDir: "home/pi/atlas/assets"
+    }
 }
 

@@ -1,7 +1,11 @@
 #include "Managers/AssetManager.h"
+
 #include "Assets/Asset.h"
 #include "Core/Engine.h"
+#include "Managers/JobManager.h"
+
 #include <fstream>
+
 #include <spdlog/spdlog.h>
 #include <wrenpp/Wren++.h>
 
@@ -52,7 +56,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
 {
     if (filename == "")
     {
-        Engine::log().error("Invalid name for added Asset of type {}", type);
+        Engine::log().error("Invalid name: {} for added Asset of type {}", filename, type);
         return AssetHandle::invalid;
     }
 
@@ -62,6 +66,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
     if (it == _registry.end())
     {
         Engine::log().error("Asset type not registered: {}", type);
+        return AssetHandle::invalid;
     }
 
     asset = it->second(filename, flags);
@@ -112,6 +117,8 @@ void AssetManager::loadAssets()
 {
     AssetPtr                asset        = nullptr;
     const AssetPackedArray& packedAssets = _assets.storage();
+    _loadingCount                        = packedAssets.count;
+    _loadedCount                         = 0;
     for (u32 i = 0; i < packedAssets.count; ++i)
     {
         asset = packedAssets.array[i];
@@ -121,7 +128,7 @@ void AssetManager::loadAssets()
             std::ifstream ifs(path, std::ios::in | std::ios::binary);
             if (ifs)
             {
-                if (!asset->load(ifs))
+                if (!asset->load(ifs) && !asset->isGPUResource())
                 {
                     Engine::log().warn("Couldn't load asset: {}", asset->filename());
                 }
@@ -138,17 +145,69 @@ void AssetManager::loadAssets()
                 Engine::log().error("Couldn't find asset: {}", path.c_str());
             }
         }
+        ++_loadedCount;
+        LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
     }
 }
 
 void AssetManager::loadAssetsAsync()
 {
-    // TODO
+    AssetPtr                asset        = nullptr;
+    const AssetPackedArray& packedAssets = _assets.storage();
+    _loadingCount                        = packedAssets.count;
+    for (u32 i = 0; i < packedAssets.count; ++i)
+    {
+        asset = packedAssets.array[i];
+        if (asset != nullptr && !asset->isLoaded())
+        {
+            std::string path = _assetsDir + asset->filename();
+            JobFunc func     = [path](void* data, uint) {
+                Asset*        asset = reinterpret_cast<Asset*>(data);
+                std::ifstream ifs(path, std::ios::in | std::ios::binary);
+                if (ifs)
+                {
+                    if (!asset->load(ifs))
+                    {
+                        Engine::log().warn("Couldn't load asset: {}", asset->filename());
+                    }
+                    else
+                    {
+                        if (asset->isGPUResource() && !asset->uploadGPU())
+                        {
+                            Engine::log().warn("Couldn't upload asset: {}, to GPU", asset->filename());
+                        }
+                    }
+                }
+                else
+                {
+                    Engine::log().error("Couldn't find asset: {}", path.c_str());
+                }
+            };
+
+            JobDoneFunc done = [&]() {
+                std::lock_guard<std::mutex> ls(_loadingMutex);
+                ++_loadedCount;
+                LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
+            };
+            Engine::jobs().addSignalingJob(func, reinterpret_cast<void*>(asset.get()), 1, done);
+        }
+        else
+        {
+            std::lock_guard<std::mutex> ls(_loadingMutex);
+            ++_loadedCount;
+            LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
+        }
+    }
 }
 
 void AssetManager::setAssetsDir(const std::string& path)
 {
     _assetsDir = path;
+}
+
+const std::string& AssetManager::assetsDir() const
+{
+    return _assetsDir;
 }
 
 void AssetManager::releaseUnusedAssets()
@@ -161,7 +220,7 @@ void AssetManager::releaseUnusedAssets()
         const AssetPtr& asset = packedAssets.array[i];
         if (asset != nullptr && 1 == asset.use_count())
         {
-            assetsForRelease.push_back(asset->_handle);
+            assetsForRelease.emplace_back(asset->_handle);
         }
     }
 

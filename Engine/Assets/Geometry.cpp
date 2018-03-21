@@ -9,6 +9,8 @@
 
 #include <algorithm>
 #include <unordered_set>
+
+#include <SDL2/SDL_filesystem.h>
 #include <spdlog/spdlog.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
@@ -57,12 +59,19 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     std::vector<tinyobj::material_t> materials;
     std::string                      err;
 
-    tinyobj::MaterialFileReader materialReader(_filename.substr(0, _filename.find_last_of('/')));
+    std::string basePath = SDL_GetBasePath();
+    basePath += _filename.substr(0, _filename.find_last_of('/')) + "/";
+    tinyobj::MaterialFileReader materialReader(basePath);
 
     if (!tinyobj::LoadObj(&vertexData, &shapes, &materials, &err, const_cast<std::istream*>(&is), &materialReader))
     {
         Engine::log().error("Failed to load OBJ with error: {}", err.c_str());
         return false;
+    }
+
+    if (!err.empty())
+    {
+        Engine::log().warn(err);
     }
 
     assert(vertexData.texcoords.size());
@@ -99,7 +108,8 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     for (const index_t& index : shape.mesh.indices)
     {
         auto returnPair = uniqueVerticesCombination.insert(index);
-        _indices.push_back(static_cast<uint16_t>(std::distance(uniqueVerticesCombination.begin(), returnPair.first)));
+        _indices.emplace_back(
+            static_cast<uint16_t>(std::distance(uniqueVerticesCombination.begin(), returnPair.first)));
     }
 
     // reverse order to get the normals right again
@@ -107,7 +117,7 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     std::reverse(_indices.begin(), _indices.end());
 
     // interleave vertex attributes
-    _vertices.reserve(uniqueVerticesCombination.size() * 3 * 3 * 2);
+    _vertices.reserve(uniqueVerticesCombination.size());
     for (const index_t& index : uniqueVerticesCombination)
     {
         SimpleMeshVertex vertex;
@@ -123,6 +133,7 @@ bool GeometryAsset::loadImpl(const std::istream& is)
 
         vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
         vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
+        _vertices.emplace_back(vertex);
         // update bbox
         _aabb.extend(math::Vector3(vertex.x, vertex.y, vertex.z));
     }
@@ -142,16 +153,15 @@ bool atlas::GeometryAsset::isGPUResource()
 
 bool atlas::GeometryAsset::uploadGPUImpl()
 {
-    bgfx::Memory vertexData;
-    vertexData.data = reinterpret_cast<u8*>(_vertices.data());
-    vertexData.size = _vertices.size() * SimpleMeshVertex::size();
+    if (_vertices.empty())
+        return false;
 
-    _vbh = bgfx::createVertexBuffer(&vertexData, SimpleMeshVertex::vertDecl);
+    const bgfx::Memory* vertexMem =
+        bgfx::copy(reinterpret_cast<u8*>(_vertices.data()), _vertices.size() * SimpleMeshVertex::size());
+    _vbh = bgfx::createVertexBuffer(vertexMem, SimpleMeshVertex::vertDecl);
 
-    bgfx::Memory indexData;
-    indexData.data = reinterpret_cast<u8*>(_indices.data());
-    indexData.size = _indices.size() * sizeof(u16);
-    _ibh           = bgfx::createIndexBuffer(&indexData);
+    const bgfx::Memory* indexMem = bgfx::copy(reinterpret_cast<u8*>(_indices.data()), _indices.size() * sizeof(u16));
+    _ibh                         = bgfx::createIndexBuffer(indexMem);
 
     assert(bgfx::isValid(_vbh));
     assert(bgfx::isValid(_ibh));

@@ -12,10 +12,7 @@ class Main {
 
     static init() {
         var assetManager = Engine.assets()
-        var handle = assetManager.addAsset(AssetTypes.Code, "test", 0)
-         if (handle != AssetHandle.invalid) {
-            System.print("Handle: (%(handle.index), %(handle.generation))")
-         }
+        var carHandle = assetManager.addAsset(AssetTypes.Geometry, "assets/caruta.obj", 0)
         assetManager.loadAssets()
     }
 

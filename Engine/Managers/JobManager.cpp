@@ -18,7 +18,7 @@ void JobManager::init()
 
     for (uint i = 0; i < _cpuCount; ++i)
     {
-        _runners.push_back(std::thread([&]() {
+        _runners.emplace_back(std::thread([&]() {
             Engine::log().info("Starting worker thread...");
             Job job;
             while (_running.test_and_set(std::memory_order_acquire) == true)

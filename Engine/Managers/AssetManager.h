@@ -43,8 +43,9 @@ public:
     void loadAssets();
     void loadAssetsAsync();
     void setAssetsDir(const std::string& path);
-    void releaseUnusedAssets();
-    int  unusedAssets();
+    const std::string& assetsDir() const;
+    void               releaseUnusedAssets();
+    int                unusedAssets();
 
 public:  // signals
     sigs::signal<void(int)> LoadingProgress;
@@ -60,6 +61,10 @@ private:
     AssetsByHash _hashedAssets;
     std::unordered_map<AssetType, AssetFactoryFunc> _registry;
     std::string _assetsDir{};
+
+    std::mutex _loadingMutex;
+    uint       _loadingCount;
+    uint       _loadedCount;
 };
 
 namespace wren
