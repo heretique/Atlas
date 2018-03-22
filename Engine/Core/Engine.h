@@ -11,6 +11,11 @@ namespace wrenpp
 class VM;
 }
 
+namespace bx
+{
+struct AllocatorI;
+}
+
 namespace atlas
 {
 // Forward declarations
@@ -54,6 +59,7 @@ public:
     {
         return *_vm;
     }
+    static bx::AllocatorI* bxAllocator();
 
 private:
     static bool init();

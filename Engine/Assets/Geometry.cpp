@@ -59,8 +59,9 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     std::vector<tinyobj::material_t> materials;
     std::string                      err;
 
-    std::string basePath = SDL_GetBasePath();
-    basePath += _filename.substr(0, _filename.find_last_of('/')) + "/";
+    std::string basePath     = SDL_GetBasePath();
+    std::string relativePath = _filename.substr(0, _filename.find_last_of('/')) + "/";
+    basePath += relativePath;
     tinyobj::MaterialFileReader materialReader(basePath);
 
     if (!tinyobj::LoadObj(&vertexData, &shapes, &materials, &err, const_cast<std::istream*>(&is), &materialReader))
@@ -139,7 +140,7 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     }
 
     material_t material = materials.front();
-    _texture            = Engine::assets().addAsset(AssetTypes::Texture, material.diffuse_texname);
+    _texture            = Engine::assets().addAsset(AssetTypes::Texture, relativePath + material.diffuse_texname);
 
     return true;
 }

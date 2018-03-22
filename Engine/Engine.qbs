@@ -40,6 +40,7 @@ Product {
         "../3rdparty/entityx",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",
+        "../3rdparty/bimg/include",
         "../3rdparty/stb",
         "../3rdparty/picojson",
         "../3rdparty/tinygltf",
@@ -59,6 +60,7 @@ Product {
     Depends { name: "wren" }
     Depends { name: "wrenpp" }
     Depends { name: "entityx" }
+    Depends { name: "shaderc_lib" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")

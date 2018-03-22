@@ -56,7 +56,7 @@ protected:
     AssetHandle getHandle(StringHash hash) const;
 
 private:
-    using AssetsByHash = std::unordered_map<StringHash, AssetHandle>;
+    using AssetsByHash = std::unordered_map<StringHash, AssetHandle, StringHash::Hasher>;
     AssetStorage _assets;
     AssetsByHash _hashedAssets;
     std::unordered_map<AssetType, AssetFactoryFunc> _registry;

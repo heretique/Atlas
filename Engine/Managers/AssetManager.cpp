@@ -36,10 +36,13 @@ void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
 
 AssetHandle AssetManager::addAssetImpl(AssetPtr resource)
 {
-    AssetHandle handle     = _assets.alloc();
+    AssetHandle handle = _assets.alloc();
+    if (!handle.valid())
+        return handle;
+
     _assets.getRef(handle) = resource;
-    // FIXME: proper check here
-    _hashedAssets.insert(std::make_pair(resource->filename(), handle));
+    auto result            = _hashedAssets.insert(std::make_pair(resource->filename(), handle));
+    assert(result.second);
     return handle;
 }
 
@@ -128,7 +131,7 @@ void AssetManager::loadAssets()
             std::ifstream ifs(path, std::ios::in | std::ios::binary);
             if (ifs)
             {
-                if (!asset->load(ifs) && !asset->isGPUResource())
+                if (!asset->load(ifs))
                 {
                     Engine::log().warn("Couldn't load asset: {}", asset->filename());
                 }

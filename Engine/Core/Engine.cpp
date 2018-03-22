@@ -2,6 +2,7 @@
 
 #include "Assets/Geometry.h"
 #include "Assets/Script.h"
+#include "Assets/Texture.h"
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
@@ -11,19 +12,27 @@
 #include "Managers/SceneManager.h"
 #include "Scripting/WrenBindings.h"
 
+#include <bx/allocator.h>
 #include <spdlog/spdlog.h>
 #include <wrenpp/Wren++.h>
 
 namespace atlas
 {
-spdlog::logger*  Engine::_logger        = nullptr;
-PluginManager*   Engine::_pluginManager = nullptr;
-AssetManager*    Engine::_assetManager  = nullptr;
-SceneManager*    Engine::_sceneManager  = nullptr;
-ECSManager*      Engine::_ecsManager    = nullptr;
-JobManager*      Engine::_jobManager    = nullptr;
-wrenpp::VM*      Engine::_vm            = nullptr;
+spdlog::logger* Engine::_logger        = nullptr;
+PluginManager*  Engine::_pluginManager = nullptr;
+AssetManager*   Engine::_assetManager  = nullptr;
+SceneManager*   Engine::_sceneManager  = nullptr;
+ECSManager*     Engine::_ecsManager    = nullptr;
+JobManager*     Engine::_jobManager    = nullptr;
+wrenpp::VM*     Engine::_vm            = nullptr;
+
 bgfx::VertexDecl SimpleMeshVertex::vertDecl;
+
+bx::AllocatorI* Engine::bxAllocator()
+{
+    static bx::DefaultAllocator allocator;
+    return &allocator;
+}
 
 bool Engine::init()
 {
@@ -90,6 +99,7 @@ void Engine::initVM()
     wren::bindAssetsModule();
     wren::bindAssetTypes();
     wren::bindAssetManager();
+    wren::bindTextureTypes();
     wren::bindEngine();
 }
 
@@ -97,6 +107,7 @@ void Engine::registerAssetTypes()
 {
     assets().registerAssetType(AssetTypes::Geometry, GeometryAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Texture, TextureAsset::factoryFunc);
 }
 
 void Engine::release()

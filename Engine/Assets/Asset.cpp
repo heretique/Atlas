@@ -25,7 +25,7 @@ bool Asset::load(const std::istream& data)
     if (!isGPUResource())
         _loaded = loaded;
 
-    return _loaded;
+    return loaded;
 }
 
 bool Asset::uploadGPU()
