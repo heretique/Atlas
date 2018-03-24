@@ -27,7 +27,7 @@ void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
 {
     if (_registry.find(assetType) != _registry.end())
     {
-        Engine::log().warn("Asset type {}, already registered", assetType);
+        Engine::log().warn("Asset type '{}', already registered", AssetTypes::toName(assetType));
         return;
     }
 
@@ -59,7 +59,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
 {
     if (filename == "")
     {
-        Engine::log().error("Invalid name: {} for added Asset of type {}", filename, type);
+        Engine::log().error("Invalid name: '{}' for added Asset of type '{}'", filename, AssetTypes::toName(type));
         return AssetHandle::invalid;
     }
 
@@ -68,7 +68,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
     auto     it    = _registry.find(type);
     if (it == _registry.end())
     {
-        Engine::log().error("Asset type not registered: {}", type);
+        Engine::log().error("Asset type not registered: '{}'", AssetTypes::toName(type));
         return AssetHandle::invalid;
     }
 
@@ -76,7 +76,7 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
     if (asset == nullptr)
         return AssetHandle::invalid;
 
-    Engine::log().info("Adding asset: '{}' of type: {}", filename.c_str(), type);
+    Engine::log().info("Adding asset: '{}' of type: '{}'", filename.c_str(), AssetTypes::toName(type));
     AssetHandle handle = addAssetImpl(asset);
     if (handle != AssetHandle::invalid)
         asset->_handle = handle;
@@ -133,19 +133,28 @@ void AssetManager::loadAssets()
             {
                 if (!asset->load(ifs))
                 {
-                    Engine::log().warn("Couldn't load asset: {}", asset->filename());
+                    Engine::log().warn("Couldn't load asset: '{}' of type: '{}'",
+                                       asset->filename(),
+                                       AssetTypes::toName(asset->type()));
                 }
                 else
                 {
                     if (asset->isGPUResource() && !asset->uploadGPU())
                     {
-                        Engine::log().warn("Couldn't upload asset: {}, to GPU", asset->filename());
+                        Engine::log().warn("Couldn't upload asset: '{}' of type: '{}', to GPU",
+                                           asset->filename(),
+                                           AssetTypes::toName(asset->type()));
+                    }
+                    else
+                    {
+                        Engine::log().info(
+                            "Loaded asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
                     }
                 }
             }
             else
             {
-                Engine::log().error("Couldn't find asset: {}", path.c_str());
+                Engine::log().error("Couldn't find asset: '{}'", path.c_str());
             }
         }
         ++_loadedCount;
@@ -171,19 +180,19 @@ void AssetManager::loadAssetsAsync()
                 {
                     if (!asset->load(ifs))
                     {
-                        Engine::log().warn("Couldn't load asset: {}", asset->filename());
+                        Engine::log().warn("Couldn't load asset: '{}'", asset->filename());
                     }
                     else
                     {
                         if (asset->isGPUResource() && !asset->uploadGPU())
                         {
-                            Engine::log().warn("Couldn't upload asset: {}, to GPU", asset->filename());
+                            Engine::log().warn("Couldn't upload asset: '{}', to GPU", asset->filename());
                         }
                     }
                 }
                 else
                 {
-                    Engine::log().error("Couldn't find asset: {}", path.c_str());
+                    Engine::log().error("Couldn't find asset: '{}'", path.c_str());
                 }
             };
 

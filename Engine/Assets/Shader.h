@@ -1,10 +1,19 @@
 #pragma once
 
 #include "Asset.h"
+#include "Utils/BgfxUtils.h"
 #include <bgfx/bgfx.h>
 
 namespace atlas
 {
+enum class ShaderTypes
+{
+    None = 0,
+    Vertex,
+    Fragment,
+    Compute
+};
+
 class ShaderAsset : public Asset
 {
 public:
@@ -21,5 +30,14 @@ protected:
 
 private:
     bgfx::ShaderHandle _shader;
+    // TODO shader is created on render thread, get rid of
+    // shader memory afterwards
+    MemoryWriter _memWriter;
 };
+
+namespace wren
+{
+    void bindShaderTypes();
+}
+
 }  // atlas namespace

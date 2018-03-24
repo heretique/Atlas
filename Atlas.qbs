@@ -1,6 +1,7 @@
 import qbs
 
 Project {
+    name: "Atlas"
 
     qbsSearchPaths: "qbs"
 
@@ -20,6 +21,5 @@ Project {
         "Engine/Engine.qbs",
         "Tests/Tests.qbs",
     ]
-    name: "Atlas"
 }
 

@@ -34,8 +34,7 @@ StaticLibrary {
         path + "/../../bgfx/3rdparty/dxsdk/include"
     ]
     cpp.cxxLanguageVersion: "c++14"
-    cpp.defines: ["BUILD_WITH_EASY_PROFILER"]
-//        cpp.defines: ["BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"]
+    cpp.defines: ["BUILD_WITH_EASY_PROFILER"/*, "BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"*/]
 
     Properties {
         condition: qbs.targetOS.contains("linux")

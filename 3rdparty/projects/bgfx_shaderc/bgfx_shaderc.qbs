@@ -1,6 +1,7 @@
 import qbs
 
 Project {
+    name: "bgfx_shaderc"
 
     qbsSearchPaths: "qbs"
 
@@ -8,9 +9,8 @@ Project {
         "fcpp.qbs",
         "glsl-optimizer.qbs",
         "glslang.qbs",
-        "shaderc.qbs",
-        "shaderc_lib.qbs"
+        "shaderc_lib.qbs",
+        "shaderc.qbs"
     ]
-    name: "bgfx_shaderc"
 }
 

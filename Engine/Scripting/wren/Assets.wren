@@ -25,6 +25,13 @@ foreign class AssetTypes {
     foreign static Template
 }
 
+foreign class ShaderTypes {
+    foreign static None
+    foreign static Vertex
+    foreign static Fragment
+    foreign static Compute
+}
+
 foreign class TextureFlags {
       foreign static None
       foreign static U_Mirror

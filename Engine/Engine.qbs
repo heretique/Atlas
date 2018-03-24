@@ -28,6 +28,8 @@ Product {
         "SDL/*.h",
         "Systems/*cpp",
         "Systems/*.h",
+        "Utils/*.cpp",
+        "Utils/*.h"
     ]
 
     Depends { name: "cpp" }
@@ -54,13 +56,13 @@ Product {
     Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
+    Depends { name: "shaderc_lib" }
     Depends { name: "imgui" }
     Depends { name: "fmt" }
 //    Depends { name: "angelscript" }
     Depends { name: "wren" }
     Depends { name: "wrenpp" }
     Depends { name: "entityx" }
-    Depends { name: "shaderc_lib" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")
@@ -117,7 +119,13 @@ Product {
         files: [
             "../Assets/Models/caruta.obj",
             "../Assets/Models/caruta.mtl",
-            "../Assets/Textures/caruta.png"
+            "../Assets/Shaders/bgfx_shader.sh",
+            "../Assets/Shaders/common.sh",
+            "../Assets/Shaders/cube/fs_cubes.sc",
+            "../Assets/Shaders/cube/varying.def.sc",
+            "../Assets/Shaders/cube/vs_cubes.sc",
+            "../Assets/Shaders/shaderlib.sh",
+            "../Assets/Textures/caruta.png",
         ]
         qbs.install: true
         qbs.installDir: "home/pi/atlas/assets"

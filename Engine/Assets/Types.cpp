@@ -4,6 +4,36 @@
 
 namespace atlas
 {
+const std::string& AssetTypes::toName(const AssetType type)
+{
+    if (type == Undefined)
+        return AssetNames::Undefined;
+    else if (type == Scene)
+        return AssetNames::Scene;
+    else if (type == Geometry)
+        return AssetNames::Geometry;
+    else if (type == Animation)
+        return AssetNames::Animation;
+    else if (type == Audio)
+        return AssetNames::Audio;
+    else if (type == Material)
+        return AssetNames::Material;
+    else if (type == Code)
+        return AssetNames::Code;
+    else if (type == Shader)
+        return AssetNames::Shader;
+    else if (type == Texture)
+        return AssetNames::Texture;
+    else if (type == ParticleEffect)
+        return AssetNames::ParticleEffect;
+    else if (type == Pipeline)
+        return AssetNames::Pipeline;
+    else if (type == Template)
+        return AssetNames::Template;
+
+    return AssetNames::Undefined;
+}
+
 namespace wren
 {
     void invalid(WrenVM* vm)
@@ -115,5 +145,7 @@ namespace wren
                  .endClass()                                                              //
                  .endModule();
     }
-}  // wren namespace
+}
+
+// wren namespace
 }  // atlas namespace

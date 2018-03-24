@@ -3,7 +3,7 @@
 #include "Core/Engine.h"
 #include "wrenpp/Wren++.h"
 #include <bgfx/defines.h>
-#include <bimg/bimg.h>
+#include <bimg/decode.h>
 
 namespace atlas
 {
@@ -26,41 +26,44 @@ bool TextureAsset::loadImpl(const std::istream& data)
 {
     _texture = BGFX_INVALID_HANDLE;
 
-    std::string          buffer = std::string(std::istreambuf_iterator<char>(data.rdbuf()), {});
-    bimg::ImageContainer imageContainer;
+    std::vector<unsigned char> buffer;
+    buffer.insert(buffer.begin(), std::istreambuf_iterator<char>(data.rdbuf()), {});
 
-    if (!bimg::imageParse(imageContainer, (const void*)buffer.c_str(), buffer.size()))
+    bimg::ImageContainer* imageContainer = bimg::imageParse(Engine::bxAllocator(), buffer.data(), buffer.size());
+
+    if (imageContainer == NULL)
     {
         return false;
     }
 
-    const bgfx::Memory* mem = bgfx::makeRef(imageContainer.m_data, imageContainer.m_size);
+    const bgfx::Memory* mem = bgfx::makeRef(imageContainer->m_data, imageContainer->m_size);
 
-    if (imageContainer.m_cubeMap)
+    if (imageContainer->m_cubeMap)
     {
-        _texture = bgfx::createTextureCube(uint16_t(imageContainer.m_width), 1 < imageContainer.m_numMips,
-                                           imageContainer.m_numLayers,
-                                           bgfx::TextureFormat::Enum(imageContainer.m_format), _flags, mem);
+        _texture = bgfx::createTextureCube(uint16_t(imageContainer->m_width), 1 < imageContainer->m_numMips,
+                                           imageContainer->m_numLayers,
+                                           bgfx::TextureFormat::Enum(imageContainer->m_format), _flags, mem);
     }
-    else if (1 < imageContainer.m_depth)
+    else if (1 < imageContainer->m_depth)
     {
-        _texture = bgfx::createTexture3D(uint16_t(imageContainer.m_width), uint16_t(imageContainer.m_height),
-                                         uint16_t(imageContainer.m_depth), 1 < imageContainer.m_numMips,
-                                         bgfx::TextureFormat::Enum(imageContainer.m_format), _flags, mem);
+        _texture = bgfx::createTexture3D(uint16_t(imageContainer->m_width), uint16_t(imageContainer->m_height),
+                                         uint16_t(imageContainer->m_depth), 1 < imageContainer->m_numMips,
+                                         bgfx::TextureFormat::Enum(imageContainer->m_format), _flags, mem);
     }
     else
     {
-        _texture = bgfx::createTexture2D(uint16_t(imageContainer.m_width), uint16_t(imageContainer.m_height),
-                                         1 < imageContainer.m_numMips, imageContainer.m_numLayers,
-                                         bgfx::TextureFormat::Enum(imageContainer.m_format), _flags, mem);
+        _texture = bgfx::createTexture2D(uint16_t(imageContainer->m_width), uint16_t(imageContainer->m_height),
+                                         1 < imageContainer->m_numMips, imageContainer->m_numLayers,
+                                         bgfx::TextureFormat::Enum(imageContainer->m_format), _flags, mem);
     }
 
     bgfx::setName(_texture, _filename.c_str());
 
-    bgfx::calcTextureSize(_textureInfo, uint16_t(imageContainer.m_width), uint16_t(imageContainer.m_height),
-                          uint16_t(imageContainer.m_depth), imageContainer.m_cubeMap, 1 < imageContainer.m_numMips,
-                          imageContainer.m_numLayers, bgfx::TextureFormat::Enum(imageContainer.m_format));
+    bgfx::calcTextureSize(_textureInfo, uint16_t(imageContainer->m_width), uint16_t(imageContainer->m_height),
+                          uint16_t(imageContainer->m_depth), imageContainer->m_cubeMap, 1 < imageContainer->m_numMips,
+                          imageContainer->m_numLayers, bgfx::TextureFormat::Enum(imageContainer->m_format));
 
+    bimg::imageFree(imageContainer);
     return true;
 }
 

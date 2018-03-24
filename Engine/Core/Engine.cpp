@@ -2,6 +2,7 @@
 
 #include "Assets/Geometry.h"
 #include "Assets/Script.h"
+#include "Assets/Shader.h"
 #include "Assets/Texture.h"
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
@@ -36,7 +37,7 @@ bx::AllocatorI* Engine::bxAllocator()
 
 bool Engine::init()
 {
-    _logger = spdlog::stdout_color_mt("console").get();
+    _logger = spdlog::stdout_color_mt("console").get();    
 
     if (_jobManager == nullptr)
         _jobManager = new JobManager();
@@ -100,6 +101,7 @@ void Engine::initVM()
     wren::bindAssetTypes();
     wren::bindAssetManager();
     wren::bindTextureTypes();
+    wren::bindShaderTypes();
     wren::bindEngine();
 }
 
@@ -108,6 +110,7 @@ void Engine::registerAssetTypes()
     assets().registerAssetType(AssetTypes::Geometry, GeometryAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Texture, TextureAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Shader, ShaderAsset::factoryFunc);
 }
 
 void Engine::release()
