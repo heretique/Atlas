@@ -5,7 +5,7 @@ StaticLibrary {
     id: easy_profiler
     name: "easy_profiler"
     files: [
-    "../../easy_profiler/easy_profiler_core/*.h",
+        "../../easy_profiler/easy_profiler_core/*.h",
         "../../easy_profiler/easy_profiler_core/*.cpp"
     ]
     Depends { name: "cpp" }
@@ -15,6 +15,7 @@ StaticLibrary {
     cpp.includePaths: [ "../../easy_profiler/easy_profiler_core/include" ]
 
     cpp.defines: [
+        "EASY_PROFILER_STATIC",
         "BUILD_WITH_EASY_PROFILER",
         "EASY_PROFILER_VERSION_MAJOR=1",
         "EASY_PROFILER_VERSION_MINOR=3",
