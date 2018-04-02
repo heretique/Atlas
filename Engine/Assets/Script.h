@@ -16,7 +16,7 @@ public:
     ScriptAsset(const std::string& filename, u32 flags);
     ~ScriptAsset() override;
 
-    bool loadImpl(const std::istream& data) override;
+    bool loadImpl(std::istream& data) override;
 
     const std::string& script() const;
 

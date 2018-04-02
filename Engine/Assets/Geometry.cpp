@@ -52,7 +52,7 @@ namespace
     };
 }
 
-bool GeometryAsset::loadImpl(const std::istream& is)
+bool GeometryAsset::loadImpl(std::istream& is)
 {
     tinyobj::attrib_t                vertexData;
     std::vector<tinyobj::shape_t>    shapes;
@@ -92,7 +92,7 @@ bool GeometryAsset::loadImpl(const std::istream& is)
         Engine::log().warn("\n\t- affected resource: {}", _filename);
     }
 
-    const shape_t& shape = shapes.front();
+    const shape_t&                                        shape = shapes.front();
     std::unordered_set<index_t, HasherIndex, EqualsIndex> uniqueVerticesCombination;
     _indices.reserve(shape.mesh.indices.size());
 
@@ -122,10 +122,10 @@ bool GeometryAsset::loadImpl(const std::istream& is)
     for (const index_t& index : uniqueVerticesCombination)
     {
         SimpleMeshVertex vertex;
-        vertex.x      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
-        vertex.y      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
-        vertex.z      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
-        vertex.normal = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
+        vertex.x       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
+        vertex.y       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
+        vertex.z       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
+        vertex.normal  = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
                                 vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
                                 vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
                                 0.f);

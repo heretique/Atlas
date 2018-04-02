@@ -31,6 +31,8 @@ StaticLibrary {
         "NBUFF=65536",
         "OLD_PREPROCESSOR=0",
         ]
+    Depends { name: "common" }
+
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

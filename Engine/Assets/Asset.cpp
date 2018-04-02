@@ -15,11 +15,9 @@ Asset::Asset(AssetType type, const std::string& filename, u32 flags)
 {
 }
 
-Asset::~Asset()
-{
-}
+Asset::~Asset() {}
 
-bool Asset::load(const std::istream& data)
+bool Asset::load(std::istream& data)
 {
     bool loaded = loadImpl(data);
     if (!isGPUResource())

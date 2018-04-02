@@ -168,6 +168,8 @@ StaticLibrary {
 
 
 	Depends { name: "cpp" }
+    Depends { name: "common" }
+
     cpp.cxxLanguageVersion: "c++11"
     cpp.includePaths: [
         "../../bgfx/3rdparty/glsl-optimizer/include",

@@ -108,6 +108,8 @@ StaticLibrary {
 
 
 	Depends { name: "cpp" }
+    Depends { name: "common" }
+
     cpp.cxxLanguageVersion: "c++14"
     cpp.defines: [
         "__STDC_LIMIT_MACROS",

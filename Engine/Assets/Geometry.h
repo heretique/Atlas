@@ -2,9 +2,9 @@
 
 #include "Assets/Asset.h"
 #include "Core/SimpleMeshVertex.h"
-#include "Math/BoundingBox.h"
 #include "bgfx/bgfx.h"
 #include <vector>
+#include "Math/BoundingBox.h"
 
 namespace atlas
 {
@@ -21,7 +21,7 @@ public:
 
     // Asset interface
 protected:
-    virtual bool loadImpl(const std::istream& data) override;
+    virtual bool loadImpl(std::istream& data) override;
     virtual bool isGPUResource() override;
     virtual bool uploadGPUImpl() override;
 

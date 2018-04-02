@@ -1,0 +1,19 @@
+{
+    "value0": {
+        "name": "unlit_textured",
+        "vertexShader": "assets/vs_cubes.sc",
+        "fragmentShader": "assets/fs_cubes.sc",
+        "params": [
+            {
+                "key": "u_time",
+                "value": { "type": 2, "value": [0]}
+            }
+        ],
+        "textures": [
+            {
+                "key": "s_diffuse",
+                "value": "assets/caruta.png"
+            }
+        ]
+    }
+}

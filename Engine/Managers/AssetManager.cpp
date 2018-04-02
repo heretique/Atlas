@@ -15,13 +15,9 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager()
-{
-}
+AssetManager::AssetManager() {}
 
-AssetManager::~AssetManager()
-{
-}
+AssetManager::~AssetManager() {}
 
 void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
 {
@@ -63,6 +59,10 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
         return AssetHandle::invalid;
     }
 
+    auto assetIt = _hashedAssets.find(filename);
+    if (assetIt != _hashedAssets.end())
+        return assetIt->second;
+
     // Create Asset
     AssetPtr asset = nullptr;
     auto     it    = _registry.find(type);
@@ -81,7 +81,6 @@ AssetHandle AssetManager::addAsset(AssetType type, const std::string& filename, 
     if (handle != AssetHandle::invalid)
         asset->_handle = handle;
 
-    // FIXME: proper check here
     _hashedAssets.insert(std::make_pair(filename, handle));
 
     return handle;
@@ -116,47 +115,55 @@ AssetPtr& AssetManager::getAsset(AssetHandle handle)
     return _assets.getRef(handle);
 }
 
+bool AssetManager::loadAsset(AssetHandle handle)
+{
+    AssetPtr asset = getAsset(handle);
+    assert(asset);
+    if (asset->isLoaded())
+        return true;
+
+    std::string   path = _assetsDir + asset->filename();
+    std::ifstream ifs(path, std::ios::in | std::ios::binary);
+    if (ifs)
+    {
+        if (!asset->load(ifs))
+        {
+            Engine::log().warn(
+                "Couldn't load asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
+        }
+        else
+        {
+            if (asset->isGPUResource() && !asset->uploadGPU())
+            {
+                Engine::log().warn("Couldn't upload asset: '{}' of type: '{}', to GPU",
+                                   asset->filename(),
+                                   AssetTypes::toName(asset->type()));
+            }
+            else
+            {
+                Engine::log().info(
+                    "Loaded asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
+                return true;
+            }
+        }
+    }
+    else
+    {
+        Engine::log().error("Couldn't find asset: '{}'", path.c_str());
+    }
+
+    return false;
+}
+
 void AssetManager::loadAssets()
 {
-    AssetPtr                asset        = nullptr;
     const AssetPackedArray& packedAssets = _assets.storage();
     _loadingCount                        = packedAssets.count;
     _loadedCount                         = 0;
     for (u32 i = 0; i < packedAssets.count; ++i)
     {
-        asset = packedAssets.array[i];
-        if (asset != nullptr && !asset->isLoaded())
-        {
-            std::string   path = _assetsDir + asset->filename();
-            std::ifstream ifs(path, std::ios::in | std::ios::binary);
-            if (ifs)
-            {
-                if (!asset->load(ifs))
-                {
-                    Engine::log().warn("Couldn't load asset: '{}' of type: '{}'",
-                                       asset->filename(),
-                                       AssetTypes::toName(asset->type()));
-                }
-                else
-                {
-                    if (asset->isGPUResource() && !asset->uploadGPU())
-                    {
-                        Engine::log().warn("Couldn't upload asset: '{}' of type: '{}', to GPU",
-                                           asset->filename(),
-                                           AssetTypes::toName(asset->type()));
-                    }
-                    else
-                    {
-                        Engine::log().info(
-                            "Loaded asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
-                    }
-                }
-            }
-            else
-            {
-                Engine::log().error("Couldn't find asset: '{}'", path.c_str());
-            }
-        }
+        AssetHandle handle = _assets.getHandleFromPackedIndex(i);
+        loadAsset(handle);
         ++_loadedCount;
         LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
     }
@@ -164,52 +171,55 @@ void AssetManager::loadAssets()
 
 void AssetManager::loadAssetsAsync()
 {
-    AssetPtr                asset        = nullptr;
-    const AssetPackedArray& packedAssets = _assets.storage();
-    _loadingCount                        = packedAssets.count;
-    for (u32 i = 0; i < packedAssets.count; ++i)
-    {
-        asset = packedAssets.array[i];
-        if (asset != nullptr && !asset->isLoaded())
-        {
-            std::string path = _assetsDir + asset->filename();
-            JobFunc func     = [path](void* data, uint) {
-                Asset*        asset = reinterpret_cast<Asset*>(data);
-                std::ifstream ifs(path, std::ios::in | std::ios::binary);
-                if (ifs)
-                {
-                    if (!asset->load(ifs))
-                    {
-                        Engine::log().warn("Couldn't load asset: '{}'", asset->filename());
-                    }
-                    else
-                    {
-                        if (asset->isGPUResource() && !asset->uploadGPU())
-                        {
-                            Engine::log().warn("Couldn't upload asset: '{}', to GPU", asset->filename());
-                        }
-                    }
-                }
-                else
-                {
-                    Engine::log().error("Couldn't find asset: '{}'", path.c_str());
-                }
-            };
+    // TODOCM: implement async job loading
+    // doesn't work parallel needs secquential async so don't use jobs
 
-            JobDoneFunc done = [&]() {
-                std::lock_guard<std::mutex> ls(_loadingMutex);
-                ++_loadedCount;
-                LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
-            };
-            Engine::jobs().addSignalingJob(func, reinterpret_cast<void*>(asset.get()), 1, done);
-        }
-        else
-        {
-            std::lock_guard<std::mutex> ls(_loadingMutex);
-            ++_loadedCount;
-            LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
-        }
-    }
+    //    AssetPtr                asset        = nullptr;
+    //    const AssetPackedArray& packedAssets = _assets.storage();
+    //    _loadingCount                        = packedAssets.count;
+    //    for (u32 i = 0; i < packedAssets.count; ++i)
+    //    {
+    //        asset = packedAssets.array[i];
+    //        if (asset != nullptr && !asset->isLoaded())
+    //        {
+    //            std::string path = _assetsDir + asset->filename();
+    //            JobFunc     func = [path](void* data, uint) {
+    //                Asset*        asset = reinterpret_cast<Asset*>(data);
+    //                std::ifstream ifs(path, std::ios::in | std::ios::binary);
+    //                if (ifs)
+    //                {
+    //                    if (!asset->load(ifs))
+    //                    {
+    //                        Engine::log().warn("Couldn't load asset: '{}'", asset->filename());
+    //                    }
+    //                    else
+    //                    {
+    //                        if (asset->isGPUResource() && !asset->uploadGPU())
+    //                        {
+    //                            Engine::log().warn("Couldn't upload asset: '{}', to GPU", asset->filename());
+    //                        }
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    Engine::log().error("Couldn't find asset: '{}'", path.c_str());
+    //                }
+    //            };
+
+    //            JobDoneFunc done = [&]() {
+    //                std::lock_guard<std::mutex> ls(_loadingMutex);
+    //                ++_loadedCount;
+    //                LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
+    //            };
+    //            Engine::jobs().addSignalingJob(func, reinterpret_cast<void*>(asset.get()), 1, done);
+    //        }
+    //        else
+    //        {
+    //            std::lock_guard<std::mutex> ls(_loadingMutex);
+    //            ++_loadedCount;
+    //            LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
+    //        }
+    //    }
 }
 
 void AssetManager::setAssetsDir(const std::string& path)

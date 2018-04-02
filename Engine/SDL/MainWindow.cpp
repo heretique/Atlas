@@ -37,6 +37,7 @@ void MainWindow::init()
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Utils.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Assets.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Engine.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/Scene.wren");
     Engine::assets().loadAssets();
 
     _vmResult = Engine::vm().executeModule("scripts/main");

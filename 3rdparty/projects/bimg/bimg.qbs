@@ -16,6 +16,7 @@ StaticLibrary {
     ]
 
     Depends { name: "cpp" }
+    Depends { name: "common" }
     Depends { name: "bx" }
 
     cpp.includePaths: [

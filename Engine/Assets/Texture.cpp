@@ -22,7 +22,12 @@ TextureAsset::~TextureAsset()
     bgfx::destroy(_texture);
 }
 
-bool TextureAsset::loadImpl(const std::istream& data)
+bgfx::TextureHandle TextureAsset::bgfxHandle() const
+{
+    return _texture;
+}
+
+bool TextureAsset::loadImpl(std::istream& data)
 {
     _texture = BGFX_INVALID_HANDLE;
 
