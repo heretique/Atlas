@@ -50,7 +50,7 @@ StaticLibrary {
     }
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/osx" ])
     }
 
@@ -76,7 +76,7 @@ StaticLibrary {
         }
 
         Properties {
-            condition: qbs.targetOS.contains("osx")
+            condition: qbs.targetOS.contains("darwin")
             cpp.systemIncludePaths: outer.uniqueConcat([ path + "/../../bx/include/compat/osx" ])
         }
     }

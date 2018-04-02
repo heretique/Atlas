@@ -24,6 +24,11 @@ ShaderAsset::~ShaderAsset()
     bgfx::destroy(_shader);
 }
 
+bgfx::ShaderHandle ShaderAsset::bgfxHandle() const
+{
+    return _shader;
+}
+
 char shaderTypeToChar(ShaderTypes shaderType)
 {
     switch (shaderType)
@@ -39,7 +44,7 @@ char shaderTypeToChar(ShaderTypes shaderType)
     }
 }
 
-bool ShaderAsset::loadImpl(const std::istream& data)
+bool ShaderAsset::loadImpl(std::istream& data)
 {
     _shader = BGFX_INVALID_HANDLE;
 
@@ -70,7 +75,7 @@ bool ShaderAsset::loadImpl(const std::istream& data)
     compileOptions.shaderType = shaderType;
 
     std::string varying;
-    std::string basePath     = SDL_GetBasePath();
+    std::string basePath         = SDL_GetBasePath();
     compileOptions.inputFilePath = basePath + _filename;
 
     std::string relativePath = _filename.substr(0, _filename.find_last_of('/')) + "/";
@@ -99,7 +104,7 @@ bool ShaderAsset::loadImpl(const std::istream& data)
         return false;
 
     const bgfx::Memory* mem = bgfx::makeRef(_memWriter.buffer.data(), _memWriter.buffer.size());
-    _shader = bgfx::createShader(mem);
+    _shader                 = bgfx::createShader(mem);
 
     return bgfx::isValid(_shader);
 }

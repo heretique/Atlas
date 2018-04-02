@@ -20,6 +20,7 @@ StaticLibrary {
     ]
 
 	Depends { name: "cpp" }
+    Depends { name: "common" }
     Depends { name: "bx" }
     Depends { name: "fcpp" }
     Depends { name: "glslang" }

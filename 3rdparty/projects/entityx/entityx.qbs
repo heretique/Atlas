@@ -25,6 +25,8 @@ StaticLibrary {
         "../../entityx/entityx/tags/TagsComponent.h"
     ]
     Depends { name: "cpp" }
+    Depends { name: "common" }
+
 
     cpp.includePaths: [ "../../entityx", ".." ]
     cpp.cxxLanguageVersion: "c++14"

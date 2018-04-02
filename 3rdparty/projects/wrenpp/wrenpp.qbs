@@ -9,6 +9,7 @@ StaticLibrary {
         "../../wrenpp/Wren++.h",
     ]
     Depends { name: "cpp" }
+    Depends { name: "common" }
     Depends { name: "wren" }
 
     cpp.includePaths: [ 

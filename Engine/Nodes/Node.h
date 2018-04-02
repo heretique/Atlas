@@ -10,16 +10,26 @@
 namespace atlas
 {
 class Node;
+using NodeVec         = std::vector<Node*>;
 using NodePtr         = std::shared_ptr<Node>;
 using NodePtrVec      = std::vector<NodePtr>;
 using ComponentPtr    = std::shared_ptr<Component>;
 using ComponentPtrVec = std::vector<ComponentPtr>;
 using NodeId          = uint64_t;
 
+/// Base node class. Not optimal, Components held temporarily inside a vectoro
 class Node
 {
 public:
-    Node(std::string name, NodePtr parent = nullptr);
+    Node(std::string name, Node* parent = nullptr);
+
+    NodeId      id() const;
+    std::string name() const;
+    void setName(std::string name);
+    StringHash hash() const;
+    bool       enabled() const;
+    void enable(bool enabled);
+    Node* parent() const;
 
     template <typename Archive>
     void serialize(Archive& ar)
@@ -42,7 +52,13 @@ private:
     math::BoundingBox    _bbox;
     math::BoundingSphere _bsphere;
     ComponentPtrVec      _components;
-    NodePtr              _parent;
-    NodePtrVec           _children;
+    Node*                _parent;
+    NodeVec              _children;
 };
+
+namespace wren
+{
+    void bindNode();
+}
+
 }  // atlas namespace

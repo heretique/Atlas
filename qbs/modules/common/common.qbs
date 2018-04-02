@@ -41,7 +41,6 @@ Module {
             path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
         cpp.windowsApiCharacterSet: ""
-        cpp.architecture: "x86_64"
     }
 
 
@@ -54,16 +53,17 @@ Module {
         ])
         cpp.defines : outer.uniqueConcat(["__VCCOREVER__", "BX_PLATFORM_RPI"]) // for RPI
         cpp.libraryPaths: outer.uniqueConcat(["c:/apps/SysGCC/raspberry/arm-linux-gnueabihf/sysroot/opt/vc/lib"])
-        cpp.architecture: "arm"
     }
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         toolchain:     {
             if (qbs.toolchain.contains("clang"))
                 return "clang"
         }
-        cpp.architecture: qbs.architecture
+        cpp.systemIncludePaths: outer.uniqueConcat([
+            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
+        ])
         cpp.includePaths: outer.uniqueConcat([
             "/usr/local/opt/sdl2/include"
         ])   

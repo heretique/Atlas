@@ -13,9 +13,11 @@ public:
     TextureAsset(const std::string& filename, u32 flags);
     ~TextureAsset() override;
 
+    bgfx::TextureHandle bgfxHandle() const;
+
     // Asset interface
 protected:
-    virtual bool loadImpl(const std::istream& data) override;
+    virtual bool loadImpl(std::istream& data) override;
     virtual bool isGPUResource() override;
     virtual bool uploadGPUImpl() override;
 

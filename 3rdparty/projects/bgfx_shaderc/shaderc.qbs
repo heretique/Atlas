@@ -5,6 +5,7 @@ CppApplication {
 	name: "shaderc"
     cpp.cxxLanguageVersion: "c++14"
 	Depends { name: "cpp" }
+    Depends { name: "common" }
 	Depends { name: "bx" }
 	Depends { name: "fcpp" }
 	Depends { name: "glslang" }
@@ -46,7 +47,7 @@ CppApplication {
 
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         cpp.frameworks: [ "Cocoa"]
     }
 

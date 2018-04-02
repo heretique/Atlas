@@ -109,6 +109,8 @@ StaticLibrary {
 
 
 	Depends { name: "cpp" }
+    Depends { name: "common" }
+
     cpp.cxxLanguageVersion: "c++14"
     cpp.commonCompilerFlags: [
         "-Wno-ignored-qualifiers",

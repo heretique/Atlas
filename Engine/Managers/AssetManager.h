@@ -18,31 +18,26 @@ public:
     AssetManager();
     ~AssetManager();
 
-    void registerAssetType(AssetType type, AssetFactoryFunc f);
+    void        registerAssetType(AssetType type, AssetFactoryFunc f);
     AssetHandle addAsset(AssetType type, const std::string& filename, u32 flags = 0);
-    void removeAsset(AssetHandle handle);
-    void removeAssetByHash(StringHash hash);
+    void        removeAsset(AssetHandle handle);
+    void        removeAssetByHash(StringHash hash);
 
     const AssetPtr& getAsset(AssetHandle handle) const;
-    AssetPtr& getAsset(AssetHandle handle);
+    AssetPtr&       getAsset(AssetHandle handle);
 
     template <typename T>
     typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type> getAsset(
-        AssetHandle handle)
-    {
-        return std::static_pointer_cast<T>(getAsset(handle));
-    }
+        AssetHandle handle) const;
 
     template <typename T>
     typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type> getAsset(
-        StringHash hash)
-    {
-        return std::static_pointer_cast<T>(getAsset(getHandle(hash)));
-    }
+        StringHash hash) const;
 
-    void loadAssets();
-    void loadAssetsAsync();
-    void setAssetsDir(const std::string& path);
+    bool               loadAsset(AssetHandle handle);
+    void               loadAssets();
+    void               loadAssetsAsync();
+    void               setAssetsDir(const std::string& path);
     const std::string& assetsDir() const;
     void               releaseUnusedAssets();
     int                unusedAssets();
@@ -57,15 +52,29 @@ protected:
 
 private:
     using AssetsByHash = std::unordered_map<StringHash, AssetHandle, StringHash::Hasher>;
-    AssetStorage _assets;
-    AssetsByHash _hashedAssets;
+    AssetStorage                                    _assets;
+    AssetsByHash                                    _hashedAssets;
     std::unordered_map<AssetType, AssetFactoryFunc> _registry;
-    std::string _assetsDir{};
+    std::string                                     _assetsDir{};
 
     std::mutex _loadingMutex;
     uint       _loadingCount;
     uint       _loadedCount;
 };
+
+template <typename T>
+typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type> AssetManager::getAsset(
+    AssetHandle handle) const
+{
+    return std::static_pointer_cast<T>(getAsset(handle));
+}
+
+template <typename T>
+typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type> AssetManager::getAsset(
+    StringHash hash) const
+{
+    return std::static_pointer_cast<T>(getAsset(getHandle(hash)));
+}
 
 namespace wren
 {

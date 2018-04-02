@@ -1,6 +1,7 @@
 #include "Engine.h"
 
 #include "Assets/Geometry.h"
+#include "Assets/Material.h"
 #include "Assets/Script.h"
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
@@ -11,6 +12,7 @@
 #include "Managers/JobManager.h"
 #include "Managers/PluginManager.h"
 #include "Managers/SceneManager.h"
+#include "Nodes/Node.h"
 #include "Scripting/WrenBindings.h"
 
 #include <bx/allocator.h>
@@ -37,7 +39,7 @@ bx::AllocatorI* Engine::bxAllocator()
 
 bool Engine::init()
 {
-    _logger = spdlog::stdout_color_mt("console").get();    
+    _logger = spdlog::stdout_color_mt("console").get();
 
     if (_jobManager == nullptr)
         _jobManager = new JobManager();
@@ -102,7 +104,17 @@ void Engine::initVM()
     wren::bindAssetManager();
     wren::bindTextureTypes();
     wren::bindShaderTypes();
+    wren::bindNode();
     wren::bindEngine();
+
+    //    MaterialAsset test("test", 0);
+    //    MaterialInfo  info;
+    //    info.name           = "unlit_textured";
+    //    MaterialParam param = {"s_diffuse", 0};
+    //    info.params.emplace_back(param);
+    //    info.textures.insert(std::make_pair("s_diffuse", "caruta.png"));
+    //    test.setMaterialInfo(info);
+    //    test.write();
 }
 
 void Engine::registerAssetTypes()
@@ -111,6 +123,7 @@ void Engine::registerAssetTypes()
     assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Texture, TextureAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Shader, ShaderAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Material, MaterialAsset::factoryFunc);
 }
 
 void Engine::release()

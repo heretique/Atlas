@@ -13,7 +13,7 @@ StaticLibrary {
     ]
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         files: outer.uniqueConcat([
                                       "../../bgfx/src/glcontext_eagl.mm",
                                       "../../bgfx/src/glcontext_nsgl.mm",
@@ -42,7 +42,7 @@ StaticLibrary {
     }
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         cpp.includePaths: outer.uniqueConcat([
             path + "/../../bgfx/3rdparty/khronos"
         ])

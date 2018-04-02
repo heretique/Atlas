@@ -8,11 +8,9 @@ ScriptAsset::ScriptAsset(const std::string& name, u32 flags)
 {
 }
 
-ScriptAsset::~ScriptAsset()
-{
-}
+ScriptAsset::~ScriptAsset() {}
 
-bool ScriptAsset::loadImpl(const std::istream& data)
+bool ScriptAsset::loadImpl(std::istream& data)
 {
     _buffer = std::string(std::istreambuf_iterator<char>(data.rdbuf()), {});
     return true;

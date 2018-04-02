@@ -23,11 +23,11 @@ public:
     const std::string& filename() const;
     bool               isLoaded() const;
 
-    bool load(const std::istream& data);
+    bool load(std::istream& data);
     bool uploadGPU();
 
 protected:
-    virtual bool loadImpl(const std::istream& data) = 0;
+    virtual bool loadImpl(std::istream& data) = 0;
     virtual bool isGPUResource();
     virtual bool uploadGPUImpl();
 

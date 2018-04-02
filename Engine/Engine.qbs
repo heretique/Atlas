@@ -53,7 +53,7 @@ Product {
     cpp.defines: ["BUILD_WITH_EASY_PROFILER", "SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
-    Depends { name: "easy_profiler" }
+//    Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "shaderc_lib" }
@@ -71,7 +71,6 @@ Product {
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
         cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
-        cpp.architecture: "x86_64"
 
         Properties {
             condition: qbs.toolchain.contains("msvc")
@@ -87,16 +86,14 @@ Product {
     Properties {
         condition: qbs.targetOS.contains("linux")
         cpp.dynamicLibraries: [ "rt", "dl", "bcm_host", "EGL", "GLESv2", "pthread", "udev", "SDL2" ]
-        cpp.architecture: "arm"
     }
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
 
         cpp.frameworks: [ "Cocoa", "OpenGL", "Metal", "QuartzCore"]
         cpp.libraryPaths: outer.uniqueConcat(["/usr/local/opt/sdl2/lib"])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
-        cpp.architecture: "x86_64"
     }
 
     Group {     // Properties for the produced executable
@@ -126,6 +123,7 @@ Product {
             "../Assets/Shaders/cube/vs_cubes.sc",
             "../Assets/Shaders/shaderlib.sh",
             "../Assets/Textures/caruta.png",
+            "../Assets/Materials/unlit_textured.material"
         ]
         qbs.install: true
         qbs.installDir: "home/pi/atlas/assets"
