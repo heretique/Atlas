@@ -71,6 +71,7 @@ Product {
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
         cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
+        cpp.architecture: common.arch
 
         Properties {
             condition: qbs.toolchain.contains("msvc")

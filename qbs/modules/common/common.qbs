@@ -6,7 +6,7 @@ Module {
         if (qbs.architecture == "x86")
             return "x86"
         if (qbs.architecture == "x86_64")
-            return "x64"
+            return "x86_64"
     }
 
     property string toolchain: qbs.toolchain[0]
@@ -41,6 +41,7 @@ Module {
             path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
         cpp.windowsApiCharacterSet: ""
+        cpp.architecture: arch
     }
 
 

@@ -87,7 +87,6 @@ StaticLibrary {
         "../../bgfx/3rdparty/glslang/glslang/MachineIndependent/propagateNoContraction.h",
         "../../bgfx/3rdparty/glslang/glslang/MachineIndependent/reflection.cpp",
         "../../bgfx/3rdparty/glslang/glslang/MachineIndependent/reflection.h",
-        "../../bgfx/3rdparty/glslang/glslang/OSDependent/Unix/ossource.cpp",
         "../../bgfx/3rdparty/glslang/glslang/OSDependent/osinclude.h",
         "../../bgfx/3rdparty/glslang/glslang/Public/ShaderLang.h",
         "../../bgfx/3rdparty/glslang/hlsl/hlslAttributes.cpp",
@@ -112,19 +111,6 @@ StaticLibrary {
     Depends { name: "common" }
 
     cpp.cxxLanguageVersion: "c++14"
-    cpp.commonCompilerFlags: [
-        "-Wno-ignored-qualifiers",
-        "-Wno-missing-field-initializers",
-        "-Wno-reorder",
-        "-Wno-return-type",
-        "-Wno-shadow",
-        "-Wno-sign-compare",
-        "-Wno-undef",
-        "-Wno-unknown-pragmas",
-        "-Wno-unused-function",
-        "-Wno-unused-parameter",
-        "-Wno-unused-variable",
-        ]
     cpp.defines: [
         "__STDC_LIMIT_MACROS",
         "__STDC_FORMAT_MACROS",
@@ -135,6 +121,33 @@ StaticLibrary {
     cpp.includePaths: [
         "../../../3rdparty/glslang",
         ]
+
+    Properties {
+        condition: qbs.targetOS.contains("windows")
+        files: outer.uniqueConcat([
+                                      "../../bgfx/3rdparty/glslang/glslang/OSDependent/Windows/ossource.cpp",
+                                  ])
+    }
+
+    Properties {
+        condition: qbs.targetOS.contains("osx")
+        files: outer.uniqueConcat([
+                                        "../../bgfx/3rdparty/glslang/glslang/OSDependent/Unix/ossource.cpp",
+                                  ])
+        cpp.commonCompilerFlagss: outer.uniqueConcat([
+                                                         "-Wno-ignored-qualifiers",
+                                                         "-Wno-missing-field-initializers",
+                                                         "-Wno-reorder",
+                                                         "-Wno-return-type",
+                                                         "-Wno-shadow",
+                                                         "-Wno-sign-compare",
+                                                         "-Wno-undef",
+                                                         "-Wno-unknown-pragmas",
+                                                         "-Wno-unused-function",
+                                                         "-Wno-unused-parameter",
+                                                         "-Wno-unused-variable",
+                                                         ])
+    }
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
