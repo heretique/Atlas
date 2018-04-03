@@ -61,9 +61,10 @@ Module {
             if (qbs.toolchain.contains("clang"))
                 return "clang"
         }
-        cpp.systemIncludePaths: outer.uniqueConcat([
-            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
-        ])
+        cpp.minimumMacosVersion: "10.9"
+//        cpp.systemIncludePaths: outer.uniqueConcat([
+//            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
+//        ])
         cpp.includePaths: outer.uniqueConcat([
             "/usr/local/opt/sdl2/include"
         ])   

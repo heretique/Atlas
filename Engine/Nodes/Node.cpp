@@ -41,7 +41,7 @@ void Node::enable(bool enabled)
     _enabled = enabled;
 }
 
-NodePtr Node::parent() const
+Node* Node::parent() const
 {
     return _parent;
 }
@@ -50,7 +50,7 @@ void wren::bindNode()
 {
     Engine::vm()
         .beginModule("scripts/Scene")                                              //
-        .bindClass<Node, std::string, NodePtr>("Node")                             //
+        .bindClass<Node, std::string, Node*>("Node")                               //
         .bindMethod<decltype(&Node::id), &Node::id>(false, "id")                   //
         .bindMethod<decltype(&Node::name), &Node::name>(false, "name")             //
         .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")   //
