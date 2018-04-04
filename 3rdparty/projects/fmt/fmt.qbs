@@ -16,6 +16,7 @@ StaticLibrary {
         "../../fmt/time.h",
     ]
     Depends { name: "cpp" }
+    Depends { name: "common" }
 
     cpp.includePaths: [ "../..", ".." ]
     cpp.cxxLanguageVersion: "c++14"
