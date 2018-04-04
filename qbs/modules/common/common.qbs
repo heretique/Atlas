@@ -26,6 +26,8 @@ Module {
         path + "/../../../3rdparty/wrenpp"
     ]
 
+    cpp.architecture: arch
+
 //    cpp.debugInformation: true
 
     Properties {
@@ -41,7 +43,6 @@ Module {
             path + "/../../../3rdparty/bgfx/3rdparty/khronos"
         ])
         cpp.windowsApiCharacterSet: ""
-        cpp.architecture: arch
     }
 
 
@@ -63,9 +64,6 @@ Module {
                 return "clang"
         }
         cpp.minimumMacosVersion: "10.9"
-//        cpp.systemIncludePaths: outer.uniqueConcat([
-//            "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1"
-//        ])
         cpp.includePaths: outer.uniqueConcat([
             "/usr/local/opt/sdl2/include"
         ])   

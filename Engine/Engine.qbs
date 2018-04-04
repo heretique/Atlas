@@ -53,7 +53,7 @@ Product {
     cpp.defines: ["BUILD_WITH_EASY_PROFILER", "SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
-//    Depends { name: "easy_profiler" }
+    Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "shaderc_lib" }
@@ -71,7 +71,6 @@ Product {
         cpp.systemIncludePaths: outer.uniqueConcat(["../../bx/include/compat/" + common.toolchain])
         cpp.libraryPaths: outer.uniqueConcat(["../3rdparty/sdl/win/" + common.toolchain + "/" + common.arch])
         cpp.staticLibraries: outer.uniqueConcat(["SDL2"])
-        cpp.architecture: common.arch
 
         Properties {
             condition: qbs.toolchain.contains("msvc")
