@@ -121,3 +121,71 @@ foreign class Vec4 {
     isZero() { x == 0 && y == 0 && z == 0 && w == 0 }
     toString() {"(%(x), %(y), %(z), %(w))"}
 }
+
+foreign class Quaternion {
+    construct new() {}
+
+    foreign x
+    foreign x=( rhs )
+    foreign y
+    foreign y=( rhs )
+    foreign z
+    foreign z=( rhs )
+    foreign w
+    foreign w=( rhs )
+
+    foreign static identity
+    foreign static zero
+
+    foreign setIdentity()
+    foreign setFromValues(x, y, z, w)
+    foreign setFromMatrix(m)
+    foreign setFromAxisAngle(axis, angle) // vec3, float
+    foreign setFromQuaternion(quaternion)
+
+    foreign static lerp(q1, q2, t, qdest)
+    foreign static slerp(q1, q2, t, qdest)
+
+    foreign *( rhs )
+}
+
+foreign class Matrix {
+    construct new() {}
+
+    foreign static identity
+    foreign static zero
+
+    foreign setIdentity()
+    foreign setZero()
+}
+
+foreign class Transform {
+    construct new() {}
+
+    foreign matrix
+    foreign scale
+    foreign scaleX
+    foreign scaleY
+    foreign scaleZ
+    foreign rotation
+    foreign translation
+    foreign translationX
+    foreign translationY
+    foreign translationZ
+    foreign forward
+    foreign up
+    foreign right
+    foreign rotateWithQuaternionFloats(x, y, z, w)
+    foreign rotateWithQuaternion(quaternion)
+    foreign rotateWithAxisAngle(axis, angle)
+    foreign rotateWithMatrix(matrix)
+    foreign rotateX(angle)
+    foreign rotateY(angle)
+    foreign rotateZ(angle)
+    foreign uniformScale(scale)
+    foreign scaleWithFloats(x, y, z)
+    foreign scaleWithVector(vector)
+    foreign scaleX(scale)
+    foreign scaleY(scale)
+    foreign scaleZ(scale)
+}

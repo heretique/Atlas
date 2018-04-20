@@ -4,9 +4,9 @@ namespace atlas
 {
 namespace wren
 {
-    void bindImguiModule();
-    void bindVectorModule();
-    void bindUtilsModule();
-    void bindAssetsModule();
+    void bindImgui();
+    void bindMath();
+    void bindUtils();
+    void bindAssets();
 }
 }

@@ -4,10 +4,14 @@
 
 namespace atlas
 {
-Node::Node(std::string name, Node* parent)
+Node::Node(std::string name, NodePtr parent)
     : _name(name)
     , _nameHash(StringHash(name))
     , _parent(parent)
+{
+}
+
+Node::~Node()
 {
 }
 
@@ -41,16 +45,34 @@ void Node::enable(bool enabled)
     _enabled = enabled;
 }
 
-Node* Node::parent() const
+NodePtr Node::parent() const
 {
     return _parent;
+}
+
+void Node::addChild(NodePtr child)
+{
+    _children.insert(child);
+}
+
+ComponentPtr Node::addComponent(StringHash component)
+{
+    return nullptr;
+}
+
+ComponentPtr Node::getComponent(StringHash component)
+{
+    return nullptr;
 }
 
 void wren::bindNode()
 {
     Engine::vm()
         .beginModule("scripts/Scene")                                              //
-        .bindClass<Node, std::string, Node*>("Node")                               //
+        .bindClass<NodePtr>("NodePtr")                                             //
+        .bindMethod<decltype(&NodePtr::get), &NodePtr::get>(false, "get")          //
+        .endClass()                                                                //
+        .bindClass<Node, std::string, NodePtr>("Node")                             //
         .bindMethod<decltype(&Node::id), &Node::id>(false, "id")                   //
         .bindMethod<decltype(&Node::name), &Node::name>(false, "name")             //
         .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")   //
@@ -58,7 +80,6 @@ void wren::bindNode()
         .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")    //
         .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")  //
         .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")       //
-
         .endClass()
         .endModule();
 }

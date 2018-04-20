@@ -2,31 +2,25 @@
 
 #include "Assets/Types.h"
 #include "Component.h"
-#include "Core/Types.h"
-
-#include <bgfx/bgfx.h>
 #include <cereal/cereal.hpp>
 
 namespace atlas
 {
-class MeshComponent : public Component
+class MaterialComponent : public Component
 {
 public:
-    MeshComponent();
-    MeshComponent(AssetHandle handle, StringHash hash);
-
     template <class Archive>
     void serialize(Archive& ar)
     {
         ar(                                       //
             cereal::base_class<Component>(this),  //
-            CEREAL_NVP(_meshHash)                 //
+            CEREAL_NVP(_materialHash)             //
             );
     }
 
 private:
-    StringHash  _meshHash;
-    AssetHandle _mesh;
+    StringHash  _materialHash;
+    AssetHandle _material;
 };
 
 }  // namespace Atlas

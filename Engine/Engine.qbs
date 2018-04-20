@@ -53,16 +53,10 @@ Product {
     cpp.defines: ["BUILD_WITH_EASY_PROFILER", "SPDLOG_FMT_EXTERNAL"]
 
     Depends { name: "common" }
-    Depends { name: "easy_profiler" }
     Depends { name: "bx" }
     Depends { name: "bgfx" }
-    Depends { name: "shaderc_lib" }
     Depends { name: "imgui" }
-    Depends { name: "fmt" }
-//    Depends { name: "angelscript" }
     Depends { name: "wren" }
-    Depends { name: "wrenpp" }
-    Depends { name: "entityx" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")

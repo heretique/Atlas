@@ -22,6 +22,12 @@ public:
 
     size_t hash() const;
 
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(_hash);
+    }
+
 private:
     size_t _hash;
 };

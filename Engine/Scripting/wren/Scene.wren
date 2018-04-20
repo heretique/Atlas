@@ -1,3 +1,7 @@
+foreign class NodePtr {
+    foreign get
+}
+
 foreign class Node {
     construct new(name, parent) {}
     foreign id
@@ -7,4 +11,9 @@ foreign class Node {
     foreign enabled
     foreign enabled=(rhs)
     foreign parent
+}
+
+foreign class SceneManager {
+    foreign root
+    foreign addNode(name, parent)
 }

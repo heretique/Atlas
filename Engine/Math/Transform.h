@@ -1,7 +1,6 @@
 #ifndef TRANSFORM_H_
 #define TRANSFORM_H_
 
-#include "Components/Component.h"
 #include "Matrix.h"
 #include "Quaternion.h"
 #include "Vector3.h"

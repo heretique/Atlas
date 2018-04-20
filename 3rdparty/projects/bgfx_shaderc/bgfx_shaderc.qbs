@@ -9,7 +9,7 @@ Project {
         "fcpp.qbs",
         "glsl-optimizer.qbs",
         "glslang.qbs",
-        "shaderc_lib.qbs",
+//        "shaderc_lib.qbs",
         "shaderc.qbs"
     ]
 }

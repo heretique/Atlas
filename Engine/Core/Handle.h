@@ -38,10 +38,20 @@ struct Handle
     bool operator==(const Handle& other) const;
     bool operator<(const Handle& other) const;
     bool valid() const;
+    operator uint32_t() const
+    {
+        return _handle;
+    }
 
 private:
-    uint32_t _index : StorageBits;
-    uint32_t _generation : GenerationBits;
+    union {
+        struct
+        {
+            uint32_t _index : StorageBits;
+            uint32_t _generation : GenerationBits;
+        };
+        uint32_t _handle;
+    };
 
     static const uint32_t MaxIndex = (1 << StorageBits) - 1;
 };

@@ -1,7 +1,8 @@
 #include "Systems/RenderSystem.h"
 
+#include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
-#include "Math/Transform.h"
+#include "Components/TransformComponent.h"
 
 namespace atlas
 {
@@ -17,13 +18,14 @@ RenderSystem::~RenderSystem()
 
 void RenderSystem::update(EntityManager& entities, EventManager& events, TimeDelta dt)
 {
-    entities.each<math::Transform, MeshComponent>(
-        [this, dt](Entity entity, math::Transform& transform, MeshComponent& meshComp) {
-            updateEntity(entity, transform, meshComp, dt);
+    entities.each<TransformComponent, MeshComponent, MaterialComponent>(
+        [this, dt](Entity entity, TransformComponent& transform, MeshComponent& mesh, MaterialComponent& material) {
+            updateEntity(entity, transform, mesh, material, dt);
         });
 }
 
-void RenderSystem::updateEntity(Entity entity, math::Transform& transform, MeshComponent& meshComp, TimeDelta dt)
+void RenderSystem::updateEntity(entityx::Entity entity, const TransformComponent& transform, const MeshComponent& mesh,
+                                MaterialComponent& material, entityx::TimeDelta dt)
 {
 }
 

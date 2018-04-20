@@ -96,16 +96,17 @@ void Engine::initVM()
         _vm = new wrenpp::VM();
 
     // bind wren modules
-    wren::bindImguiModule();
-    wren::bindVectorModule();
-    wren::bindUtilsModule();
-    wren::bindAssetsModule();
+    wren::bindImgui();
+    wren::bindMath();
+    wren::bindUtils();
+    wren::bindAssets();
     wren::bindAssetTypes();
     wren::bindAssetManager();
     wren::bindTextureTypes();
     wren::bindShaderTypes();
     wren::bindNode();
     wren::bindEngine();
+    wren::bindSceneManager();
 
     //    MaterialAsset test("test", 0);
     //    MaterialInfo  info;

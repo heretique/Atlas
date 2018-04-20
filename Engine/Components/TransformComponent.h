@@ -19,6 +19,11 @@ public:
             );
     }
 
+    const math::Transform& world() const;
+    math::Transform&       world();
+    const math::Transform& local() const;
+    math::Transform&       local();
+
 private:
     math::Transform _worldTransform;
     math::Transform _localTransform;
