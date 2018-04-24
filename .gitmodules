@@ -1,21 +1,6 @@
-[submodule "3rdparty/entityx"]
-	path = 3rdparty/entityx
-	url = https://github.com/alecthomas/entityx.git
-[submodule "3rdparty/microbench"]
-	path = 3rdparty/microbench
-	url = https://github.com/cameron314/microbench.git
-[submodule "3rdparty/concurrentqueue"]
-	path = 3rdparty/concurrentqueue
-	url = https://github.com/cameron314/concurrentqueue.git
-[submodule "3rdparty/readerwriterqueue"]
-	path = 3rdparty/readerwriterqueue
-	url = https://github.com/cameron314/readerwriterqueue.git
 [submodule "3rdparty/wren"]
 	path = 3rdparty/wren
 url=https://github.com/heretique/wren.git
-[submodule "3rdparty/cereal"]
-	path = 3rdparty/cereal
-	url = https://github.com/USCiLab/cereal.git
 [submodule "3rdparty/bgfx"]
 	path = 3rdparty/bgfx
 	url = https://github.com/bkaradzic/bgfx.git
@@ -25,15 +10,6 @@ url=https://github.com/heretique/wren.git
 [submodule "3rdparty/imgui"]
 	path = 3rdparty/imgui
 	url = https://github.com/ocornut/imgui.git
-[submodule "3rdparty/wrenpp"]
-	path = 3rdparty/wrenpp
-url=https://github.com/heretique/wrenpp.git
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
-[submodule "3rdparty/easy_profiler"]
-	path = 3rdparty/easy_profiler
-	url = https://github.com/yse/easy_profiler.git
-[submodule "3rdparty/spdlog"]
-	path = 3rdparty/spdlog
-	url = https://github.com/gabime/spdlog.git
