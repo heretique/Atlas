@@ -1,6 +1,9 @@
 [submodule "3rdparty/entityx"]
 	path = 3rdparty/entityx
 	url = https://github.com/alecthomas/entityx.git
+[submodule "3rdparty/bgfx"]
+	path = 3rdparty/bgfx
+url=https://github.com/bkaradzic/bgfx.git
 [submodule "3rdparty/microbench"]
 	path = 3rdparty/microbench
 	url = https://github.com/cameron314/microbench.git
