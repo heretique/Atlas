@@ -34,7 +34,7 @@ private:
     bgfx::ShaderHandle _shader;
     // TODO shader is created on render thread, get rid of
     // shader memory afterwards
-    MemoryWriter _memWriter;
+    std::string _shaderBuffer;
 };
 
 namespace wren

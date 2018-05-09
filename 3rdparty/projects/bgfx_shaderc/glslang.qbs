@@ -130,11 +130,11 @@ StaticLibrary {
     }
 
     Properties {
-        condition: qbs.targetOS.contains("osx")
+        condition: qbs.targetOS.contains("darwin")
         files: outer.uniqueConcat([
                                         "../../bgfx/3rdparty/glslang/glslang/OSDependent/Unix/ossource.cpp",
                                   ])
-        cpp.commonCompilerFlagss: outer.uniqueConcat([
+        cpp.commonCompilerFlags: outer.uniqueConcat([
                                                          "-Wno-ignored-qualifiers",
                                                          "-Wno-missing-field-initializers",
                                                          "-Wno-reorder",

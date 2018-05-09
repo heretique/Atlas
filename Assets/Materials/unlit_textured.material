@@ -1,8 +1,8 @@
 {
     "value0": {
         "name": "unlit_textured",
-        "vertexShader": "assets/vs_cubes.sc",
-        "fragmentShader": "assets/fs_cubes.sc",
+        "vertexShader": "assets/vs_cubes.bin",
+        "fragmentShader": "assets/fs_cubes.bin",
         "params": [
             {
                 "key": "u_time",

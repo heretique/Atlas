@@ -18,7 +18,6 @@ CppApplication {
         "../../bgfx/src/vertexdecl.cpp",
         "../../bgfx/src/vertexdecl.h",
         "../../bgfx/tools/shaderc/shaderc.cpp",
-        "../../bgfx/tools/shaderc/shaderc_private.h",
         "../../bgfx/tools/shaderc/shaderc.h",
         "../../bgfx/tools/shaderc/shaderc_glsl.cpp",
         "../../bgfx/tools/shaderc/shaderc_hlsl.cpp",

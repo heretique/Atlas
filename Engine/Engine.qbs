@@ -57,6 +57,9 @@ Product {
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
     Depends { name: "wren" }
+    Depends { name: "fmt" }
+    Depends { name: "entityx" }
+    Depends { name: "wrenpp" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")
@@ -110,12 +113,8 @@ Product {
         files: [
             "../Assets/Models/caruta.obj",
             "../Assets/Models/caruta.mtl",
-            "../Assets/Shaders/bgfx_shader.sh",
-            "../Assets/Shaders/common.sh",
-            "../Assets/Shaders/cube/fs_cubes.sc",
-            "../Assets/Shaders/cube/varying.def.sc",
-            "../Assets/Shaders/cube/vs_cubes.sc",
-            "../Assets/Shaders/shaderlib.sh",
+            "../Assets/Shaders/cube/fs_cubes.bin",
+            "../Assets/Shaders/cube/vs_cubes.bin",
             "../Assets/Textures/caruta.png",
             "../Assets/Materials/unlit_textured.material"
         ]

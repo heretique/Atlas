@@ -19,7 +19,11 @@ StaticLibrary {
         "BUILD_WITH_EASY_PROFILER",
         "EASY_PROFILER_VERSION_MAJOR=1",
         "EASY_PROFILER_VERSION_MINOR=3",
-        "EASY_PROFILER_VERSION_PATCH=0"
+        "EASY_PROFILER_VERSION_PATCH=0",
+        // a hack to make easy_profiler compile
+        "EASY_CONSTEXPR=const",
+        "EASY_STATIC_CONSTEXPR=static const",
+        "EASY_CONSTEXPR_FCN="
     ]
 
     Properties {
