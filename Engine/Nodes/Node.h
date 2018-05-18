@@ -13,13 +13,15 @@ class Node;
 using NodeVec         = std::vector<Node*>;
 using NodeSet         = std::unordered_set<Node*>;
 using NodePtr         = std::shared_ptr<Node>;
+using NodeRef         = std::weak_ptr<Node>;
 using NodePtrVec      = std::vector<NodePtr>;
 using NodePtrSet      = std::unordered_set<NodePtr>;
 using ComponentPtr    = std::shared_ptr<Component>;
 using ComponentPtrVec = std::vector<ComponentPtr>;
 using NodeId          = uint64_t;
+using NodeFactoryFunc = std::function<NodePtr(const std::string& filename, int flags)>;
 
-/// Base node class. Not optimal, Components held temporarily inside a vector
+/// Base node class. Not optimal, Components for now inside a vector
 class Node
 {
 public:
@@ -33,8 +35,8 @@ public:
     void enable(bool enabled);
     NodePtr parent() const;
     void addChild(NodePtr child);
-    ComponentPtr addComponent(StringHash component);
-    ComponentPtr getComponent(StringHash component);
+    void removeChild(NodePtr child);
+    NodePtrSet children();
 
     template <typename Archive>
     void serialize(Archive& ar)

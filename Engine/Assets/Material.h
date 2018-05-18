@@ -58,7 +58,7 @@ struct MaterialUniform
 struct MaterialSampler
 {
     bgfx::UniformHandle sampler;
-    AssetHandle         textureHandle;
+    AssetPtr            textureHandle;
 };
 
 class MaterialAsset : public Asset
@@ -90,8 +90,8 @@ private:
 
     u32                 _materialId;
     MaterialInfo        _materialInfo;
-    AssetHandle         _vsh{AssetHandle::invalid};
-    AssetHandle         _fsh{AssetHandle::invalid};
+    AssetPtr            _vsh;
+    AssetPtr            _fsh;
     MaterialUniforms    _uniforms;
     MaterialSamplers    _samplers;
     bgfx::ProgramHandle _program;

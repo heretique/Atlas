@@ -9,9 +9,9 @@ MeshComponent::MeshComponent()
 {
 }
 
-MeshComponent::MeshComponent(AssetHandle handle, StringHash hash)
+MeshComponent::MeshComponent(AssetPtr mesh, StringHash hash)
     : _meshHash(hash)
-    , _mesh(handle)
+    , _mesh(mesh)
 {
 }
 

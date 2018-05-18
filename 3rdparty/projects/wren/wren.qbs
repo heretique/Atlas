@@ -17,7 +17,7 @@ StaticLibrary {
         path + "/../../wren/src/optional",
     ]
     cpp.cLanguageVersion: "c11"
-    cpp.cxxLanguageVersion: "c++14"
+    cpp.cxxLanguageVersion: "c++17"
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

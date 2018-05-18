@@ -55,31 +55,23 @@ void Node::addChild(NodePtr child)
     _children.insert(child);
 }
 
-ComponentPtr Node::addComponent(StringHash component)
-{
-    return nullptr;
-}
-
-ComponentPtr Node::getComponent(StringHash component)
-{
-    return nullptr;
-}
-
 void wren::bindNode()
 {
     Engine::vm()
-        .beginModule("scripts/Scene")                                              //
-        .bindClass<NodePtr>("NodePtr")                                             //
-        .bindMethod<decltype(&NodePtr::get), &NodePtr::get>(false, "get")          //
-        .endClass()                                                                //
-        .bindClass<Node, std::string, NodePtr>("Node")                             //
-        .bindMethod<decltype(&Node::id), &Node::id>(false, "id")                   //
-        .bindMethod<decltype(&Node::name), &Node::name>(false, "name")             //
-        .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")   //
-        .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")             //
-        .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")    //
-        .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")  //
-        .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")       //
+        .beginModule("scripts/Scene")                                                        //
+        .bindClass<NodePtr>("NodePtr")                                                       //
+        .bindMethod<decltype(&NodePtr::get), &NodePtr::get>(false, "get")                    //
+        .bindMethod<decltype(&NodePtr::use_count), &NodePtr::use_count>(false, "use_count")  //
+        .endClass()                                                                          //
+        .bindClass<Node, std::string, NodePtr>("Node")                                       //
+        .bindMethod<decltype(&Node::id), &Node::id>(false, "id")                             //
+        .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                       //
+        .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")             //
+        .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")                       //
+        .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")              //
+        .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")            //
+        .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")                 //
+        .bindMethod<decltype(&Node::addChild), &Node::addChild>(false, "addChild(_)")        //
         .endClass()
         .endModule();
 }

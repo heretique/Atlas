@@ -36,11 +36,6 @@ const std::string& AssetTypes::toName(const AssetType type)
 
 namespace wren
 {
-    void invalid(WrenVM* vm)
-    {
-        wrenpp::setSlotForeignValue<AssetHandle>(vm, 0, AssetHandle::invalid);
-    }
-
     static AssetType Undefined{"Undefined"};
     static AssetType Scene{"Scene"};
     static AssetType Geometry{"Geometry"};
@@ -117,33 +112,26 @@ namespace wren
     void bindAssetTypes()
     {
         Engine::vm()
-                .beginModule("scripts/Assets")                                                                  //
-                .bindClass<AssetHandle, uint32_t, uint32_t>("AssetHandle")                                      //
-                .bindCFunction(true, "invalid", &wren::invalid)                                                 //
-                .bindMethod<decltype(&AssetHandle::index), &AssetHandle::index>(false, "index")                 //
-                .bindMethod<decltype(&AssetHandle::generation), &AssetHandle::generation>(false, "generation")  //
-                .bindMethod < decltype(&AssetHandle::operator!=),
-            &AssetHandle::operator!=>(false, "!=(_)")  //
-                    .bindMethod < decltype(&AssetHandle::operator==),
-            &AssetHandle::operator==>(false, "==(_)")  //
-                    .bindMethod < decltype(&AssetHandle::operator<),
-            &AssetHandle::operator<>(false, "<(_)")                                       //
-                 .endClass()                                                              //
-                 .beginClass("AssetTypes")                                                //
-                 .bindCFunction(true, "Undefined", &wren::assetType_Undefined)            //
-                 .bindCFunction(true, "Scene", &wren::assetType_Scene)                    //
-                 .bindCFunction(true, "Geometry", &wren::assetType_Geometry)              //
-                 .bindCFunction(true, "Animation", &wren::assetType_Animation)            //
-                 .bindCFunction(true, "Audio", &wren::assetType_Audio)                    //
-                 .bindCFunction(true, "Material", &wren::assetType_Material)              //
-                 .bindCFunction(true, "Code", &wren::assetType_Code)                      //
-                 .bindCFunction(true, "Shader", &wren::assetType_Shader)                  //
-                 .bindCFunction(true, "Texture", &wren::assetType_Texture)                //
-                 .bindCFunction(true, "ParticleEffect", &wren::assetType_ParticleEffect)  //
-                 .bindCFunction(true, "Pipeline", &wren::assetType_Pipeline)              //
-                 .bindCFunction(true, "Template", &wren::assetType_Template)              //
-                 .endClass()                                                              //
-                 .endModule();
+            .beginModule("scripts/Assets")                                                        //
+            .bindClass<AssetPtr>("AssetPtr")                                                      //
+            .bindMethod<decltype(&AssetPtr::get), &AssetPtr::get>(false, "get")                   //
+            .bindMethod<decltype(&AssetPtr::use_count), &AssetPtr::use_count>(false, "useCount")  //
+            .endClass()                                                                           //
+            .beginClass("AssetTypes")                                                             //
+            .bindCFunction(true, "Undefined", &wren::assetType_Undefined)                         //
+            .bindCFunction(true, "Scene", &wren::assetType_Scene)                                 //
+            .bindCFunction(true, "Geometry", &wren::assetType_Geometry)                           //
+            .bindCFunction(true, "Animation", &wren::assetType_Animation)                         //
+            .bindCFunction(true, "Audio", &wren::assetType_Audio)                                 //
+            .bindCFunction(true, "Material", &wren::assetType_Material)                           //
+            .bindCFunction(true, "Code", &wren::assetType_Code)                                   //
+            .bindCFunction(true, "Shader", &wren::assetType_Shader)                               //
+            .bindCFunction(true, "Texture", &wren::assetType_Texture)                             //
+            .bindCFunction(true, "ParticleEffect", &wren::assetType_ParticleEffect)               //
+            .bindCFunction(true, "Pipeline", &wren::assetType_Pipeline)                           //
+            .bindCFunction(true, "Template", &wren::assetType_Template)                           //
+            .endClass()                                                                           //
+            .endModule();
     }
 }
 

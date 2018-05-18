@@ -75,14 +75,14 @@ void Engine::initVM()
         if (scriptAsset != nullptr)
         {
             auto  source = scriptAsset->script();
-            char* buffer = (char*)malloc(source.size() + 1);
-            assert(buffer != NULL);
+            char* buffer = static_cast<char*>(malloc(source.size() + 1));
+            assert(buffer != nullptr);
             buffer[source.size()] = '\0';
             memcpy(buffer, source.c_str(), source.size());
             return buffer;
         }
 
-        return NULL;
+        return nullptr;
     };
     wrenpp::VM::writeFn = [](const char* text) -> void {
         // this hack exists because Wren always prints an extra newline as a separate print statement.

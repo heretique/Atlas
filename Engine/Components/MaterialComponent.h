@@ -19,8 +19,8 @@ public:
     }
 
 private:
-    StringHash  _materialHash;
-    AssetHandle _material;
+    StringHash _materialHash;
+    AssetPtr   _material;
 };
 
 }  // namespace Atlas

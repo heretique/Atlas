@@ -36,7 +36,7 @@ bool TextureAsset::loadImpl(std::istream& data)
 
     bimg::ImageContainer* imageContainer = bimg::imageParse(Engine::bxAllocator(), buffer.data(), buffer.size());
 
-    if (imageContainer == NULL)
+    if (imageContainer == nullptr)
     {
         return false;
     }

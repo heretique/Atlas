@@ -32,6 +32,8 @@ void wren::bindSceneManager()
 {
     Engine::vm()
         .beginModule("scripts/Scene")                                                                 //
+        .bindClass<NodePtr>("NodePtr")                                                                //
+        .endClass()                                                                                   //
         .bindClass<SceneManager>("SceneManager")                                                      //
         .bindMethod<decltype(&SceneManager::root), &SceneManager::root>(false, "root")                //
         .bindMethod<decltype(&SceneManager::addNode), &SceneManager::addNode>(false, "addNode(_,_)")  //

@@ -1,7 +1,7 @@
 import "scripts/ImGui" for Imgui
 import "scripts/Math" for Vec2, Vec3
 import "scripts/Utils" for StringHash
-import "scripts/Assets" for AssetHandle, AssetTypes, AssetManager, TextureFlags, ShaderTypes
+import "scripts/Assets" for AssetPtr, AssetTypes, AssetManager, TextureFlags, ShaderTypes
 import "scripts/Engine" for Engine
 import "scripts/Scene" for Node, SceneManager
 
@@ -22,7 +22,9 @@ class Main {
         var material = assetManager.addAsset(AssetTypes.Material, "assets/unlit_textured.material", 0)
         assetManager.loadAssets()
         var node = sceneManager.addNode("Test Node", sceneManager.root)
-        System.print("Node name: %(node.get.name)")
+        System.print("Node name: %(node.get.name), use count: %(node.use_count)")
+        var node2 = sceneManager.addNode("Test2 Node", node)
+        System.print("Node name: %(node.get.name), use count: %(node.use_count)")
     }
 
     static update(delta) {
@@ -30,15 +32,15 @@ class Main {
     }
 
     static onGUI() {
-        Imgui.setNextWindowSize(WindowSize)
-        Imgui.begin("Wren IMGUI")
-        Imgui.text("Test : " + Test.toString())
-        if (Imgui.button("Test")) Imgui.text("Pressed")
-        WindowSize = Imgui.getWindowSize()
-        for (i in 1..10) {
-        var text = "TestString%(i)"
-        Imgui.text("String: %(text), hash: %(StringHash.new(text).hash())")
-        }
-        Imgui.end()
+          Imgui.setNextWindowSize(WindowSize)
+          Imgui.begin("Wren IMGUI")
+          Imgui.text("Test : " + Test.toString())
+          if (Imgui.button("Test")) Imgui.text("Pressed")
+          WindowSize = Imgui.getWindowSize()
+          for (i in 1..10) {
+          var text = "TestString%(i)"
+          Imgui.text("String: %(text), hash: %(StringHash.new(text).hash())")
+          }
+          Imgui.end()
     }
  }

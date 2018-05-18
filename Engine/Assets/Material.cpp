@@ -50,10 +50,9 @@ void MaterialAsset::bind() const
     uint8_t textureUnit = 0;
     for (auto& samplerPair : _samplers)
     {
-        const MaterialSampler&        materialSampler = samplerPair.second;
-        std::shared_ptr<TextureAsset> texture = Engine::assets().getAsset<TextureAsset>(materialSampler.textureHandle);
-        assert(texture);
-        bgfx::setTexture(textureUnit, materialSampler.sampler, texture->bgfxHandle());
+        const MaterialSampler& materialSampler = samplerPair.second;
+        bgfx::setTexture(textureUnit, materialSampler.sampler,
+                         std::static_pointer_cast<TextureAsset>(materialSampler.textureHandle)->bgfxHandle());
         ++textureUnit;
     }
 }
@@ -83,8 +82,8 @@ bool MaterialAsset::loadImpl(std::istream& data)
         return false;
     }
 
-    bgfx::ShaderHandle vsh = Engine::assets().getAsset<ShaderAsset>(_vsh)->bgfxHandle();
-    bgfx::ShaderHandle fsh = Engine::assets().getAsset<ShaderAsset>(_fsh)->bgfxHandle();
+    bgfx::ShaderHandle vsh = std::static_pointer_cast<ShaderAsset>(_vsh)->bgfxHandle();
+    bgfx::ShaderHandle fsh = std::static_pointer_cast<ShaderAsset>(_fsh)->bgfxHandle();
     _program               = bgfx::createProgram(vsh, fsh);
     if (!bgfx::isValid(_program))
     {
@@ -94,7 +93,7 @@ bool MaterialAsset::loadImpl(std::istream& data)
 
     for (const auto& pair : _materialInfo.textures)
     {
-        AssetHandle textureHandle = Engine::assets().addAsset(AssetTypes::Texture, pair.second);
+        AssetPtr textureHandle = Engine::assets().addAsset(AssetTypes::Texture, pair.second);
         if (!Engine::assets().loadAsset(textureHandle))
         {
             Engine::log().error("Couldn't load texture: '{}' for material: '{}'", pair.second, _filename);

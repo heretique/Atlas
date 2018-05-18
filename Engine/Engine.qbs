@@ -33,13 +33,12 @@ Product {
     ]
 
     Depends { name: "cpp" }
-    cpp.cxxLanguageVersion: "c++14"
+    cpp.cxxLanguageVersion: "c++17"
     cpp.includePaths: [
         ".",
         "../3rdparty/concurrentqueue",
         "../3rdparty/cereal/include",
         "../3rdparty/projects",
-        "../3rdparty/entityx",
         "../3rdparty/bx/include",
         "../3rdparty/bgfx/include",
         "../3rdparty/bimg/include",
@@ -58,7 +57,6 @@ Product {
     Depends { name: "imgui" }
     Depends { name: "wren" }
     Depends { name: "fmt" }
-    Depends { name: "entityx" }
     Depends { name: "wrenpp" }
 
     Properties {

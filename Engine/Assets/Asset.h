@@ -16,7 +16,6 @@ public:
     Asset(AssetType type, const std::string& filename, u32 flags);
     virtual ~Asset();
 
-    AssetHandle        handle() const;
     StringHash         hash() const;
     AssetType          type() const;
     u32                flags() const;
@@ -37,15 +36,9 @@ protected:
     StringHash  _hash{};
     u32         _flags{0};
     bool        _loaded{false};
-    AssetHandle _handle{AssetHandle::invalid};
 
     friend class AssetManager;
 };
-
-inline AssetHandle Asset::handle() const
-{
-    return _handle;
-}
 
 inline StringHash Asset::hash() const
 {
@@ -72,6 +65,6 @@ inline bool Asset::isLoaded() const
     return _loaded;
 }
 
-typedef std::function<AssetPtr(const std::string& filename, int flags)> AssetFactoryFunc;
+using AssetFactoryFunc = std::function<AssetPtr(const std::string& filename, int flags)>;
 
 }  // namespace atlas

@@ -170,7 +170,8 @@ StaticLibrary {
 	Depends { name: "cpp" }
     Depends { name: "common" }
 
-    cpp.cxxLanguageVersion: "c++11"
+    // using c++14 because c++17 doesn't allow "register" keyword anymore
+    cpp.cxxLanguageVersion: "c++14"
     cpp.includePaths: [
         "../../bgfx/3rdparty/glsl-optimizer/include",
         "../../bgfx/3rdparty/glsl-optimizer/src",

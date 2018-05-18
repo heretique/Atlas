@@ -20,7 +20,7 @@ StaticLibrary {
     cpp.includePaths: [ 
         "../../imgui"
     ]
-    cpp.cxxLanguageVersion: "c++14"
+    cpp.cxxLanguageVersion: "c++17"
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type

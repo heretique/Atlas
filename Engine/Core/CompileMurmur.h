@@ -18,7 +18,7 @@ namespace murmur
     template <int... S>
     struct CreateSequence<0, S...>
     {
-        typedef Sequence<S...> Type;
+        using Type = Sequence<S...>;
     };
 
     constexpr uint32_t UpdateHash1(uint32_t k)

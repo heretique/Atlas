@@ -10,11 +10,9 @@ namespace atlas
 // do not change bitfields size without changing the API handle bitfield size
 // these need to be the same
 class Asset;
-using AssetPtr         = std::shared_ptr<Asset>;
-using AssetHandle      = Handle<20, 12>;
-using AssetStorage     = PackedFreeList<AssetPtr, AssetHandle, 4096>;
-using AssetPackedArray = AssetStorage::PackedStorage;
-using AssetType        = StringHash;
+using AssetPtr     = std::shared_ptr<Asset>;
+using AssetStorage = std::vector<AssetPtr>;
+using AssetType    = StringHash;
 
 namespace AssetNames
 {

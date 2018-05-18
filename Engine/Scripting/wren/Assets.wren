@@ -1,13 +1,8 @@
 import "scripts/Utils" for StringHash
 
-foreign class AssetHandle {
-    foreign static invalid
-    foreign generation
-    foreign index
-
-    foreign == ( rhs )
-    foreign != ( rhs )
-    foreign < ( rhs )
+foreign class AssetPtr {
+    foreign get
+    foreign useCount
 }
 
 foreign class AssetTypes {
@@ -92,7 +87,7 @@ foreign class TextureFlags {
 
 foreign class AssetManager {
     foreign addAsset(type, filename, flags)
-    foreign removeAsset(handle)
+    foreign removeAsset(ptr)
     foreign removeAssetByHash(hash)
     foreign loadAssets()
     foreign loadAssetsAsync()

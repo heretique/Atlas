@@ -13,7 +13,7 @@ class MeshComponent : public Component
 {
 public:
     MeshComponent();
-    MeshComponent(AssetHandle handle, StringHash hash);
+    MeshComponent(AssetPtr mesh, StringHash hash);
 
     template <class Archive>
     void serialize(Archive& ar)
@@ -25,8 +25,8 @@ public:
     }
 
 private:
-    StringHash  _meshHash;
-    AssetHandle _mesh;
+    StringHash _meshHash;
+    AssetPtr   _mesh;
 };
 
 }  // namespace Atlas

@@ -47,7 +47,7 @@ bool ShaderAsset::loadImpl(std::istream& data)
 {
     _shader = BGFX_INVALID_HANDLE;
 
-    if (ShaderTypes::None == (ShaderTypes)_flags)
+    if (ShaderTypes::None == static_cast<ShaderTypes>(_flags))
         return false;
 
     _shaderBuffer           = std::string(std::istreambuf_iterator<char>(data.rdbuf()), {});

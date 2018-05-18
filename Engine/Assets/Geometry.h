@@ -2,9 +2,9 @@
 
 #include "Assets/Asset.h"
 #include "Core/SimpleMeshVertex.h"
+#include "Math/BoundingBox.h"
 #include "bgfx/bgfx.h"
 #include <vector>
-#include "Math/BoundingBox.h"
 
 namespace atlas
 {
@@ -32,7 +32,7 @@ private:
     math::BoundingBox             _aabb;
     std::vector<SimpleMeshVertex> _vertices;
     std::vector<u16>              _indices;
-    AssetHandle                   _texture{AssetHandle::invalid};
+    AssetPtr                      _texture;
 };
 
 }  // atlas
