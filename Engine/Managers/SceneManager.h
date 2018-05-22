@@ -1,21 +1,36 @@
 #pragma once
+#include "Core/NonCopyable.h"
+#include "Core/StringHash.h"
+#include "Nodes/Node.h"
+
 #include <string>
+#include <unordered_map>
 
 namespace atlas
 {
-class Node;
-using NodePtr = std::shared_ptr<Node>;
+using NodeRegistry = std::unordered_map<NodeType, NodeFactoryFunc>;
 
-class SceneManager
+class Engine;
+class SceneManager : NonCopyable
 {
+    friend class Engine;
+
 public:
     SceneManager();
     ~SceneManager();
+    void registerNodeType(NodeType nodeType, NodeFactoryFunc f);
     NodePtr root() const;
-    NodePtr addNode(const std::string& name, NodePtr parent);
+    NodePtr addNode(NodeType nodeType, const std::string& name, NodePtr parent);
+    void removeNode(NodePtr node);
+    bool reparentNode(NodePtr node, NodePtr parent);
+    bool attachNodeScript(NodePtr node, const std::string& moduleName, const std::string& className);
 
 private:
-    NodePtr _root;
+    void update(float dt);
+
+private:
+    NodePtr      _root;
+    NodeRegistry _registry;
 };
 
 namespace wren

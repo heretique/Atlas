@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/FreeList.h"
-#include "Core/Handle.h"
 #include "Core/StringHash.h"
 #include <memory>
 

@@ -65,6 +65,6 @@ inline bool Asset::isLoaded() const
     return _loaded;
 }
 
-using AssetFactoryFunc = std::function<AssetPtr(const std::string& filename, int flags)>;
+using AssetFactoryFunc = std::function<AssetPtr(const std::string& filename, u32 flags)>;
 
 }  // namespace atlas

@@ -21,7 +21,6 @@ namespace atlas
 // Forward declarations
 class PluginManager;
 class AssetManager;
-class ECSManager;
 class AudioManager;
 class PhysicsManager;
 class JobManager;
@@ -43,10 +42,6 @@ public:
     {
         return *_sceneManager;
     }
-    static ECSManager& ecs()
-    {
-        return *_ecsManager;
-    }
     static JobManager& jobs()
     {
         return *_jobManager;
@@ -66,6 +61,7 @@ private:
     static void initVertDecl();
     static void initVM();
     static void registerAssetTypes();
+    static void registerNodeTypes();
     static void release();
 
 private:
@@ -73,7 +69,6 @@ private:
     static PluginManager*  _pluginManager;
     static AssetManager*   _assetManager;
     static SceneManager*   _sceneManager;
-    static ECSManager*     _ecsManager;
     static JobManager*     _jobManager;
     static wrenpp::VM*     _vm;
 

@@ -3,7 +3,7 @@ import "scripts/Math" for Vec2, Vec3
 import "scripts/Utils" for StringHash
 import "scripts/Assets" for AssetPtr, AssetTypes, AssetManager, TextureFlags, ShaderTypes
 import "scripts/Engine" for Engine
-import "scripts/Scene" for Node, SceneManager
+import "scripts/Scene" for Node, NodePtr, NodeTypes, SceneManager
 
 
 var Test = Vec3.one
@@ -21,10 +21,10 @@ class Main {
         var fs = assetManager.addAsset(AssetTypes.Shader, "assets/fs_cubes.bin", ShaderTypes.Fragment)
         var material = assetManager.addAsset(AssetTypes.Material, "assets/unlit_textured.material", 0)
         assetManager.loadAssets()
-        var node = sceneManager.addNode("Test Node", sceneManager.root)
-        System.print("Node name: %(node.get.name), use count: %(node.use_count)")
-        var node2 = sceneManager.addNode("Test2 Node", node)
-        System.print("Node name: %(node.get.name), use count: %(node.use_count)")
+        var node = sceneManager.addNode(NodeTypes.Spatial, "Test Node", sceneManager.root)
+        System.print("Node name: %(node.get.name), use count: %(node.useCount)")
+        var node2 = sceneManager.addNode(NodeTypes.Spatial, "Test2 Node", node)
+        System.print("Node name: %(node.get.name), use count: %(node.useCount)")
     }
 
     static update(delta) {

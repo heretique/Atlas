@@ -16,6 +16,7 @@ Module {
     cpp.cxxLanguageVersion: "c++17"
     cpp.includePaths: [
         path + "/../../../3rdparty",
+        path + "/../../../3rdparty/outcome/single-header",
         path + "/../../../3rdparty/easy_profiler/easy_profiler_core/include",
         path + "/../../../3rdparty/bx/include",
         path + "/../../../3rdparty/bgfx/include",

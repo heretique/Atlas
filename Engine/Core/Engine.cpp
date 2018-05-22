@@ -8,11 +8,11 @@
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
-#include "Managers/ECSManager.h"
 #include "Managers/JobManager.h"
 #include "Managers/PluginManager.h"
 #include "Managers/SceneManager.h"
 #include "Nodes/Node.h"
+#include "Nodes/Spatial.h"
 #include "Scripting/WrenBindings.h"
 
 #include <bx/allocator.h>
@@ -25,7 +25,6 @@ spdlog::logger* Engine::_logger        = nullptr;
 PluginManager*  Engine::_pluginManager = nullptr;
 AssetManager*   Engine::_assetManager  = nullptr;
 SceneManager*   Engine::_sceneManager  = nullptr;
-ECSManager*     Engine::_ecsManager    = nullptr;
 JobManager*     Engine::_jobManager    = nullptr;
 wrenpp::VM*     Engine::_vm            = nullptr;
 
@@ -47,13 +46,12 @@ bool Engine::init()
         _pluginManager = new PluginManager();
     if (_assetManager == nullptr)
         _assetManager = new AssetManager();
-    if (_ecsManager == nullptr)
-        _ecsManager = new ECSManager();
     if (_sceneManager == nullptr)
         _sceneManager = new SceneManager();
 
     initVertDecl();
     registerAssetTypes();
+    registerNodeTypes();
     jobs().init();
     initVM();
 
@@ -104,6 +102,7 @@ void Engine::initVM()
     wren::bindAssetManager();
     wren::bindTextureTypes();
     wren::bindShaderTypes();
+    wren::bindNodeTypes();
     wren::bindNode();
     wren::bindEngine();
     wren::bindSceneManager();
@@ -127,6 +126,11 @@ void Engine::registerAssetTypes()
     assets().registerAssetType(AssetTypes::Material, MaterialAsset::factoryFunc);
 }
 
+void Engine::registerNodeTypes()
+{
+    scene().registerNodeType(NodeTypes::Spatial, SpatialNode::factoryFunc);
+}
+
 void Engine::release()
 {
     jobs().release();
@@ -136,9 +140,6 @@ void Engine::release()
 
     delete _sceneManager;
     _sceneManager = nullptr;
-
-    delete _ecsManager;
-    _ecsManager = nullptr;
 
     delete _assetManager;
     _assetManager = nullptr;

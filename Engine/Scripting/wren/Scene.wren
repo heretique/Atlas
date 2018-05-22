@@ -1,22 +1,30 @@
 foreign class NodePtr {
     foreign get
-    foreign use_count
+    foreign useCount
 }
 
 
+foreign class NodeTypes {
+    foreign static Undefined
+    foreign static Root
+    foreign static Spatial
+}
+
 foreign class Node {
     construct new(name, parent) {}
-    foreign id
     foreign name
     foreign name=(rhs)
     foreign hash
     foreign enabled
     foreign enabled=(rhs)
-    foreign parent // parent: NodePtr
-    foreign addChild(child) // child: NodePtr
+    foreign parent // parent: Node
+    foreign parentPtr // parentPtr :NodePtr
+    foreign childCount
+    foreign childAt(index) // return: Node
+    foreign childPtrAt(index) // return: NodePtr
 }
 
 foreign class SceneManager {
     foreign root
-    foreign addNode(name, parent)
+    foreign addNode(type, name, parent)
 }

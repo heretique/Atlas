@@ -1,5 +1,3 @@
-import "scripts/Utils" for StringHash
-
 foreign class AssetPtr {
     foreign get
     foreign useCount

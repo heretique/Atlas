@@ -1,11 +1,13 @@
 #include "Node.h"
 #include "Core/Engine.h"
+#include "NodeScript.h"
 #include <wrenpp/Wren++.h>
 
 namespace atlas
 {
-Node::Node(std::string name, NodePtr parent)
-    : _name(name)
+Node::Node(NodeType type, std::string name, NodePtr parent)
+    : _type(type)
+    , _name(name)
     , _nameHash(StringHash(name))
     , _parent(parent)
 {
@@ -15,9 +17,9 @@ Node::~Node()
 {
 }
 
-NodeId Node::id() const
+NodeType Node::type() const
 {
-    return _id;
+    return _type;
 }
 
 std::string Node::name() const
@@ -45,33 +47,110 @@ void Node::enable(bool enabled)
     _enabled = enabled;
 }
 
-NodePtr Node::parent() const
+Node* Node::parent() const
+{
+    return _parent.get();
+}
+
+NodePtr Node::parentPtr() const
 {
     return _parent;
 }
 
+size_t Node::childCount() const
+{
+    return _children.size();
+}
+
+Node* Node::childAt(size_t index) const
+{
+    return _children[index].get();
+}
+
+NodePtr Node::childPtrAt(size_t index) const
+{
+    return _children[index];
+}
+
+void Node::attach(NodePtr parent)
+{
+    _parent = parent;
+    onAttach();
+    if (_nodeScript && _nodeScript->_onAttach)
+        _nodeScript->_onAttach();
+}
+
+void Node::init()
+{
+    // TODOCM: add initialization code
+    onInit();
+    if (_nodeScript && _nodeScript->_onInit)
+        _nodeScript->_onInit();
+}
+
+void Node::update(float dt)
+{
+    onUpdate(dt);
+    if (_nodeScript && _nodeScript->_onUpdate)
+        _nodeScript->_onUpdate(dt);
+}
+
+void Node::destroy()
+{
+    onDestroy();
+    if (_nodeScript && _nodeScript->_onDestroy)
+        _nodeScript->_onDestroy();
+}
+
+bool Node::canAttach(Node* /*node*/)
+{
+    return true;
+}
+
+void Node::onAttach()
+{
+}
+
+void Node::onInit()
+{
+}
+
+void Node::onUpdate(float /*dt*/)
+{
+}
+
+void Node::onDestroy()
+{
+}
+
 void Node::addChild(NodePtr child)
 {
-    _children.insert(child);
+    auto found = std::find(_children.begin(), _children.end(), child);
+    if (found == _children.end())
+        _children.emplace_back(child);
+}
+
+bool Node::attachScript(NodeScriptUPtr nodeScript)
+{
+    _nodeScript = std::move(nodeScript);
+    return true;
 }
 
 void wren::bindNode()
 {
     Engine::vm()
         .beginModule("scripts/Scene")                                                        //
-        .bindClass<NodePtr>("NodePtr")                                                       //
-        .bindMethod<decltype(&NodePtr::get), &NodePtr::get>(false, "get")                    //
-        .bindMethod<decltype(&NodePtr::use_count), &NodePtr::use_count>(false, "use_count")  //
-        .endClass()                                                                          //
-        .bindClass<Node, std::string, NodePtr>("Node")                                       //
-        .bindMethod<decltype(&Node::id), &Node::id>(false, "id")                             //
+        .bindClass<Node, NodeType, std::string, NodePtr>("Node")                             //
         .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                       //
         .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")             //
         .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")                       //
         .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")              //
         .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")            //
         .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")                 //
-        .bindMethod<decltype(&Node::addChild), &Node::addChild>(false, "addChild(_)")        //
+        .bindMethod<decltype(&Node::parentPtr), &Node::parentPtr>(false, "parentPtr")        //
+        .bindMethod<decltype(&Node::childCount), &Node::childCount>(false, "childCount")     //
+        .bindMethod<decltype(&Node::childAt), &Node::childAt>(false, "childAt(_)")           //
+        .bindMethod<decltype(&Node::childPtrAt), &Node::childPtrAt>(false, "childPtrAt(_)")  //
         .endClass()
         .endModule();
 }

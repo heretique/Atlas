@@ -4,6 +4,7 @@
 
 namespace atlas
 {
+// TODOCM: refactor this abomination
 const std::string& AssetTypes::toName(const AssetType type)
 {
     if (type == Undefined)
@@ -36,19 +37,6 @@ const std::string& AssetTypes::toName(const AssetType type)
 
 namespace wren
 {
-    static AssetType Undefined{"Undefined"};
-    static AssetType Scene{"Scene"};
-    static AssetType Geometry{"Geometry"};
-    static AssetType Animation{"Animation"};
-    static AssetType Audio{"Audio"};
-    static AssetType Material{"Material"};
-    static AssetType Code{"Code"};
-    static AssetType Shader{"Shader"};
-    static AssetType Texture{"Texture"};
-    static AssetType ParticleEffect{"Particles"};
-    static AssetType Pipeline{"Pipeline"};
-    static AssetType Template{"Template"};
-
     void assetType_Undefined(WrenVM* vm)
     {
         wrenpp::setSlotForeignValue<AssetType>(vm, 0, AssetTypes::Undefined);
