@@ -4,6 +4,7 @@ import "scripts/Utils" for StringHash
 import "scripts/Assets" for AssetPtr, AssetTypes, AssetManager, TextureFlags, ShaderTypes
 import "scripts/Engine" for Engine
 import "scripts/Scene" for Node, NodePtr, NodeTypes, SceneManager
+import "scripts/TestNodeScript" for TestNodeScript
 
 
 var Test = Vec3.one
@@ -25,6 +26,7 @@ class Main {
         System.print("Node name: %(node.get.name), use count: %(node.useCount)")
         var node2 = sceneManager.addNode(NodeTypes.Spatial, "Test2 Node", node)
         System.print("Node name: %(node.get.name), use count: %(node.useCount)")
+        sceneManager.attachScript(node, TestNodeScript.new())
     }
 
     static update(delta) {

@@ -2,6 +2,7 @@
 
 #include "Core/Engine.h"
 #include "Nodes/Node.h"
+#include "Nodes/NodeScript.h"
 #include "wrenpp/Wren++.h"
 #include <spdlog/spdlog.h>
 
@@ -67,8 +68,20 @@ bool SceneManager::reparentNode(NodePtr node, NodePtr parent)
     return false;
 }
 
-bool SceneManager::attachNodeScript(NodePtr node, const std::string& moduleName, const std::string& className)
+void SceneManager::update(float dt)
 {
+    updateNode(_root.get(), dt);
+}
+
+void SceneManager::updateNode(Node* node, float dt)
+{
+    node->update(dt);
+    size_t childCount = node->childCount();
+    while (childCount)
+    {
+        updateNode(node->childAt(childCount - 1), dt);
+        --childCount;
+    }
 }
 
 void wren::bindSceneManager()

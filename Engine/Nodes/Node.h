@@ -9,6 +9,8 @@
 #include <memory>
 #include <cereal/cereal.hpp>
 
+struct WrenHandle;
+
 namespace atlas
 {
 class Node;
@@ -43,6 +45,7 @@ public:
     void init();
     void update(float dt);
     void destroy();
+    bool attachScript(WrenHandle* scriptInstance);
 
     template <typename Archive>
     void serialize(Archive& ar)
@@ -71,7 +74,6 @@ private:
     void addChild(NodePtr child);
     void removeChild(Node* child);
     NodePtrVec children();
-    bool attachScript(NodeScriptUPtr nodeScript);
 
 private:
     NodeType             _type;

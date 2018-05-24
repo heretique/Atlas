@@ -2,6 +2,8 @@
 
 #include "SDL2/SDL.h"
 #include "SDLWindow.h"
+
+#include <chrono>
 #include <vector>
 //#include <easy/profiler.h>
 namespace atlas
@@ -45,6 +47,8 @@ int SDLApp::exec()
 
     while (_running)
     {
+        using namespace std::chrono;
+        static high_resolution_clock::time_point lastTime = high_resolution_clock::now();
         //        EASY_BLOCK("Main loop", profiler::colors::Green);
         while (SDL_PollEvent(&e) != 0)
         {
@@ -87,10 +91,13 @@ int SDLApp::exec()
             }
         }
 
+        high_resolution_clock::time_point nowTime = high_resolution_clock::now();
+        duration<double>                  delta   = duration_cast<duration<double> >(nowTime - lastTime);
+        lastTime                                  = nowTime;
         for (auto& window : _windows)
         {
             // TODO add proper timing
-            window->doUpdate(1.f / 60.f);
+            window->doUpdate(delta.count());
         }
         bgfx::frame();
 

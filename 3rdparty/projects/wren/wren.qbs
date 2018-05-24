@@ -19,6 +19,8 @@ StaticLibrary {
     cpp.cLanguageVersion: "c11"
     cpp.cxxLanguageVersion: "c++17"
 
+    cpp.defines: ["DEBUG"]
+
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: false

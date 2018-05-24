@@ -22,9 +22,13 @@ foreign class Node {
     foreign childCount
     foreign childAt(index) // return: Node
     foreign childPtrAt(index) // return: NodePtr
+    foreign attachScript(script)
 }
 
 foreign class SceneManager {
     foreign root
     foreign addNode(type, name, parent)
+    attachScript(node, script) {
+        node.get.attachScript(script)
+    }
 }

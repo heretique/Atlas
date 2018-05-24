@@ -3,6 +3,7 @@
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
 #include "Managers/JobManager.h"
+#include "Managers/SceneManager.h"
 #include <cmath>
 
 #include <easy/profiler.h>
@@ -38,6 +39,7 @@ void MainWindow::init()
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Assets.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Engine.wren");
     Engine::assets().addAsset(AssetTypes::Code, "scripts/Scene.wren");
+    Engine::assets().addAsset(AssetTypes::Code, "scripts/TestNodeScript.wren");
     Engine::assets().loadAssets();
 
     _vmResult = Engine::vm().executeModule("scripts/main");
@@ -59,6 +61,7 @@ void MainWindow::update(float dt)
     {
         _update(dt);
     }
+    Engine::scene().update(dt);
 }
 
 void MainWindow::onGUI()

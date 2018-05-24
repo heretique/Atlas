@@ -130,27 +130,28 @@ void Node::addChild(NodePtr child)
         _children.emplace_back(child);
 }
 
-bool Node::attachScript(NodeScriptUPtr nodeScript)
+bool Node::attachScript(WrenHandle* scriptInstance)
 {
-    _nodeScript = std::move(nodeScript);
-    return true;
+    _nodeScript = std::make_unique<NodeScript>(scriptInstance);
+    return _nodeScript->initScript();
 }
 
 void wren::bindNode()
 {
     Engine::vm()
-        .beginModule("scripts/Scene")                                                        //
-        .bindClass<Node, NodeType, std::string, NodePtr>("Node")                             //
-        .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                       //
-        .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")             //
-        .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")                       //
-        .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")              //
-        .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")            //
-        .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")                 //
-        .bindMethod<decltype(&Node::parentPtr), &Node::parentPtr>(false, "parentPtr")        //
-        .bindMethod<decltype(&Node::childCount), &Node::childCount>(false, "childCount")     //
-        .bindMethod<decltype(&Node::childAt), &Node::childAt>(false, "childAt(_)")           //
-        .bindMethod<decltype(&Node::childPtrAt), &Node::childPtrAt>(false, "childPtrAt(_)")  //
+        .beginModule("scripts/Scene")                                                              //
+        .bindClass<Node, NodeType, std::string, NodePtr>("Node")                                   //
+        .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                             //
+        .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")                   //
+        .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")                             //
+        .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")                    //
+        .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")                  //
+        .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")                       //
+        .bindMethod<decltype(&Node::parentPtr), &Node::parentPtr>(false, "parentPtr")              //
+        .bindMethod<decltype(&Node::childCount), &Node::childCount>(false, "childCount")           //
+        .bindMethod<decltype(&Node::childAt), &Node::childAt>(false, "childAt(_)")                 //
+        .bindMethod<decltype(&Node::childPtrAt), &Node::childPtrAt>(false, "childPtrAt(_)")        //
+        .bindMethod<decltype(&Node::attachScript), &Node::attachScript>(false, "attachScript(_)")  //
         .endClass()
         .endModule();
 }

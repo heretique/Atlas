@@ -23,10 +23,10 @@ public:
     NodePtr addNode(NodeType nodeType, const std::string& name, NodePtr parent);
     void removeNode(NodePtr node);
     bool reparentNode(NodePtr node, NodePtr parent);
-    bool attachNodeScript(NodePtr node, const std::string& moduleName, const std::string& className);
+    void update(float dt);
 
 private:
-    void update(float dt);
+    void updateNode(Node* node, float dt);
 
 private:
     NodePtr      _root;

@@ -14,11 +14,13 @@ class NodeScript
     friend class Node;
 
 public:
-    NodeScript(const std::string& moduleName, const std::string& className);
-    virtual ~NodeScript();
+    NodeScript(WrenHandle* handle);
+    ~NodeScript();
+    bool initScript();
+    bool isValid() const;
 
 private:
-    wrenpp::Method _new;
+    WrenHandle*    _handle;
     wrenpp::Method _onAttach;
     wrenpp::Method _onInit;
     wrenpp::Method _onUpdate;
