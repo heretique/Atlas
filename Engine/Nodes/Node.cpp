@@ -80,6 +80,13 @@ void Node::attach(NodePtr parent)
         _nodeScript->_onAttach();
 }
 
+void Node::detach()
+{
+    onDetach();
+    if (_nodeScript && _nodeScript->_onDetach)
+        _nodeScript->_onDetach();
+}
+
 void Node::init()
 {
     // TODOCM: add initialization code
@@ -108,6 +115,10 @@ bool Node::canAttach(Node* /*node*/)
 }
 
 void Node::onAttach()
+{
+}
+
+void Node::onDetach()
 {
 }
 

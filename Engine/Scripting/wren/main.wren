@@ -40,8 +40,8 @@ class Main {
           if (Imgui.button("Test")) Imgui.text("Pressed")
           WindowSize = Imgui.getWindowSize()
           for (i in 1..10) {
-          var text = "TestString%(i)"
-          Imgui.text("String: %(text), hash: %(StringHash.new(text).hash())")
+              var text = "TestString%(i)"
+              Imgui.text("String: %(text), hash: %(StringHash.new(text).hash())")
           }
           Imgui.end()
     }

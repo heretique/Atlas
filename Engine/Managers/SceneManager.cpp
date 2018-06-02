@@ -87,13 +87,15 @@ void SceneManager::updateNode(Node* node, float dt)
 void wren::bindSceneManager()
 {
     Engine::vm()
-        .beginModule("scripts/Scene")                                                                   //
-        .bindClass<NodePtr>("NodePtr")                                                                  //
-        .endClass()                                                                                     //
-        .bindClass<SceneManager>("SceneManager")                                                        //
-        .bindMethod<decltype(&SceneManager::root), &SceneManager::root>(false, "root")                  //
-        .bindMethod<decltype(&SceneManager::addNode), &SceneManager::addNode>(false, "addNode(_,_,_)")  //
-        .endClass()                                                                                     //
+        .beginModule("scripts/Scene")                                                                                //
+        .bindClass<NodePtr>("NodePtr")                                                                               //
+        .endClass()                                                                                                  //
+        .bindClass<SceneManager>("SceneManager")                                                                     //
+        .bindMethod<decltype(&SceneManager::root), &SceneManager::root>(false, "root")                               //
+        .bindMethod<decltype(&SceneManager::addNode), &SceneManager::addNode>(false, "addNode(_,_,_)")               //
+        .bindMethod<decltype(&SceneManager::removeNode), &SceneManager::removeNode>(false, "removeNode(_)")          //
+        .bindMethod<decltype(&SceneManager::reparentNode), &SceneManager::reparentNode>(false, "reparentNode(_,_)")  //
+        .endClass()                                                                                                  //
         .endModule();
 }
 

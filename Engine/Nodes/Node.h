@@ -42,6 +42,7 @@ public:
     NodePtr childPtrAt(size_t index) const;
 
     void attach(NodePtr parent);
+    void detach();
     void init();
     void update(float dt);
     void destroy();
@@ -55,8 +56,6 @@ public:
             CEREAL_NVP(_name),        //
             CEREAL_NVP(_nameHash),    //
             CEREAL_NVP(_enabled),     //
-            CEREAL_NVP(_bbox),        //
-            CEREAL_NVP(_bsphere),     //
             CEREAL_NVP(_nodeScript),  //
             CEREAL_NVP(_parent),      //
             CEREAL_NVP(_children)     //
@@ -66,6 +65,7 @@ public:
 protected:
     virtual bool canAttach(Node* node);
     virtual void onAttach();
+    virtual void onDetach();
     virtual void onInit();
     virtual void onUpdate(float dt);
     virtual void onDestroy();
@@ -76,15 +76,13 @@ private:
     NodePtrVec children();
 
 private:
-    NodeType             _type;
-    std::string          _name;
-    StringHash           _nameHash;
-    bool                 _enabled;
-    math::BoundingBox    _bbox;
-    math::BoundingSphere _bsphere;
-    NodePtr              _parent;
-    NodePtrVec           _children;
-    NodeScriptUPtr       _nodeScript;
+    NodeType       _type;
+    std::string    _name;
+    StringHash     _nameHash;
+    bool           _enabled;
+    NodePtr        _parent;
+    NodePtrVec     _children;
+    NodeScriptUPtr _nodeScript;
 };
 
 namespace wren

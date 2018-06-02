@@ -28,7 +28,19 @@ foreign class Node {
 foreign class SceneManager {
     foreign root
     foreign addNode(type, name, parent)
+    foreign removeNode(node)
+    foreign reparentNode(node, newParent)
+
     attachScript(node, script) {
         node.get.attachScript(script)
     }
+}
+
+
+class NodeScript {
+    onInit() {}
+    onAttach() {}
+    onDetach() {}
+    onUpdate(dt) {}
+    onDestoy() {}
 }

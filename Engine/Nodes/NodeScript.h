@@ -22,6 +22,7 @@ public:
 private:
     WrenHandle*    _handle;
     wrenpp::Method _onAttach;
+    wrenpp::Method _onDetach;
     wrenpp::Method _onInit;
     wrenpp::Method _onUpdate;
     wrenpp::Method _onDestroy;

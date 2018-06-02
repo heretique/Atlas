@@ -18,15 +18,17 @@ bool NodeScript::initScript()
 {
     wrenpp::VM& vm = Engine::vm();
 
-    _onAttach = vm.method(_handle, "onAttach()");
-    _onInit   = vm.method(_handle, "onInit()");
-    _onUpdate = vm.method(_handle, "onUpdate(_)");
+    _onAttach  = vm.method(_handle, "onAttach()");
+    _onDetach  = vm.method(_handle, "onDetach()");
+    _onInit    = vm.method(_handle, "onInit()");
+    _onUpdate  = vm.method(_handle, "onUpdate(_)");
+    _onDestroy = vm.method(_handle, "onDestroy()");
 
     return true;
 }
 
 bool NodeScript::isValid() const
 {
-    return true;
+    return _handle != nullptr;
 }
 }

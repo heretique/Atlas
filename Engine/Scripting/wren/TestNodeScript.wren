@@ -1,10 +1,10 @@
-class TestNodeScript {
+import "scripts/Scene" for NodeScript
+
+class TestNodeScript is NodeScript {
     construct new() {}
 
     onInit() {}
     onAttach() {}
-    onUpdate(dt) {
-        System.print("Update from script - dt: %(dt)")
-    }
+    onUpdate(dt) {}
     onDestoy() {}
 }
