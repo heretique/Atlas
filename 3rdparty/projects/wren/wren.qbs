@@ -19,7 +19,7 @@ StaticLibrary {
     cpp.cLanguageVersion: "c11"
     cpp.cxxLanguageVersion: "c++17"
 
-    cpp.defines: ["DEBUG"]
+    cpp.defines: ["DEBUG", "WREN_NAN_TAGGING=0"]
 
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
