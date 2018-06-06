@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.5)
+project(atlas VERSION 0.1.0 LANGUAGES CXX C)
+
+
+add_subdirectory(3rdparty/projects/bx)
+add_subdirectory(3rdparty/projects/bimg)
+add_subdirectory(3rdparty/projects/bgfx)
+#add_subdirectory(3rdparty/projects/bgfx_shaderc)
+#add_subdirectory(3rdparty/projects/easy_profiler)
+add_subdirectory(3rdparty/projects/fmt)
+add_subdirectory(3rdparty/projects/imgui)
+add_subdirectory(3rdparty/projects/wren)
+add_subdirectory(3rdparty/projects/wrenpp)
+add_subdirectory(Engine)
+add_subdirectory(Tests)
