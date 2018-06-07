@@ -138,7 +138,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_link_libraries(atlas ${COCOA_LIBRARY} ${METAL_LIBRARY} ${QUARTZCORE_LIBRARY})
 endif()
 
-target_compile_features(atlas PUBLIC cxx_std_17)
+target_compile_features(atlas PUBLIC cxx_std_14)
 target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
 
 

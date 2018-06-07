@@ -1,5 +1,5 @@
 #include "WrenBindingsImpl.h"
-#include "math/Vector2.h"
+#include "Math/Vector2.h"
 #include <imgui/imgui.h>
 #include <wrenpp/Wren++.h>
 
