@@ -139,3 +139,39 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_17)
+target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
+
+
+add_custom_command(TARGET atlas POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.obj
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.mtl
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/cube/fs_cubes.bin
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/cube/vs_cubes.bin
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Textures/caruta.png
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Materials/unlit_textured.material
+    $<TARGET_FILE_DIR:atlas>/assets
+    )
+
+add_custom_command(TARGET atlas POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Assets.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Engine.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/ImGui.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/main.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Math.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Scene.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/TestNodeScript.wren
+    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Utils.wren
+    $<TARGET_FILE_DIR:atlas>/scripts
+    )
+
+
+#install(TARGETS atlas RUNTIME DESTINATION ~/atlas)
+#install(FILES ../Assets/Models/caruta.obj
+#    ../Assets/Models/caruta.mtl
+#    ../Assets/Shaders/cube/fs_cubes.bin
+#    ../Assets/Shaders/cube/vs_cubes.bin
+#    ../Assets/Textures/caruta.png
+#    ../Assets/Materials/unlit_textured.material
+#    DESTINATION ~/atlas/assets)

@@ -31,6 +31,8 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_sources(bgfx PRIVATE ../../bgfx/src/glcontext_eagl.mm
         ../../bgfx/src/glcontext_nsgl.mm
         ../../bgfx/src/renderer_mtl.mm)
+
+    target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_OPENGL)
 endif()
 
 target_include_directories(bgfx PUBLIC
@@ -39,5 +41,7 @@ target_include_directories(bgfx PUBLIC
     PRIVATE ../../bgfx/src
     ../../bgfx/3rdparty
     ../../bgfx/3rdparty/khronos)
+
+
 
 target_link_libraries(bgfx bx bimg)
