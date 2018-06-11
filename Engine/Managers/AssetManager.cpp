@@ -230,17 +230,26 @@ int AssetManager::unusedAssets()
 void wren::bindAssetManager()
 {
     Engine::vm()
-        .beginModule("scripts/Assets")
+        .beginModule("main")
         .bindClass<AssetManager>("AssetManager")
-        .bindMethod<decltype(&AssetManager::addAsset), &AssetManager::addAsset>(false, "addAsset(_,_,_)")
-        .bindMethod<decltype(&AssetManager::removeAsset), &AssetManager::removeAsset>(false, "removeAsset(_)")
+        .bindMethod<decltype(&AssetManager::addAsset), &AssetManager::addAsset>(false, "addAsset(_,_,_)")       //
+        .bindMethod<decltype(&AssetManager::removeAsset), &AssetManager::removeAsset>(false, "removeAsset(_)")  //
         .bindMethod<decltype(&AssetManager::removeAssetByHash), &AssetManager::removeAssetByHash>(
-            false, "removeAssetByHash(_)")
-        .bindMethod<decltype(&AssetManager::loadAssets), &AssetManager::loadAssets>(false, "loadAssets()")
+            false, "removeAssetByHash(_)")                                                                  //
+        .bindMethod<decltype(&AssetManager::loadAssets), &AssetManager::loadAssets>(false, "loadAssets()")  //
         .bindMethod<decltype(&AssetManager::loadAssetsAsync), &AssetManager::loadAssetsAsync>(false,
-                                                                                              "loadAssetsAsync()")
+                                                                                              "loadAssetsAsync()")  //
         .endClass()
         .endModule();
+
+    Engine::wrenModule() +=
+        "foreign class AssetManager {\n"
+        "   foreign addAsset(type, filename, flags)\n"
+        "   foreign removeAsset(ptr)\n"
+        "   foreign removeAssetByHash(hash)\n"
+        "   foreign loadAssets()\n"
+        "   foreign loadAssetsAsync()\n"
+        "}\n";
 }
 
 }  // atlas

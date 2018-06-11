@@ -10,7 +10,7 @@ StaticLibrary {
     ]
     Depends { name: "cpp" }
     Depends { name: "common" }
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++14"
 
     cpp.includePaths: [ "../../easy_profiler/easy_profiler_core/include" ]
 

@@ -17,7 +17,7 @@ StaticLibrary {
         path + "/../../wren/src/optional",
     ]
     cpp.cLanguageVersion: "c11"
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++14"
 
     cpp.defines: ["DEBUG", "WREN_NAN_TAGGING=0"]
 

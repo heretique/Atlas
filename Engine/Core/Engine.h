@@ -1,6 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <string>
+
 namespace spdlog
 {
 class logger;
@@ -54,6 +56,8 @@ public:
     {
         return *_vm;
     }
+    static std::string& wrenModule();
+
     static bx::AllocatorI* bxAllocator();
 
 private:

@@ -30,6 +30,12 @@ wrenpp::VM*     Engine::_vm            = nullptr;
 
 bgfx::VertexDecl SimpleMeshVertex::vertDecl;
 
+std::string& Engine::wrenModule()
+{
+    static std::string wrenModule;
+    return wrenModule;
+}
+
 bx::AllocatorI* Engine::bxAllocator()
 {
     static bx::DefaultAllocator allocator;
@@ -48,6 +54,8 @@ bool Engine::init()
         _assetManager = new AssetManager();
     if (_sceneManager == nullptr)
         _sceneManager = new SceneManager();
+    if (_vm == nullptr)
+        _vm = new wrenpp::VM();
 
     initVertDecl();
     registerAssetTypes();
@@ -82,6 +90,7 @@ void Engine::initVM()
 
         return nullptr;
     };
+
     wrenpp::VM::writeFn = [](const char* text) -> void {
         // this hack exists because Wren always prints an extra newline as a separate print statement.
         if (text[0] != '\n')
@@ -90,14 +99,10 @@ void Engine::initVM()
         }
     };
 
-    if (_vm == nullptr)
-        _vm = new wrenpp::VM();
-
     // bind wren modules
     wren::bindImgui();
     wren::bindMath();
     wren::bindUtils();
-    wren::bindAssets();
     wren::bindAssetTypes();
     wren::bindAssetManager();
     wren::bindTextureTypes();
@@ -156,12 +161,18 @@ namespace wren
     void bindEngine()
     {
         Engine::vm()
-            .beginModule("scripts/Engine")
+            .beginModule("main")
             .beginClass("Engine")
             .bindFunction<decltype(Engine::assets), &Engine::assets>(true, "assets()")
             .bindFunction<decltype(Engine::scene), &Engine::scene>(true, "scene()")
             .endClass()
             .endModule();
+
+        Engine::wrenModule() +=
+            "class Engine {\n"
+            "    foreign static assets()\n"
+            "    foreign static scene()\n"
+            "}\n";
     }
 }
 

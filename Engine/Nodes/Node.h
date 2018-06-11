@@ -45,8 +45,9 @@ public:
     void detach();
     void init();
     void update(float dt);
+    void updateGUI();
     void destroy();
-    bool attachScript(WrenHandle* scriptInstance);
+    void attachScript(WrenHandle* scriptInstance);
 
     template <typename Archive>
     void serialize(Archive& ar)
@@ -68,6 +69,7 @@ protected:
     virtual void onDetach();
     virtual void onInit();
     virtual void onUpdate(float dt);
+    virtual void onGUI();
     virtual void onDestroy();
 
 private:

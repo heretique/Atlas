@@ -92,7 +92,7 @@ namespace wren
     void bindShaderTypes()
     {
         Engine::vm()
-            .beginModule("scripts/Assets")                        //
+            .beginModule("main")                                  //
             .beginClass("ShaderTypes")                            //
             .bindCFunction(true, "None", &shaderTypeNone)         //
             .bindCFunction(true, "Vertex", &shaderTypeVertex)     //
@@ -100,6 +100,14 @@ namespace wren
             .bindCFunction(true, "Compute", &shaderTypeCompute)   //
             .endClass()                                           //
             .endModule();
+
+        Engine::wrenModule() +=
+            "foreign class ShaderTypes {\n"
+            "    foreign static None\n"
+            "    foreign static Vertex\n"
+            "    foreign static Fragment\n"
+            "    foreign static Compute\n"
+            "}\n";
     }
 }
 

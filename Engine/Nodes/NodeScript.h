@@ -25,6 +25,7 @@ private:
     wrenpp::Method _onDetach;
     wrenpp::Method _onInit;
     wrenpp::Method _onUpdate;
+    wrenpp::Method _onGUI;
     wrenpp::Method _onDestroy;
 };
 }

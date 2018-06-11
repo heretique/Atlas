@@ -363,7 +363,7 @@ namespace wren
     void bindTextureTypes()
     {
         Engine::vm()
-            .beginModule("scripts/Assets")                                               //
+            .beginModule("main")                                                         //
             .beginClass("TextureFlags")                                                  //
             .bindCFunction(true, "None", &textureFlag_None)                              //
             .bindCFunction(true, "U_Mirror", &textureFlag_U_Mirror)                      //
@@ -422,6 +422,65 @@ namespace wren
             .bindCFunction(true, "Sampler_Bits_Mask", &textureFlag_Sampler_Bits_Mask)    //
             .endClass()                                                                  //
             .endModule();
+
+        Engine::wrenModule() +=
+            "foreign class TextureFlags {\n"
+            "    foreign static None\n"
+            "    foreign static U_Mirror\n"
+            "    foreign static U_Clamp\n"
+            "    foreign static U_Border\n"
+            "    foreign static U_Shift\n"
+            "    foreign static U_Mask\n"
+            "    foreign static V_Mirror\n"
+            "    foreign static V_Clamp\n"
+            "    foreign static V_Border\n"
+            "    foreign static V_Shift\n"
+            "    foreign static V_Mask\n"
+            "    foreign static W_Mirror\n"
+            "    foreign static W_Clamp\n"
+            "    foreign static W_Border\n"
+            "    foreign static W_Shift\n"
+            "    foreign static W_Mask\n"
+            "    foreign static Min_Point\n"
+            "    foreign static Min_Anisotropic\n"
+            "    foreign static Min_Shift\n"
+            "    foreign static Min_Mask\n"
+            "    foreign static Mag_Point\n"
+            "    foreign static Mag_Anisotropic\n"
+            "    foreign static Mag_Shift\n"
+            "    foreign static Mag_Mask\n"
+            "    foreign static Mip_Point\n"
+            "    foreign static Mip_Shift\n"
+            "    foreign static Mip_Mask\n"
+            "    foreign static Msaa_Sample\n"
+            "    foreign static RT\n"
+            "    foreign static RT_Msaa_x2\n"
+            "    foreign static RT_Msaa_x4\n"
+            "    foreign static RT_Msaa_x8\n"
+            "    foreign static RT_Msaa_x16\n"
+            "    foreign static RT_Msaa_Shift\n"
+            "    foreign static RT_Msaa_Mask\n"
+            "    foreign static RT_Write_Only\n"
+            "    foreign static RT_Mask\n"
+            "    foreign static Compare_Less\n"
+            "    foreign static Compare_LEqual\n"
+            "    foreign static Compare_Equal\n"
+            "    foreign static Compare_GEqual\n"
+            "    foreign static Compare_Greater\n"
+            "    foreign static Compare_NotEqual\n"
+            "    foreign static Compare_Never\n"
+            "    foreign static Compare_Always\n"
+            "    foreign static Compare_Shift\n"
+            "    foreign static Compare_Mask\n"
+            "    foreign static Compute_Write\n"
+            "    foreign static SRGB\n"
+            "    foreign static Blit_Dst\n"
+            "    foreign static Read_Back\n"
+            "    foreign static Border_Color_Shift\n"
+            "    foreign static Border_Color_Mask\n"
+            "    foreign static Border_Color(index)\n"
+            "    foreign static Sampler_Bits_Mask\n"
+            "}\n";
     }
 }
 

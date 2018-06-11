@@ -22,12 +22,6 @@ public:
     void init() override;
     void update(float dt) override;
     void onGUI() override;
-
-private:
-    wrenpp::Result _vmResult;
-    wrenpp::Method _init;
-    wrenpp::Method _update;
-    wrenpp::Method _ongui;
 };
 
 }  // namespace atlas

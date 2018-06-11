@@ -77,7 +77,7 @@ void Node::attach(NodePtr parent)
     _parent = parent;
     onAttach();
     if (_nodeScript && _nodeScript->_onAttach)
-        _nodeScript->_onAttach();
+        _nodeScript->_onAttach(this);
 }
 
 void Node::detach()
@@ -100,6 +100,13 @@ void Node::update(float dt)
     onUpdate(dt);
     if (_nodeScript && _nodeScript->_onUpdate)
         _nodeScript->_onUpdate(dt);
+}
+
+void Node::updateGUI()
+{
+    onGUI();
+    if (_nodeScript && _nodeScript->_onGUI)
+        _nodeScript->_onGUI();
 }
 
 void Node::destroy()
@@ -130,6 +137,10 @@ void Node::onUpdate(float /*dt*/)
 {
 }
 
+void Node::onGUI()
+{
+}
+
 void Node::onDestroy()
 {
 }
@@ -141,16 +152,16 @@ void Node::addChild(NodePtr child)
         _children.emplace_back(child);
 }
 
-bool Node::attachScript(WrenHandle* scriptInstance)
+void Node::attachScript(WrenHandle* scriptInstance)
 {
     _nodeScript = std::make_unique<NodeScript>(scriptInstance);
-    return _nodeScript->initScript();
+    _nodeScript->initScript();
 }
 
 void wren::bindNode()
 {
     Engine::vm()
-        .beginModule("scripts/Scene")                                                              //
+        .beginModule("main")                                                                       //
         .bindClass<Node, NodeType, std::string, NodePtr>("Node")                                   //
         .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                             //
         .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")                   //
@@ -165,6 +176,21 @@ void wren::bindNode()
         .bindMethod<decltype(&Node::attachScript), &Node::attachScript>(false, "attachScript(_)")  //
         .endClass()
         .endModule();
+
+    Engine::wrenModule() +=
+        "foreign class Node {\n"
+        "    foreign name\n"
+        "    foreign name=(rhs)\n"
+        "    foreign hash\n"
+        "    foreign enabled\n"
+        "    foreign enabled=(rhs)\n"
+        "    foreign parent // parent: Node\n"
+        "    foreign parentPtr // parentPtr :NodePtr\n"
+        "    foreign childCount\n"
+        "    foreign childAt(index) // return: Node\n"
+        "    foreign childPtrAt(index) // return: NodePtr\n"
+        "    foreign attachScript(script)\n"
+        "}\n";
 }
 
 }  // atlas namespace

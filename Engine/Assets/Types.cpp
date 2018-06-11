@@ -100,7 +100,7 @@ namespace wren
     void bindAssetTypes()
     {
         Engine::vm()
-            .beginModule("scripts/Assets")                                                        //
+            .beginModule("main")                                                                  //
             .bindClass<AssetPtr>("AssetPtr")                                                      //
             .bindMethod<decltype(&AssetPtr::get), &AssetPtr::get>(false, "get")                   //
             .bindMethod<decltype(&AssetPtr::use_count), &AssetPtr::use_count>(false, "useCount")  //
@@ -120,6 +120,27 @@ namespace wren
             .bindCFunction(true, "Template", &wren::assetType_Template)                           //
             .endClass()                                                                           //
             .endModule();
+
+        Engine::wrenModule() +=
+            "foreign class AssetPtr {\n"
+            "    foreign get\n"
+            "    foreign useCount\n"
+            "}\n"
+            "\n"
+            "foreign class AssetTypes {\n"
+            "    foreign static Undefined\n"
+            "    foreign static Scene\n"
+            "    foreign static Geometry\n"
+            "    foreign static Animation\n"
+            "    foreign static Audio\n"
+            "    foreign static Material\n"
+            "    foreign static Code\n"
+            "    foreign static Shader\n"
+            "    foreign static Texture\n"
+            "    foreign static ParticleEffect\n"
+            "    foreign static Pipeline\n"
+            "    foreign static Template\n"
+            "}\n";
     }
 }
 

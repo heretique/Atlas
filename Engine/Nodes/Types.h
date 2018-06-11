@@ -6,6 +6,11 @@
 #include <functional>
 #include <memory>
 
+namespace wrenpp
+{
+class VM;
+}
+
 namespace atlas
 {
 class Node;
@@ -19,12 +24,14 @@ using NodePtrVec     = std::vector<NodePtr>;
 using NodeScriptUPtr = std::unique_ptr<NodeScript>;
 
 using NodeFactoryFunc = std::function<NodePtr(const std::string& nodeName)>;
+using NodeBindFunc    = std::function<void(wrenpp::VM& vm)>;
 
 namespace NodeTypeNames
 {
     static const std::string Undefined{"Undefined"};
     static const std::string Root{"Root"};
     static const std::string Spatial{"Spatial"};
+    static const std::string Camera{"Camera"};
 }
 
 namespace NodeTypes

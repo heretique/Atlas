@@ -2,13 +2,15 @@
 #include "Core/NonCopyable.h"
 #include "Core/StringHash.h"
 #include "Nodes/Node.h"
+#include "wrenpp/Wren++.h"
 
 #include <string>
 #include <unordered_map>
 
 namespace atlas
 {
-using NodeRegistry = std::unordered_map<NodeType, NodeFactoryFunc>;
+using NodeRegistry   = std::unordered_map<NodeType, NodeFactoryFunc>;
+using ScriptRegistry = std::unordered_map<std::string, wrenpp::Method>;
 
 class Engine;
 class SceneManager : NonCopyable
@@ -24,13 +26,17 @@ public:
     void removeNode(NodePtr node);
     bool reparentNode(NodePtr node, NodePtr parent);
     void update(float dt);
+    void onGUI();
+    void attachScript(NodePtr node, std::string scriptName);
 
 private:
     void updateNode(Node* node, float dt);
+    void onGUINode(Node* node);
 
 private:
-    NodePtr      _root;
-    NodeRegistry _registry;
+    NodePtr        _root;
+    NodeRegistry   _nodeRegistry;
+    ScriptRegistry _scriptRegistry;
 };
 
 namespace wren

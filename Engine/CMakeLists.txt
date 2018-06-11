@@ -154,7 +154,7 @@ add_custom_command(TARGET atlas POST_BUILD
     )
 
 add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    COMMAND ${CMAKE_COMMAND} -E copy
     ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Assets.wren
     ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Engine.wren
     ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/ImGui.wren

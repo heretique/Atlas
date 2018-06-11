@@ -7,6 +7,5 @@ namespace wren
     void bindImgui();
     void bindMath();
     void bindUtils();
-    void bindAssets();
 }
 }

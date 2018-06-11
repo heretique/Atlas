@@ -38,7 +38,7 @@ namespace wren
     void bindNodeTypes()
     {
         Engine::vm()
-            .beginModule("scripts/Scene")                                                       //
+            .beginModule("main")                                                                //
             .bindClass<NodePtr>("NodePtr")                                                      //
             .bindMethod<decltype(&NodePtr::get), &NodePtr::get>(false, "get")                   //
             .bindMethod<decltype(&NodePtr::use_count), &NodePtr::use_count>(false, "useCount")  //
@@ -49,6 +49,19 @@ namespace wren
             .bindCFunction(true, "Spatial", &wren::nodeType_Spatial)                            //
             .endClass()                                                                         //
             .endModule();
+
+        Engine::wrenModule() +=
+            "foreign class NodePtr {\n"
+            "    foreign get\n"
+            "    foreign useCount\n"
+            "}\n"
+            "\n"
+            "\n"
+            "foreign class NodeTypes {\n"
+            "    foreign static Undefined\n"
+            "    foreign static Root\n"
+            "    foreign static Spatial\n"
+            "}\n";
     }
 }
 }

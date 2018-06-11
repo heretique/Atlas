@@ -22,6 +22,7 @@ bool NodeScript::initScript()
     _onDetach  = vm.method(_handle, "onDetach()");
     _onInit    = vm.method(_handle, "onInit()");
     _onUpdate  = vm.method(_handle, "onUpdate(_)");
+    _onGUI     = vm.method(_handle, "onGUI()");
     _onDestroy = vm.method(_handle, "onDestroy()");
 
     return true;

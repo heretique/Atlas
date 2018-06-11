@@ -33,7 +33,7 @@ StaticLibrary {
         path + "/../../bgfx/3rdparty",
         path + "/../../bgfx/3rdparty/dxsdk/include"
     ]
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++14"
     cpp.defines: ["BUILD_WITH_EASY_PROFILER"/*, "BGFX_CONFIG_DEBUG", "__STDC_FORMAT_MACROS"*/]
 
     Properties {

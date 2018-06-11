@@ -110,7 +110,7 @@ StaticLibrary {
 	Depends { name: "cpp" }
     Depends { name: "common" }
 
-    // using c++14 because c++17 doesn't allow "register" keyword anymore
+    // using c++14 because c++14 doesn't allow "register" keyword anymore
     cpp.cxxLanguageVersion: "c++14"
     cpp.defines: [
         "__STDC_LIMIT_MACROS",

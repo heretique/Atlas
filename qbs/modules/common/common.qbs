@@ -13,7 +13,7 @@ Module {
 
 
     Depends { name: "cpp" }
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++14"
     cpp.includePaths: [
         path + "/../../../3rdparty",
         path + "/../../../3rdparty/outcome/single-header",

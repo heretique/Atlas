@@ -26,7 +26,7 @@ StaticLibrary {
         path + "/../../bimg/3rdparty/nvtt",
         path + "/../../bx/include",
     ]
-    cpp.cxxLanguageVersion: "c++17"
+    cpp.cxxLanguageVersion: "c++14"
 
     cpp.defines: [
         "__STDC_LIMIT_MACROS",
