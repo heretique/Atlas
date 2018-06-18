@@ -26,12 +26,12 @@ public:
     void removeNode(NodePtr node);
     bool reparentNode(NodePtr node, NodePtr parent);
     void update(float dt);
-    void onGUI();
+    void updateGUI();
     void attachScript(NodePtr node, std::string scriptName);
 
 private:
     void updateNode(Node* node, float dt);
-    void onGUINode(Node* node);
+    void updateNodeGUI(Node* node);
 
 private:
     NodePtr        _root;

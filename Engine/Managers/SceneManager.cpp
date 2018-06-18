@@ -75,9 +75,9 @@ void SceneManager::update(float dt)
     updateNode(_root.get(), dt);
 }
 
-void SceneManager::onGUI()
+void SceneManager::updateGUI()
 {
-    onGUINode(_root.get());
+    updateNodeGUI(_root.get());
 }
 
 void SceneManager::attachScript(NodePtr node, std::string scriptName)
@@ -113,20 +113,21 @@ void SceneManager::updateNode(Node* node, float dt)
 {
     node->update(dt);
     size_t childCount = node->childCount();
-    while (childCount)
+    while (childCount && node->_enabled)
     {
         updateNode(node->childAt(childCount - 1), dt);
         --childCount;
     }
+    node->setDirty(false);
 }
 
-void SceneManager::onGUINode(Node* node)
+void SceneManager::updateNodeGUI(Node* node)
 {
     node->updateGUI();
     size_t childCount = node->childCount();
-    while (childCount)
+    while (childCount && node->_enabled)
     {
-        onGUINode(node->childAt(childCount - 1));
+        updateNodeGUI(node->childAt(childCount - 1));
         --childCount;
     }
 }

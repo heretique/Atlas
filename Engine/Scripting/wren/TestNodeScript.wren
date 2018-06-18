@@ -6,7 +6,9 @@ class TestNodeScript is NodeScript {
     construct new() {}
     onInit() {}
     onAttach() {}
-    onUpdate(dt) {}
+    onUpdate(dt) {
+        Test = Test + Vec3.one
+    }
     onGUI() {
         Imgui.setNextWindowSize(WindowSize)
         Imgui.begin("Wren IMGUI")

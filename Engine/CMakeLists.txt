@@ -154,15 +154,8 @@ add_custom_command(TARGET atlas POST_BUILD
     )
 
 add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Assets.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Engine.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/ImGui.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/main.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Math.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Scene.wren
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/TestNodeScript.wren
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/Utils.wren
     $<TARGET_FILE_DIR:atlas>/scripts
     )
 

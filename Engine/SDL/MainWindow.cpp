@@ -54,7 +54,7 @@ void MainWindow::update(float dt)
 void MainWindow::onGUI()
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
-    Engine::scene().onGUI();
+    Engine::scene().updateGUI();
 }
 
 }  // namespace atlas
