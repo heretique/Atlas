@@ -1,5 +1,6 @@
 #include "NodeScript.h"
 #include "Core/Engine.h"
+#include "Nodes/Node.h"
 
 #include <spdlog/spdlog.h>
 
@@ -14,16 +15,20 @@ NodeScript::~NodeScript()
 {
 }
 
-bool NodeScript::initScript()
+bool NodeScript::initScript(Node* node)
 {
     wrenpp::VM& vm = Engine::vm();
 
-    _onAttach  = vm.method(_handle, "onAttach()");
-    _onDetach  = vm.method(_handle, "onDetach()");
-    _onInit    = vm.method(_handle, "onInit()");
-    _onUpdate  = vm.method(_handle, "onUpdate(_)");
-    _onGUI     = vm.method(_handle, "onGUI()");
-    _onDestroy = vm.method(_handle, "onDestroy()");
+    _nodeSetter = vm.method(_handle, "node=(_)");
+    _onAttach   = vm.method(_handle, "onAttach()");
+    _onDetach   = vm.method(_handle, "onDetach()");
+    _onInit     = vm.method(_handle, "onInit()");
+    _onUpdate   = vm.method(_handle, "onUpdate(_)");
+    _onGUI      = vm.method(_handle, "onGUI()");
+    _onDestroy  = vm.method(_handle, "onDestroy()");
+
+    assert(_nodeSetter);
+    node->onSetScriptNode(_nodeSetter);
 
     return true;
 }

@@ -42,8 +42,6 @@ namespace AssetTypes
     static const AssetType ParticleEffect{AssetNames::ParticleEffect};
     static const AssetType Pipeline{AssetNames::Pipeline};
     static const AssetType Template{AssetNames::Template};
-
-    const std::string& toName(AssetType type);
 }  // AssetTypes namespace
 
 namespace wren

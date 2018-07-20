@@ -4,7 +4,6 @@
 #include "Managers/AssetManager.h"
 #include "Managers/JobManager.h"
 #include "Managers/SceneManager.h"
-#include "Nodes/Types.h"
 #include <cmath>
 #include <spdlog/spdlog.h>
 
@@ -41,7 +40,8 @@ void MainWindow::init()
     {
     }
 
-    NodePtr node = Engine::scene().addNode(NodeTypes::Spatial, "Test Node", Engine::scene().root());
+    Node* node = Engine::scene().addNode("Test Node", Engine::scene().root());
+    Engine::scene().addComponent(node, ComponentTypes::Transform);
     Engine::scene().attachScript(node, "scripts/TestNodeScript");
 }
 

@@ -16,11 +16,12 @@ class NodeScript
 public:
     NodeScript(WrenHandle* handle);
     ~NodeScript();
-    bool initScript();
+    bool initScript(Node* node);
     bool isValid() const;
 
 private:
     WrenHandle*    _handle;
+    wrenpp::Method _nodeSetter;
     wrenpp::Method _onAttach;
     wrenpp::Method _onDetach;
     wrenpp::Method _onInit;

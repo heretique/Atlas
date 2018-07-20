@@ -23,15 +23,15 @@ AssetManager::~AssetManager()
 {
 }
 
-void AssetManager::registerAssetType(AssetType assetType, AssetFactoryFunc f)
+void AssetManager::registerAssetType(AssetType assetType, std::string assetTypeName, AssetFactoryFunc f)
 {
     if (_registry.find(assetType) != _registry.end())
     {
-        Engine::log().warn("Asset type '{}', already registered", AssetTypes::toName(assetType));
+        Engine::log().warn("Asset type '{}', already registered", assetName(assetType));
         return;
     }
-
-    _registry.insert(make_pair(assetType, f));
+    AssetRegistryEntry entry{assetTypeName, f};
+    _registry.insert(std::make_pair(assetType, entry));
 }
 
 AssetPtr AssetManager::getAsset(StringHash hash) const
@@ -47,7 +47,7 @@ AssetPtr AssetManager::addAsset(AssetType type, const std::string& filename, u32
 {
     if (filename == "")
     {
-        Engine::log().error("Invalid name: '{}' for added Asset of type '{}'", filename, AssetTypes::toName(type));
+        Engine::log().error("Invalid name: '{}' for added Asset of type '{}'", filename, assetName(type));
         return nullptr;
     }
 
@@ -60,15 +60,15 @@ AssetPtr AssetManager::addAsset(AssetType type, const std::string& filename, u32
     auto     it    = _registry.find(type);
     if (it == _registry.end())
     {
-        Engine::log().error("Asset type not registered: '{}'", AssetTypes::toName(type));
+        Engine::log().error("Asset type not registered: '{}'", assetName(type));
         return nullptr;
     }
 
-    asset = it->second(filename, flags);
+    asset = it->second.factory(filename, flags);
     if (asset == nullptr)
         return nullptr;
 
-    Engine::log().info("Adding asset: '{}' of type: '{}'", filename.c_str(), AssetTypes::toName(type));
+    Engine::log().info("Adding asset: '{}' of type: '{}'", filename.c_str(), assetName(type));
     _assets.emplace_back(asset);
     _hashedAssets.insert(std::make_pair(filename, asset));
 
@@ -105,21 +105,18 @@ bool AssetManager::loadAsset(AssetPtr asset)
     {
         if (!asset->load(ifs))
         {
-            Engine::log().warn(
-                "Couldn't load asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
+            Engine::log().warn("Couldn't load asset: '{}' of type: '{}'", asset->filename(), assetName(asset->type()));
         }
         else
         {
             if (asset->isGPUResource() && !asset->uploadGPU())
             {
-                Engine::log().warn("Couldn't upload asset: '{}' of type: '{}', to GPU",
-                                   asset->filename(),
-                                   AssetTypes::toName(asset->type()));
+                Engine::log().warn(
+                    "Couldn't upload asset: '{}' of type: '{}', to GPU", asset->filename(), assetName(asset->type()));
             }
             else
             {
-                Engine::log().info(
-                    "Loaded asset: '{}' of type: '{}'", asset->filename(), AssetTypes::toName(asset->type()));
+                Engine::log().info("Loaded asset: '{}' of type: '{}'", asset->filename(), assetName(asset->type()));
                 return true;
             }
         }
@@ -225,6 +222,17 @@ int AssetManager::unusedAssets()
             ++unusedAssets;
 
     return unusedAssets;
+}
+
+const std::string AssetManager::assetName(AssetType type)
+{
+    auto assetIt = _registry.find(type);
+    if (assetIt != _registry.end())
+    {
+        return assetIt->second.name;
+    }
+
+    return "";
 }
 
 void wren::bindAssetManager()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Components/Types.h"
+
 namespace atlas
 {
 class Component
@@ -8,12 +10,18 @@ public:
     virtual ~Component()
     {
     }
-    template <class Archive>
-    void serialize(Archive&)
+
+    ComponentType type() const
     {
+        return _type;
     }
 
-private:
+protected:
+    Component(ComponentType type)
+        : _type(type)
+    {
+    }
+    ComponentType _type;
 };
 
 }  // atlas namespace

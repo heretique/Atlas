@@ -2,30 +2,32 @@
 
 #include "Component.h"
 #include "Math/Transform.h"
-#include <cereal/cereal.hpp>
 
 namespace atlas
 {
 class TransformComponent : public Component
 {
 public:
-    template <typename Archive>
-    void serialize(Archive& ar)
+    static ComponentPtr factoryFunc()
     {
-        ar(                                       //
-            cereal::base_class<Component>(this),  //
-            CEREAL_NVP(_worldTransform),          //
-            CEREAL_NVP(_localTransform)           //
-            );
+        return std::make_unique<TransformComponent>(StringHash(ComponentNames::Transform));
     }
 
-    const math::Transform& world() const;
-    math::Transform&       world();
-    const math::Transform& local() const;
-    math::Transform&       local();
+    TransformComponent(ComponentType type);
+
+    const math::Matrix& world() const;
+    math::Matrix&       world();
+    const math::Matrix& local() const;
+    math::Matrix&       local();
 
 private:
-    math::Transform _worldTransform;
-    math::Transform _localTransform;
+    math::Matrix _worldTransform;
+    math::Matrix _localTransform;
 };
+
+namespace wren
+{
+    void bindTransformComponent();
+}
+
 }  // atlas namespace

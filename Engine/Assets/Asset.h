@@ -13,7 +13,6 @@ namespace atlas
 class Asset
 {
 public:
-    Asset(AssetType type, const std::string& filename, u32 flags);
     virtual ~Asset();
 
     StringHash         hash() const;
@@ -26,6 +25,8 @@ public:
     bool uploadGPU();
 
 protected:
+    Asset(AssetType type, const std::string& filename, u32 flags);
+
     virtual bool loadImpl(std::istream& data) = 0;
     virtual bool isGPUResource();
     virtual bool uploadGPUImpl();

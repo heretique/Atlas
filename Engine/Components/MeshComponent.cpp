@@ -4,13 +4,15 @@
 namespace atlas
 {
 MeshComponent::MeshComponent()
-    : _meshHash()
+    : Component(StringHash("Mesh"))
+    , _meshHash()
     , _mesh()
 {
 }
 
 MeshComponent::MeshComponent(AssetPtr mesh, StringHash hash)
-    : _meshHash(hash)
+    : Component(StringHash("Mesh"))
+    , _meshHash(hash)
     , _mesh(mesh)
 {
 }

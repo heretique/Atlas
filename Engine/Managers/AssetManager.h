@@ -18,7 +18,7 @@ public:
     AssetManager();
     ~AssetManager();
 
-    void registerAssetType(AssetType type, AssetFactoryFunc f);
+    void registerAssetType(AssetType type, std::string assetTypeName, AssetFactoryFunc f);
     AssetPtr addAsset(AssetType type, const std::string& filename, u32 flags = 0);
     void removeAsset(AssetPtr handle);
     void removeAssetByHash(StringHash hash);
@@ -34,6 +34,7 @@ public:
     const std::string& assetsDir() const;
     void               releaseUnusedAssets();
     int                unusedAssets();
+    const std::string assetName(AssetType type);
 
 public:  // signals
     sigs::signal<void(int)> LoadingProgress;
@@ -44,9 +45,14 @@ protected:
 
 private:
     using AssetsByHash = std::unordered_map<StringHash, AssetPtr, StringHash::Hasher>;
+    struct AssetRegistryEntry
+    {
+        std::string      name;
+        AssetFactoryFunc factory;
+    };
     AssetStorage _assets;
     AssetsByHash _hashedAssets;
-    std::unordered_map<AssetType, AssetFactoryFunc> _registry;
+    std::unordered_map<AssetType, AssetRegistryEntry> _registry;
     std::string _assetsDir{};
 
     std::mutex _loadingMutex;

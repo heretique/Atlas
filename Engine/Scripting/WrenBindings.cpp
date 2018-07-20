@@ -273,52 +273,60 @@ namespace wren
                  .bindMethod<decltype(&math::Matrix::setIdentity), &math::Matrix::setIdentity>(false,
                                                                                                "setIdentity()")  //
                  .bindMethod<decltype(&math::Matrix::setZero), &math::Matrix::setZero>(false, "setZero()")       //
-                 .endClass()                                                                                     //
-                 .bindClass<math::Transform>("Transform")  // class Transform
-                 .bindMethod<decltype(&math::Transform::getMatrix), &math::Transform::getMatrix>(false, "matrix")  //
-                 .bindMethod<const math::Vector3& (math::Transform::*)() const, &math::Transform::getScale>(false,
-                                                                                                            "scale")  //
-                 .bindMethod<decltype(&math::Transform::getScaleX), &math::Transform::getScaleX>(false, "scaleX")     //
-                 .bindMethod<decltype(&math::Transform::getScaleY), &math::Transform::getScaleY>(false, "scaleY")     //
-                 .bindMethod<decltype(&math::Transform::getScaleZ), &math::Transform::getScaleZ>(false, "scaleZ")     //
-                 .bindMethod<const math::Quaternion& (math::Transform::*)() const, &math::Transform::getRotation>(
-                     false, "rotation")  //
-                 .bindMethod<const math::Vector3& (math::Transform::*)() const, &math::Transform::getTranslation>(
-                     false, "translation")  //
-                 .bindMethod<decltype(&math::Transform::getTranslationX), &math::Transform::getTranslationX>(
-                     false, "translationX")  //
-                 .bindMethod<decltype(&math::Transform::getTranslationY), &math::Transform::getTranslationY>(
-                     false, "translationY")  //
-                 .bindMethod<decltype(&math::Transform::getTranslationZ), &math::Transform::getTranslationZ>(
-                     false, "translationZ")  //
-                 .bindMethod<math::Vector3 (math::Transform::*)() const, &math::Transform::getForwardVector>(
-                     false, "forward")                                                                                //
-                 .bindMethod<math::Vector3 (math::Transform::*)() const, &math::Transform::getUpVector>(false, "up")  //
-                 .bindMethod<math::Vector3 (math::Transform::*)() const, &math::Transform::getRightVector>(false,
-                                                                                                           "right")  //
-                 .bindMethod<void (math::Transform::*)(float, float, float, float), &math::Transform::rotate>(
-                     false, "rotateWithQuaternionFloats(_,_,_,_)")  //
-                 .bindMethod<void (math::Transform::*)(const math::Quaternion&), &math::Transform::rotate>(
-                     false, "rotateWithQuaternion(_)")  //
-                 .bindMethod<void (math::Transform::*)(const math::Vector3&, float), &math::Transform::rotate>(
-                     false, "rotateWithAxisAngle(_,_)")  //
-                 .bindMethod<void (math::Transform::*)(const math::Matrix&), &math::Transform::rotate>(
-                     false, "rotateWithMatrix(_)")                                                                 //
-                 .bindMethod<decltype(&math::Transform::rotateX), &math::Transform::rotateX>(false, "rotateX(_)")  //
-                 .bindMethod<decltype(&math::Transform::rotateY), &math::Transform::rotateY>(false, "rotateY(_)")  //
-                 .bindMethod<decltype(&math::Transform::rotateZ), &math::Transform::rotateZ>(false, "rotateZ(_)")  //
-                 .bindMethod<void (math::Transform::*)(float), &math::Transform::scale>(false,
-                                                                                        "uniformScale(_)")  //
-                 .bindMethod<void (math::Transform::*)(float, float, float), &math::Transform::scale>(
+                 .bindMethod<void (*)(const math::Vector3&, const math::Vector3&, const math::Vector3&, math::Matrix*),
+                             &math::Matrix::createLookAt>(true, "createLookAt(_,_,_,_)")  //
+                 .bindMethod<void (*)(float, float, float, float, math::Matrix*), &math::Matrix::createPerspective>(
+                     true, "createPerspective(_,_,_,_,_)")  //
+                 .bindMethod<void (*)(float, float, float, float, math::Matrix*), &math::Matrix::createOrthographic>(
+                     true, "createOrthographic(_,_,_,_,_)")  //
+                 .bindMethod<void (*)(const math::Vector3&, const math::Vector3&, const math::Vector3&, math::Matrix*),
+                             &math::Matrix::createBillboard>(true, "createBillboard(_,_,_,_)")  //
+                 .bindMethod<void (*)(const math::Vector3&,
+                                      const math::Vector3&,
+                                      const math::Vector3&,
+                                      const math::Vector3&,
+                                      math::Matrix*),
+                             &math::Matrix::createBillboard>(true, "createBillboard(_,_,_,_,_)")  //
+                 .bindMethod<decltype(&math::Matrix::decompose), &math::Matrix::decompose>(false,
+                                                                                           "decompose(_,_,_)")  //
+                 .bindMethod<decltype(&math::Matrix::determinant), &math::Matrix::determinant>(false,
+                                                                                               "determinant()")   //
+                 .bindMethod<void (math::Matrix::*)(float), &math::Matrix::multiply>(false, "multiplyScalar(_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Matrix&), &math::Matrix::multiply>(false,
+                                                                                                   "multiply(_)")  //
+                 .bindMethod<void (*)(const math::Matrix&, const math::Matrix&, math::Matrix*),
+                             &math::Matrix::multiply>(true,
+                                                      "multiply(_,_,_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Quaternion&), &math::Matrix::rotate>(false,
+                                                                                                     "rotate(_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Vector3&, float), &math::Matrix::rotate>(
+                     false, "rotate(_,_)")                                                                           //
+                 .bindMethod<void (math::Matrix::*)(float), &math::Matrix::rotateX>(false, "rotateX(_)")             //
+                 .bindMethod<void (math::Matrix::*)(float), &math::Matrix::rotateY>(false, "rotateY(_)")             //
+                 .bindMethod<void (math::Matrix::*)(float), &math::Matrix::rotateZ>(false, "rotateZ(_)")             //
+                 .bindMethod<void (math::Matrix::*)(float), &math::Matrix::scale>(false, "scaleUniform(_)")          //
+                 .bindMethod<void (math::Matrix::*)(const math::Vector3&), &math::Matrix::scale>(false, "scale(_)")  //
+                 .bindMethod<void (math::Matrix::*)(float, float, float), &math::Matrix::scale>(false,
+                                                                                                "scale(_,_,_)")  //
+                 .bindMethod<void (math::Matrix::*)(math::Vector3*) const, &math::Matrix::transformPoint>(
                      false,
-                     "scaleWithFloats(_,_,_)")  //
-                 .bindMethod<void (math::Transform::*)(const math::Vector3&), &math::Transform::scale>(
+                     "transformPoint(_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Vector3&, math::Vector3*) const,
+                             &math::Matrix::transformPoint>(false,
+                                                            "transformPoint(_,_)")  //
+                 .bindMethod<void (math::Matrix::*)(math::Vector3*) const, &math::Matrix::transformVector>(
                      false,
-                     "scaleWithVector(_)")                                                                      //
-                 .bindMethod<decltype(&math::Transform::scaleX), &math::Transform::scaleX>(false, "scaleX(_)")  //
-                 .bindMethod<decltype(&math::Transform::scaleY), &math::Transform::scaleY>(false, "scaleY(_)")  //
-                 .bindMethod<decltype(&math::Transform::scaleZ), &math::Transform::scaleZ>(false, "scaleZ(_)")  //
-                 .endClass()                                                                                    //
+                     "transformVector(_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Vector3&, math::Vector3*) const,
+                             &math::Matrix::transformVector>(false,
+                                                             "transformVector(_,_)")  //
+                 .bindMethod<void (math::Matrix::*)(const math::Vector3&), &math::Matrix::translate>(false,
+                                                                                                     "translate(_)")  //
+                 .bindMethod<void (math::Matrix::*)(float, float, float), &math::Matrix::translate>(
+                     false,
+                     "translate(_,_,_)")                                                                //
+                 .bindMethod<void (math::Matrix::*)(), &math::Matrix::transpose>(false, "transpose()")  //
+                 .endClass()                                                                            //
                  .endModule();
 
         Engine::wrenModule() +=
@@ -480,38 +488,35 @@ namespace wren
             "\n"
             "    foreign setIdentity()\n"
             "    foreign setZero()\n"
-            "}\n"
             "\n"
-            "foreign class Transform {\n"
-            "    construct new() {}\n"
+            "    foreign static createLookAt(eyePosition, targetPosition, up, destination)\n"
+            "    foreign static createPerspective(fov, aspectRatio, near, far, destination)\n"
+            "    foreign static createOrthographic(width, height, near, far, destination)\n"
+            "    foreign static createBillboard(objPosition, camPosition, camUpVector, destination)\n"
+            "    foreign static createBillboard(objPosition, camPosition, camUpVector, camForwardVector, destination)\n"
             "\n"
-            "    foreign matrix\n"
-            "    foreign scale\n"
-            "    foreign scaleX\n"
-            "    foreign scaleY\n"
-            "    foreign scaleZ\n"
-            "    foreign rotation\n"
-            "    foreign translation\n"
-            "    foreign translationX\n"
-            "    foreign translationY\n"
-            "    foreign translationZ\n"
-            "    foreign forward\n"
-            "    foreign up\n"
-            "    foreign right\n"
-            "    foreign rotateWithQuaternionFloats(x, y, z, w)\n"
-            "    foreign rotateWithQuaternion(quaternion)\n"
-            "    foreign rotateWithAxisAngle(axis, angle)\n"
-            "    foreign rotateWithMatrix(matrix)\n"
+            "    foreign decompose(scale, rotation, translation)\n"
+            "    foreign determinant()\n"
+            "    foreign multiplyScalar(scalar)\n"
+            "    foreign multiply(matrix)\n"
+            "    foreign static multiply(mat1, mat2, destination)\n"
+            "    foreign rotate(quaternion)\n"
+            "    foreign rotate(axis, angle)\n"
             "    foreign rotateX(angle)\n"
             "    foreign rotateY(angle)\n"
             "    foreign rotateZ(angle)\n"
-            "    foreign uniformScale(scale)\n"
-            "    foreign scaleWithFloats(x, y, z)\n"
-            "    foreign scaleWithVector(vector)\n"
-            "    foreign scaleX(scale)\n"
-            "    foreign scaleY(scale)\n"
-            "    foreign scaleZ(scale)\n"
-            "}\n";
+            "    foreign scaleUniform(scale)\n"
+            "    foreign scale(x, y, z)\n"
+            "    foreign scale(scaleVec)\n"
+            "    foreign transformPoint(point)\n"
+            "    foreign transformPoint(point, destination)\n"
+            "    foreign transformVector(vector)\n"
+            "    foreign transformVector(vector, destination)\n"
+            "    foreign translate(vector)\n"
+            "    foreign translate(x, y, z)\n"
+            "    foreign transpose()\n"
+            "}\n"
+            "\n";
     }
 
     void bindUtils()

@@ -1,25 +1,20 @@
 #include "Node.h"
 #include "Core/Engine.h"
 #include "NodeScript.h"
-#include <wrenpp/Wren++.h>
 
 namespace atlas
 {
-Node::Node(NodeType type, std::string name, NodePtr parent)
-    : _type(type)
-    , _name(name)
+Node::Node(std::string name, Node* parent)
+    : _name(name)
     , _nameHash(StringHash(name))
+    , _dirty(true)
+    , _enabled(true)
     , _parent(parent)
 {
 }
 
 Node::~Node()
 {
-}
-
-NodeType Node::type() const
-{
-    return _type;
 }
 
 std::string Node::name() const
@@ -37,6 +32,16 @@ StringHash Node::hash() const
     return _nameHash;
 }
 
+bool Node::dirty() const
+{
+    return _dirty;
+}
+
+void Node::setDirty(bool dirty)
+{
+    _dirty = dirty;
+}
+
 bool Node::enabled() const
 {
     return _enabled;
@@ -49,11 +54,6 @@ void Node::enable(bool enabled)
 
 Node* Node::parent() const
 {
-    return _parent.get();
-}
-
-NodePtr Node::parentPtr() const
-{
     return _parent;
 }
 
@@ -64,15 +64,10 @@ size_t Node::childCount() const
 
 Node* Node::childAt(size_t index) const
 {
-    return _children[index].get();
-}
-
-NodePtr Node::childPtrAt(size_t index) const
-{
     return _children[index];
 }
 
-void Node::attach(NodePtr parent)
+void Node::attach(Node* parent)
 {
     _parent = parent;
     onAttach();
@@ -145,35 +140,63 @@ void Node::onDestroy()
 {
 }
 
-void Node::addChild(NodePtr child)
+void Node::onSetScriptNode(wrenpp::Method& method)
+{
+    method(this);
+}
+
+Component* Node::getComponent(ComponentType type)
+{
+    auto compIt = _components.find(type);
+    if (compIt != _components.end())
+    {
+        return compIt->second.get();
+    }
+
+    return nullptr;
+}
+
+void Node::addChild(Node* child)
 {
     auto found = std::find(_children.begin(), _children.end(), child);
     if (found == _children.end())
         _children.emplace_back(child);
 }
 
+void Node::addComponent(ComponentPtr component)
+{
+    _components.insert(std::make_pair(component->type(), std::move(component)));
+}
+
+void Node::removeComponent(ComponentType type)
+{
+    auto it = _components.find(type);
+    if (it != _components.end())
+        _components.erase(it);
+}
+
 void Node::attachScript(WrenHandle* scriptInstance)
 {
     _nodeScript = std::make_unique<NodeScript>(scriptInstance);
-    _nodeScript->initScript();
+    _nodeScript->initScript(this);
+    init();
 }
 
 void wren::bindNode()
 {
     Engine::vm()
         .beginModule("main")                                                                       //
-        .bindClass<Node, NodeType, std::string, NodePtr>("Node")                                   //
+        .bindClass<Node, std::string, Node*>("Node")                                               //
         .bindMethod<decltype(&Node::name), &Node::name>(false, "name")                             //
         .bindMethod<decltype(&Node::setName), &Node::setName>(false, "name=(_)")                   //
         .bindMethod<decltype(&Node::hash), &Node::hash>(false, "hash")                             //
         .bindMethod<decltype(&Node::enabled), &Node::enabled>(false, "enabled")                    //
         .bindMethod<decltype(&Node::enable), &Node::enable>(false, "enabled=(_)")                  //
         .bindMethod<decltype(&Node::parent), &Node::parent>(false, "parent")                       //
-        .bindMethod<decltype(&Node::parentPtr), &Node::parentPtr>(false, "parentPtr")              //
         .bindMethod<decltype(&Node::childCount), &Node::childCount>(false, "childCount")           //
         .bindMethod<decltype(&Node::childAt), &Node::childAt>(false, "childAt(_)")                 //
-        .bindMethod<decltype(&Node::childPtrAt), &Node::childPtrAt>(false, "childPtrAt(_)")        //
         .bindMethod<decltype(&Node::attachScript), &Node::attachScript>(false, "attachScript(_)")  //
+        .bindMethod<decltype(&Node::getComponent), &Node::getComponent>(false, "getComponent(_)")  //
         .endClass()
         .endModule();
 
@@ -185,11 +208,10 @@ void wren::bindNode()
         "    foreign enabled\n"
         "    foreign enabled=(rhs)\n"
         "    foreign parent // parent: Node\n"
-        "    foreign parentPtr // parentPtr :NodePtr\n"
         "    foreign childCount\n"
         "    foreign childAt(index) // return: Node\n"
-        "    foreign childPtrAt(index) // return: NodePtr\n"
         "    foreign attachScript(script)\n"
+        "    foreign getComponent(componentType)\n"
         "}\n";
 }
 

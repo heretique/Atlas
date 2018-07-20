@@ -5,6 +5,7 @@
 #include "Assets/Script.h"
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
+#include "Components/TransformComponent.h"
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
@@ -12,7 +13,6 @@
 #include "Managers/PluginManager.h"
 #include "Managers/SceneManager.h"
 #include "Nodes/Node.h"
-#include "Nodes/Spatial.h"
 #include "Scripting/WrenBindings.h"
 
 #include <bx/allocator.h>
@@ -107,8 +107,8 @@ void Engine::initVM()
     wren::bindAssetManager();
     wren::bindTextureTypes();
     wren::bindShaderTypes();
-    wren::bindNodeTypes();
     wren::bindNode();
+    wren::bindTransformComponent();
     wren::bindEngine();
     wren::bindSceneManager();
 
@@ -124,16 +124,17 @@ void Engine::initVM()
 
 void Engine::registerAssetTypes()
 {
-    assets().registerAssetType(AssetTypes::Geometry, GeometryAsset::factoryFunc);
-    assets().registerAssetType(AssetTypes::Code, ScriptAsset::factoryFunc);
-    assets().registerAssetType(AssetTypes::Texture, TextureAsset::factoryFunc);
-    assets().registerAssetType(AssetTypes::Shader, ShaderAsset::factoryFunc);
-    assets().registerAssetType(AssetTypes::Material, MaterialAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Geometry, AssetNames::Geometry, GeometryAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Code, AssetNames::Code, ScriptAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Texture, AssetNames::Texture, TextureAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Shader, AssetNames::Shader, ShaderAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::Material, AssetNames::Material, MaterialAsset::factoryFunc);
 }
 
 void Engine::registerNodeTypes()
 {
-    scene().registerNodeType(NodeTypes::Spatial, SpatialNode::factoryFunc);
+    scene().registerComponentType(ComponentTypes::Transform, ComponentNames::Transform,
+                                  TransformComponent::factoryFunc);
 }
 
 void Engine::release()

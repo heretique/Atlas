@@ -12,75 +12,93 @@ namespace atlas
 {
 SceneManager::SceneManager()
 {
-    _root = std::make_shared<Node>(NodeTypes::Root, "root");
+    _nodes.emplace_back(std::make_unique<Node>("root"));
+    _root = _nodes.back().get();
 }
 
 SceneManager::~SceneManager()
 {
 }
 
-void SceneManager::registerNodeType(NodeType nodeType, NodeFactoryFunc f)
+void SceneManager::registerComponentType(ComponentType componentType, std::string componentTypeName,
+                                         ComponentFactoryFunc f)
 {
-    if (_nodeRegistry.find(nodeType) != _nodeRegistry.end())
+    if (_componentRegistry.find(componentType) != _componentRegistry.end())
     {
-        Engine::log().warn("Node type '{}', already registered", NodeTypes::toName(nodeType));
+        Engine::log().warn("Component type '{}', already registered", componentName(componentTypeName));
         return;
     }
 
-    _nodeRegistry.insert(make_pair(nodeType, f));
+    _componentRegistry.insert(std::make_pair(componentType, ComponentRegistryEntry{componentTypeName, f}));
 }
 
-NodePtr SceneManager::root() const
+Node* SceneManager::root() const
 {
     return _root;
 }
 
-NodePtr SceneManager::addNode(NodeType nodeType, const std::string& name, NodePtr parent)
+Node* SceneManager::addNode(const std::string& name, Node* parent)
 {
     assert(parent);
 
-    NodePtr node = nullptr;
-    auto    it   = _nodeRegistry.find(nodeType);
-    if (it == _nodeRegistry.end())
-    {
-        Engine::log().error("Node type not registered: '{}'", NodeTypes::toName(nodeType));
-        return nullptr;
-    }
-
-    node = it->second(name);
-    assert(node);
-
-    if (node->canAttach(parent.get()))
-    {
-        node->attach(parent);
-        parent->addChild(node);
-    }
-    else
-        return nullptr;
+    _nodes.emplace_back(std::make_unique<Node>(name, parent));
+    Node* node = _nodes.back().get();
+    parent->addChild(node);
 
     return node;
 }
 
-void SceneManager::removeNode(NodePtr node)
+void SceneManager::removeNode(Node* node)
 {
 }
 
-bool SceneManager::reparentNode(NodePtr node, NodePtr parent)
+bool SceneManager::reparentNode(Node* node, Node* parent)
 {
     return false;
 }
 
+Component* SceneManager::addComponent(Node* node, ComponentType type)
+{
+    assert(node != nullptr);
+    Component* component = node->getComponent(type);
+    if (component != nullptr)
+    {
+        Engine::log().warn("Node: \"{}\" already has a component of type: \"{}\"", node->name(), componentName(type));
+        return component;
+    }
+
+    auto compoIt = _componentRegistry.find(type);
+    if (compoIt == _componentRegistry.end())
+    {
+        Engine::log().warn("Component type: \"{}\" not registered, when trying to add to node: \"{}\".",
+                           componentName(type), node->name());
+        return nullptr;
+    }
+
+    ComponentPtr compPtr = compoIt->second.factory();
+    component            = compPtr.get();
+    node->addComponent(std::move(compPtr));
+
+    return component;
+}
+
+void SceneManager::removeComponent(Node* node, ComponentType type)
+{
+    assert(node != nullptr);
+    node->removeComponent(type);
+}
+
 void SceneManager::update(float dt)
 {
-    updateNode(_root.get(), dt);
+    updateNode(_root, dt);
 }
 
 void SceneManager::updateGUI()
 {
-    updateNodeGUI(_root.get());
+    updateNodeGUI(_root);
 }
 
-void SceneManager::attachScript(NodePtr node, std::string scriptName)
+void SceneManager::attachScript(Node* node, std::string scriptName)
 {
     auto scriptIt = _scriptRegistry.find(scriptName);
     if (scriptIt == _scriptRegistry.end())
@@ -132,18 +150,30 @@ void SceneManager::updateNodeGUI(Node* node)
     }
 }
 
+const std::string SceneManager::componentName(ComponentType type) const
+{
+    auto compIt = _componentRegistry.find(type);
+    if (compIt != _componentRegistry.end())
+    {
+        return compIt->second.name;
+    }
+
+    return "";
+}
+
 void wren::bindSceneManager()
 {
     Engine::vm()
         .beginModule("main")                                                                                         //
-        .bindClass<NodePtr>("NodePtr")                                                                               //
-        .endClass()                                                                                                  //
         .bindClass<SceneManager>("SceneManager")                                                                     //
         .bindMethod<decltype(&SceneManager::root), &SceneManager::root>(false, "root")                               //
         .bindMethod<decltype(&SceneManager::addNode), &SceneManager::addNode>(false, "addNode(_,_,_)")               //
         .bindMethod<decltype(&SceneManager::removeNode), &SceneManager::removeNode>(false, "removeNode(_)")          //
         .bindMethod<decltype(&SceneManager::reparentNode), &SceneManager::reparentNode>(false, "reparentNode(_,_)")  //
-        .endClass()                                                                                                  //
+        .bindMethod<decltype(&SceneManager::addComponent), &SceneManager::addComponent>(false, "addComponent(_,_)")  //
+        .bindMethod<decltype(&SceneManager::removeComponent), &SceneManager::removeComponent>(
+            false, "removeComponent(_,_)")  //
+        .endClass()                         //
         .endModule();
 
     Engine::wrenModule() +=
@@ -152,10 +182,12 @@ void wren::bindSceneManager()
         "    foreign addNode(type, name, parent)\n"
         "    foreign removeNode(node)\n"
         "    foreign reparentNode(node, newParent)\n"
+        "    foreign addComponent(node, componentType)\n"
+        "    foreign removeComponent(node, componentType)\n"
         "\n"
         "    attachScript(node, script) {\n"
-        "        node.get.attachScript(script)\n"
-        "        script.node = node.get\n"
+        "        node.attachScript(script)\n"
+        "        script.node = node\n"
         "        script.onInit()\n"
         "    }\n"
         "}\n"
