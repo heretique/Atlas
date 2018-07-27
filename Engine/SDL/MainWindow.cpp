@@ -36,7 +36,7 @@ void MainWindow::init()
     Engine::assets().addAsset(AssetTypes::Code, "scripts/TestNodeScript.wren");
     Engine::assets().loadAssets();
 
-    if (wrenpp::Result::Success != Engine::vm().executeString(Engine::wrenModule()))
+    if (wrenpp::Result::Success != Engine::vm().executeString("main", Engine::wrenModule()))
     {
     }
 

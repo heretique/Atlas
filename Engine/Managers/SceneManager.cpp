@@ -108,7 +108,7 @@ void SceneManager::attachScript(Node* node, std::string scriptName)
         auto scriptAsset = Engine::assets().getAsset<ScriptAsset>(scriptName);
         if (scriptAsset != nullptr)
         {
-            if (wrenpp::Result::Success == Engine::vm().executeString(scriptAsset->script()))
+            if (wrenpp::Result::Success == Engine::vm().executeString("main", scriptAsset->script()))
             {
                 wrenEnsureSlots(Engine::vm().ptr(), 1);
                 wrenGetVariable(Engine::vm().ptr(), "main", scriptClass.c_str(), 0);
