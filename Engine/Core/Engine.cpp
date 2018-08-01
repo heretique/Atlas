@@ -164,8 +164,8 @@ namespace wren
         Engine::vm()
             .beginModule("main")
             .beginClass("Engine")
-            .bindFunction<decltype(Engine::assets), &Engine::assets>(true, "assets()")
-            .bindFunction<decltype(Engine::scene), &Engine::scene>(true, "scene()")
+            .bindFunction<decltype(&Engine::assets), &Engine::assets>(true, "assets()")
+            .bindFunction<decltype(&Engine::scene), &Engine::scene>(true, "scene()")
             .endClass()
             .endModule();
 

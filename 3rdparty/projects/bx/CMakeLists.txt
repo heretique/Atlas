@@ -34,6 +34,11 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_include_directories(bx PRIVATE ../../bx/include/compat/osx)
 endif()
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_include_directories(bx BEFORE PUBLIC /opt/vc/include)
+    target_compile_definitions(bx PUBLIC __VCCOREVER__)
+endif()
+
 target_compile_features(bx PUBLIC cxx_std_14)
 
 target_compile_definitions(bx PUBLIC __STDC_LIMIT_MACROS

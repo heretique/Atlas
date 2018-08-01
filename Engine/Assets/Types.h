@@ -2,6 +2,7 @@
 
 #include "Core/StringHash.h"
 #include <memory>
+#include <vector>
 
 namespace atlas
 {

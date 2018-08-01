@@ -1,6 +1,7 @@
 #include "Node.h"
 #include "Core/Engine.h"
 #include "NodeScript.h"
+#include <algorithm>
 
 namespace atlas
 {

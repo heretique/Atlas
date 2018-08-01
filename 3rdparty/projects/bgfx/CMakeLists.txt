@@ -9,10 +9,7 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/glcontext_egl.cpp
     ../../bgfx/src/glcontext_glx.cpp
     ../../bgfx/src/glcontext_wgl.cpp
-    ../../bgfx/src/hmd_openvr.cpp
-    ../../bgfx/src/hmd_ovr.cpp
     ../../bgfx/src/nvapi.cpp
-    ../../bgfx/src/hmd.cpp
     ../../bgfx/src/renderer_d3d9.cpp
     ../../bgfx/src/renderer_d3d11.cpp
     ../../bgfx/src/renderer_d3d12.cpp
@@ -26,6 +23,8 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/shader.cpp
     ../../bgfx/src/topology.cpp
     ../../bgfx/src/vertexdecl.cpp)
+
+message("System name: ${CMAKE_SYSTEM_NAME}")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_sources(bgfx PRIVATE ../../bgfx/src/glcontext_eagl.mm
@@ -42,6 +41,9 @@ target_include_directories(bgfx PUBLIC
     ../../bgfx/3rdparty
     ../../bgfx/3rdparty/khronos)
 
-
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    target_include_directories(bgfx BEFORE PUBLIC /opt/vc/include)
+    target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_OPENGLES)
+endif()
 
 target_link_libraries(bgfx bx bimg)

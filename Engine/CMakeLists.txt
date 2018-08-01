@@ -26,6 +26,14 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Assets/Texture.cpp
     Assets/Texture.h
     Assets/Types.cpp
+    Components/Component.h
+    Components/MaterialComponent.cpp
+    Components/MaterialComponent.h
+    Components/MeshComponent.cpp
+    Components/MeshComponent.h
+    Components/TransformComponent.cpp
+    Components/TransformComponent.h
+    Components/Types.h
     Core/CompileMurmur.h
     Core/Debug.h
     Core/Delegate.h
@@ -95,10 +103,6 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Nodes/NodePath.h
     Nodes/NodeScript.cpp
     Nodes/NodeScript.h
-    Nodes/Spatial.cpp
-    Nodes/Spatial.h
-    Nodes/Types.cpp
-    Nodes/Types.h
     Scripting/WrenBindings.cpp
     Scripting/WrenBindings.h
     Scripting/WrenBindingsImpl.cpp
@@ -136,6 +140,26 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     message(${QUARTZCORE_LIBRARY})
 
     target_link_libraries(atlas ${COCOA_LIBRARY} ${METAL_LIBRARY} ${QUARTZCORE_LIBRARY})
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+	set(RPI_LIB_PATHS "/opt/vc/lib")
+	find_package(Threads REQUIRED)
+	find_library(GLES2_LIBRARY GLESv2 PATHS ${RPI_LIB_PATHS})
+	find_library(EGL_LIBRARY EGL PATHS ${RPI_LIB_PATHS})
+	find_library(BCM_HOST_LIBRARY bcm_host PATHS ${RPI_LIB_PATHS})
+	find_library(DL_LIBRARY dl)
+	find_library(RT_LIBRARY rt)
+	find_library(SDL2_LIBRARY SDL2)
+	
+	message(${GLES2_LIBRARY})
+	message(${EGL_LIBRARY})
+	message(${BCM_HOST_LIBRARY})
+	message(${DL_LIBRARY})
+	message(${RT_LIBRARY})
+	message(${SDL2_LIBRARY})
+	
+	target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${BCM_HOST_LIBRARY} ${EGL_LIBRARY} ${GLES2_LIBRARY} ${SDL2_LIBRARY})
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_14)
