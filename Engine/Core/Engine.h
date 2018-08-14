@@ -18,11 +18,6 @@ namespace bx
 struct AllocatorI;
 }
 
-namespace bgfx
-{
-struct Stats;
-}
-
 namespace atlas
 {
 // Forward declarations
@@ -64,8 +59,6 @@ public:
     static std::string& wrenModule();
 
     static bx::AllocatorI* bxAllocator();
-
-    static const bgfx::Stats* bgfxStats();
 
 private:
     static bool init();

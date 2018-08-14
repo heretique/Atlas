@@ -1,4 +1,5 @@
 #include "MeshComponent.h"
+#include "Core/SerializationArchives.h"
 
 namespace atlas
 {
@@ -8,3 +9,4 @@ MeshComponent::MeshComponent(ComponentType type)
 }
 
 }  // namespace atlas
+CEREAL_REGISTER_TYPE(atlas::MeshComponent)

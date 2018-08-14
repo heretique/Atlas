@@ -8,6 +8,7 @@
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
+#include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
 #include "Managers/JobManager.h"
@@ -42,11 +43,6 @@ bx::AllocatorI* Engine::bxAllocator()
 {
     static bx::DefaultAllocator allocator;
     return &allocator;
-}
-
-const bgfx::Stats* Engine::bgfxStats()
-{
-    return bgfx::getStats();
 }
 
 bool Engine::init()

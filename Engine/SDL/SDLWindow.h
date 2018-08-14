@@ -44,15 +44,15 @@ protected:
     void imguiMoveWindow();
 
     // bgfx related
-    bool bgfxInit(uint32_t w, uint32_t h);
+    bool bgfxInit();
 
 private:
     void* nativeHandle();
-    void  doUpdate(float dt);
-    void  handleEvent(SDL_Event& e);
-    void  handleWindowEvent(SDL_WindowEvent& e);
-    void  handleInputEvent(SDL_Event& e);
-    void  releaseFramebuffer();
+    void doUpdate(float dt);
+    void handleEvent(SDL_Event& e);
+    void handleWindowEvent(SDL_WindowEvent& e);
+    void handleInputEvent(SDL_Event& e);
+    void releaseFramebuffer();
 
 private:
     static bool          _initialized;

@@ -186,9 +186,8 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(
-        title, x, y, w, h,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
+    _window = SDL_CreateWindow(title, x, y, w, h,
+                               SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -201,7 +200,7 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     {
         _glContext = SDL_GL_CreateContext(_window);
 
-        if (!bgfxInit(w, h))
+        if (!bgfxInit(/*_glContext*/))
             fmt::print("Failed to initialize bgfx\n");
         _initialized = true;
         _isDefault   = true;
@@ -251,7 +250,9 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init() {}
+void SDLWindow::init()
+{
+}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -348,7 +349,9 @@ void SDLWindow::update(float /*dt*/)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI() {}
+void SDLWindow::onGUI()
+{
+}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -491,7 +494,7 @@ void SDLWindow::imguiRender()
     s_imguiBgfx.render(_viewId, drawData);
 }
 
-bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
+bool SDLWindow::bgfxInit()
 {
     bgfx::PlatformData pd;
     SDL_SysWMinfo      wmi;
@@ -518,15 +521,7 @@ bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
 
     setPlatformData(pd);
 
-    bgfx::Init initParams;
-    initParams.resolution.width  = w;
-    initParams.resolution.height = h;
-    initParams.resolution.reset  = 0x0;
-
-    initParams.limits.transientVbSize = 1 << 20;
-    initParams.limits.transientIbSize = 1 << 20;
-
-    if (!bgfx::init(initParams))
+    if (!bgfx::init())
         return false;
 
     bgfx::reset(_width, _height, _reset);

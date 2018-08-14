@@ -151,7 +151,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	find_library(DL_LIBRARY dl)
 	find_library(RT_LIBRARY rt)
 	find_library(SDL2_LIBRARY SDL2)
-        find_path(SDL2_INCLUDE SDL2)
 	
 	message(${GLES2_LIBRARY})
 	message(${EGL_LIBRARY})
@@ -159,19 +158,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	message(${DL_LIBRARY})
 	message(${RT_LIBRARY})
 	message(${SDL2_LIBRARY})
-        message(${SDL2_INCLUDE})
 	
-        target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
 	target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${BCM_HOST_LIBRARY} ${EGL_LIBRARY} ${GLES2_LIBRARY} ${SDL2_LIBRARY})
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_14)
 target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
 
-add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory
-    $<TARGET_FILE_DIR:atlas>/assets
-    )
+
 add_custom_command(TARGET atlas POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.obj
@@ -184,28 +178,17 @@ add_custom_command(TARGET atlas POST_BUILD
     )
 
 add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory
-    $<TARGET_FILE_DIR:atlas>/scripts
-    )
-add_custom_command(TARGET atlas POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/TestNodeScript.wren
     $<TARGET_FILE_DIR:atlas>/scripts
     )
 
-set(DEPLOYMENT_DIR "$<TARGET_FILE_DIR:atlas>")
-file(WRITE "${CMAKE_SOURCE_DIR}/QtCreatorDeployment.txt" "${DEPLOYMENT_DIR}\n")
 
-macro(add_deployment_file SRC DEST)
-    file(RELATIVE_PATH path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-    file(APPEND "${CMAKE_SOURCE_DIR}/QtCreatorDeployment.txt" "${path}/${SRC}:${DEST}\n")
-endmacro()
-
-macro(add_deployment_directory SRC DEST)
-    file(GLOB_RECURSE files RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "${SRC}/*")
-    foreach(filename ${files})
-        get_filename_component(path ${filename} PATH)
-        add_deployment_file("${filename}" "${DEST}/${path}")
-    endforeach(filename)
-endmacro()
-add_deployment_directory(${CMAKE_CURRENT_SOURCE_DIR}/../Assets assets)
+#install(TARGETS atlas RUNTIME DESTINATION ~/atlas)
+#install(FILES ../Assets/Models/caruta.obj
+#    ../Assets/Models/caruta.mtl
+#    ../Assets/Shaders/cube/fs_cubes.bin
+#    ../Assets/Shaders/cube/vs_cubes.bin
+#    ../Assets/Textures/caruta.png
+#    ../Assets/Materials/unlit_textured.material
+#    DESTINATION ~/atlas/assets)

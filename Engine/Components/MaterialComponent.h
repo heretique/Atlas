@@ -2,6 +2,7 @@
 
 #include "Assets/Types.h"
 #include "Component.h"
+#include <cereal/cereal.hpp>
 
 namespace atlas
 {
