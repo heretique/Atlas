@@ -11,12 +11,15 @@ namespace atlas
 class MeshComponent : public Component
 {
 public:
-    MeshComponent();
-    MeshComponent(AssetPtr mesh, StringHash hash);
+    static ComponentPtr factoryFunc()
+    {
+        return std::make_unique<MeshComponent>(StringHash(ComponentNames::Mesh));
+    }
+
+    MeshComponent(ComponentType type);
 
 private:
-    StringHash _meshHash;
-    AssetPtr   _mesh;
+    AssetPtr _mesh;
 };
 
 }  // namespace Atlas

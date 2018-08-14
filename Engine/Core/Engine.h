@@ -72,7 +72,7 @@ private:
     static void initVertDecl();
     static void initVM();
     static void registerAssetTypes();
-    static void registerNodeTypes();
+    static void registerComponentTypes();
     static void release();
 
 private:

@@ -2,4 +2,9 @@
 
 namespace atlas
 {
+MaterialComponent::MaterialComponent(ComponentType type)
+    : Component(type)
+{
+}
+
 }  // namespace atlas

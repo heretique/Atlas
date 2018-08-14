@@ -5,6 +5,8 @@
 #include "Assets/Script.h"
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
+#include "Components/MaterialComponent.h"
+#include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
@@ -13,8 +15,8 @@
 #include "Managers/SceneManager.h"
 #include "Nodes/Node.h"
 #include "Scripting/WrenBindings.h"
-#include <bgfx/bgfx.h>
 
+#include <bgfx/bgfx.h>
 #include <bx/allocator.h>
 #include <spdlog/spdlog.h>
 #include <wrenpp/Wren++.h>
@@ -64,7 +66,7 @@ bool Engine::init()
 
     initVertDecl();
     registerAssetTypes();
-    registerNodeTypes();
+    registerComponentTypes();
     jobs().init();
     initVM();
 
@@ -136,10 +138,12 @@ void Engine::registerAssetTypes()
     assets().registerAssetType(AssetTypes::Material, AssetNames::Material, MaterialAsset::factoryFunc);
 }
 
-void Engine::registerNodeTypes()
+void Engine::registerComponentTypes()
 {
     scene().registerComponentType(ComponentTypes::Transform, ComponentNames::Transform,
                                   TransformComponent::factoryFunc);
+    scene().registerComponentType(ComponentTypes::Mesh, ComponentNames::Mesh, MeshComponent::factoryFunc);
+    scene().registerComponentType(ComponentTypes::Material, ComponentNames::Material, MaterialComponent::factoryFunc);
 }
 
 void Engine::release()

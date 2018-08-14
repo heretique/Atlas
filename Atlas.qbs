@@ -19,7 +19,7 @@ Project {
     ]
 
     Properties {
-        condition: qbs.targetOS.contains("windows")
+        condition: qbs.targetOS.contains("windows") || qbs.targetOS.contains("darwin")
         references: outer.uniqueConcat(["3rdparty/projects/bgfx_shaderc/bgfx_shaderc.qbs"])
     }
 }

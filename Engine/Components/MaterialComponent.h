@@ -8,6 +8,13 @@ namespace atlas
 class MaterialComponent : public Component
 {
 public:
+    static ComponentPtr factoryFunc()
+    {
+        return std::make_unique<MaterialComponent>(StringHash(ComponentNames::Material));
+    }
+
+    MaterialComponent(ComponentType type);
+
 private:
     StringHash _materialHash;
     AssetPtr   _material;
