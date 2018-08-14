@@ -31,6 +31,3 @@ url=https://github.com/heretique/wrenpp.git
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "3rdparty/outcome"]
-	path = 3rdparty/outcome
-	url = https://github.com/ned14/outcome.git
