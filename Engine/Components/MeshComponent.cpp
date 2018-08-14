@@ -1,5 +1,4 @@
 #include "MeshComponent.h"
-#include "Core/SerializationArchives.h"
 
 namespace atlas
 {
@@ -18,4 +17,3 @@ MeshComponent::MeshComponent(AssetPtr mesh, StringHash hash)
 }
 
 }  // namespace atlas
-CEREAL_REGISTER_TYPE(atlas::MeshComponent)

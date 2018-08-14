@@ -42,7 +42,7 @@ target_include_directories(bgfx PUBLIC
     ../../bgfx/3rdparty/khronos)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_include_directories(bgfx BEFORE PUBLIC /opt/vc/include)
+    target_include_directories(bgfx BEFORE PUBLIC ${CMAKE_FIND_ROOT_PATH}/opt/vc/include)
     target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_OPENGLES)
 endif()
 

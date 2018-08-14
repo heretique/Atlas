@@ -6,7 +6,6 @@
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
 #include "Components/TransformComponent.h"
-#include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
 #include "Managers/JobManager.h"
@@ -14,6 +13,7 @@
 #include "Managers/SceneManager.h"
 #include "Nodes/Node.h"
 #include "Scripting/WrenBindings.h"
+#include <bgfx/bgfx.h>
 
 #include <bx/allocator.h>
 #include <spdlog/spdlog.h>
@@ -40,6 +40,11 @@ bx::AllocatorI* Engine::bxAllocator()
 {
     static bx::DefaultAllocator allocator;
     return &allocator;
+}
+
+const bgfx::Stats* Engine::bgfxStats()
+{
+    return bgfx::getStats();
 }
 
 bool Engine::init()

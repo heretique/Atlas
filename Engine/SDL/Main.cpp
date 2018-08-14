@@ -22,8 +22,11 @@ int main(int argc, char** argv)
         return -1;
     }
 
+    SDL_DisplayMode dm;
+    SDL_GetCurrentDisplayMode(0, &dm);
+
     MainWindow* win =
-        new MainWindow(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720);
+        new MainWindow(fmt::format("BGFX {}", 1).c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dm.w, dm.h);
     win->init();
     app.addWindow(win);
 

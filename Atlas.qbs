@@ -9,8 +9,7 @@ Project {
         "3rdparty/projects/bx/bx.qbs",
         "3rdparty/projects/bimg/bimg.qbs",
         "3rdparty/projects/bgfx/bgfx.qbs",
-        "3rdparty/projects/bgfx_shaderc/bgfx_shaderc.qbs",
-        "3rdparty/projects/easy_profiler/easy_profiler.qbs",
+//        "3rdparty/projects/easy_profiler/easy_profiler.qbs",
         "3rdparty/projects/fmt/fmt.qbs",
         "3rdparty/projects/imgui/imgui.qbs",
         "3rdparty/projects/wren/wren.qbs",
@@ -18,5 +17,10 @@ Project {
         "Engine/Engine.qbs",
         "Tests/Tests.qbs",
     ]
+
+    Properties {
+        condition: qbs.targetOS.contains("windows")
+        references: outer.uniqueConcat(["3rdparty/projects/bgfx_shaderc/bgfx_shaderc.qbs"])
+    }
 }
 
