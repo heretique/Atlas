@@ -34,6 +34,3 @@ url=https://github.com/heretique/wrenpp.git
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "3rdparty/MetaStuff"]
-	path = 3rdparty/MetaStuff
-	url = https://github.com/eliasdaler/MetaStuff.git
