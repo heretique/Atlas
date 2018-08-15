@@ -16,9 +16,11 @@ public:
 
     MaterialComponent(ComponentType type);
 
+    void setMaterial(AssetPtr material);
+    void clearMaterial();
+
 private:
-    StringHash _materialHash;
-    AssetPtr   _material;
+    AssetPtr _material;
 };
 
 }  // namespace Atlas

@@ -8,5 +8,15 @@ MaterialComponent::MaterialComponent(ComponentType type)
 {
 }
 
+void MaterialComponent::setMaterial(AssetPtr material)
+{
+    _material = material;
+}
+
+void MaterialComponent::clearMaterial()
+{
+    _material = nullptr;
+}
+
 }  // namespace atlas
 CEREAL_REGISTER_TYPE(atlas::MaterialComponent)

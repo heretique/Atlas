@@ -27,8 +27,6 @@ Module {
         path + "/../../../3rdparty/wrenpp"
     ]
 
-    cpp.architecture: arch
-
 //    cpp.debugInformation: true
 
     Properties {

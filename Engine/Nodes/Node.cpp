@@ -14,9 +14,7 @@ Node::Node(std::string name, Node* parent)
 {
 }
 
-Node::~Node()
-{
-}
+Node::~Node() {}
 
 std::string Node::name() const
 {
@@ -71,14 +69,13 @@ Node* Node::childAt(size_t index) const
 void Node::attach(Node* parent)
 {
     _parent = parent;
-    onAttach();
+
     if (_nodeScript && _nodeScript->_onAttach)
         _nodeScript->_onAttach(this);
 }
 
 void Node::detach()
 {
-    onDetach();
     if (_nodeScript && _nodeScript->_onDetach)
         _nodeScript->_onDetach();
 }
@@ -86,59 +83,26 @@ void Node::detach()
 void Node::init()
 {
     // TODOCM: add initialization code
-    onInit();
     if (_nodeScript && _nodeScript->_onInit)
         _nodeScript->_onInit();
 }
 
 void Node::update(float dt)
 {
-    onUpdate(dt);
     if (_nodeScript && _nodeScript->_onUpdate)
         _nodeScript->_onUpdate(dt);
 }
 
 void Node::updateGUI()
 {
-    onGUI();
     if (_nodeScript && _nodeScript->_onGUI)
         _nodeScript->_onGUI();
 }
 
 void Node::destroy()
 {
-    onDestroy();
     if (_nodeScript && _nodeScript->_onDestroy)
         _nodeScript->_onDestroy();
-}
-
-bool Node::canAttach(Node* /*node*/)
-{
-    return true;
-}
-
-void Node::onAttach()
-{
-}
-
-void Node::onDetach()
-{
-}
-
-void Node::onInit()
-{
-}
-
-void Node::onUpdate(float /*dt*/)
-{
-}
-
-void Node::onGUI()
-{
-}
-
-void Node::onDestroy()
-{
 }
 
 void Node::onSetScriptNode(wrenpp::Method& method)

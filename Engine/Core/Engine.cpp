@@ -5,6 +5,7 @@
 #include "Assets/Script.h"
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
+#include "Components/Camera.h"
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
@@ -43,6 +44,11 @@ bx::AllocatorI* Engine::bxAllocator()
 {
     static bx::DefaultAllocator allocator;
     return &allocator;
+}
+
+const bgfx::Stats* Engine::bgfxStats()
+{
+    return bgfx::getStats();
 }
 
 bool Engine::init()
@@ -138,6 +144,7 @@ void Engine::registerComponentTypes()
 {
     scene().registerComponentType(ComponentTypes::Transform, ComponentNames::Transform,
                                   TransformComponent::factoryFunc);
+    scene().registerComponentType(ComponentTypes::Camera, ComponentNames::Camera, Camera::factoryFunc);
     scene().registerComponentType(ComponentTypes::Mesh, ComponentNames::Mesh, MeshComponent::factoryFunc);
     scene().registerComponentType(ComponentTypes::Material, ComponentNames::Material, MaterialComponent::factoryFunc);
 }

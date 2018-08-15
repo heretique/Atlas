@@ -1,5 +1,4 @@
-#ifndef VECTOR2_H_
-#define VECTOR2_H_
+#pragma once
 
 namespace math
 {
@@ -448,5 +447,3 @@ inline const Vector2 operator*(float x, const Vector2& v);
 }
 
 #include "Vector2.inl"
-
-#endif

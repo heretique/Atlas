@@ -41,7 +41,7 @@ bool TextureAsset::loadImpl(std::istream& data)
         return false;
     }
 
-    const bgfx::Memory* mem = bgfx::makeRef(imageContainer->m_data, imageContainer->m_size);
+    const bgfx::Memory* mem = bgfx::copy(imageContainer->m_data, imageContainer->m_size);
 
     if (imageContainer->m_cubeMap)
     {

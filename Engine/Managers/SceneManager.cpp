@@ -1,6 +1,10 @@
 #include "SceneManager.h"
 
 #include "Assets/Script.h"
+#include "Components/Camera.h"
+#include "Components/MaterialComponent.h"
+#include "Components/MeshComponent.h"
+#include "Components/TransformComponent.h"
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
 #include "Nodes/Node.h"
@@ -16,9 +20,7 @@ SceneManager::SceneManager()
     _root = _nodes.back().get();
 }
 
-SceneManager::~SceneManager()
-{
-}
+SceneManager::~SceneManager() {}
 
 void SceneManager::registerComponentType(ComponentType componentType, std::string componentTypeName,
                                          ComponentFactoryFunc f)
@@ -48,9 +50,7 @@ Node* SceneManager::addNode(const std::string& name, Node* parent)
     return node;
 }
 
-void SceneManager::removeNode(Node* node)
-{
-}
+void SceneManager::removeNode(Node* node) {}
 
 bool SceneManager::reparentNode(Node* node, Node* parent)
 {
@@ -77,6 +77,7 @@ Component* SceneManager::addComponent(Node* node, ComponentType type)
 
     ComponentPtr compPtr = compoIt->second.factory();
     component            = compPtr.get();
+    compPtr->setNode(node);
     node->addComponent(std::move(compPtr));
 
     return component;
@@ -125,6 +126,41 @@ void SceneManager::attachScript(Node* node, std::string scriptName)
     }
     WrenHandle* handle = wrenGetSlotHandle(Engine::vm().ptr(), 0);
     node->attachScript(handle);
+}
+
+Node* SceneManager::addSpatialNode(const std::string& name, Node* parent, const math::Vector3& position, AssetPtr mesh,
+                                   AssetPtr material)
+{
+    Node*      node      = Engine::scene().addNode(name, parent);
+    Component* transform = Engine::scene().addComponent(node, ComponentTypes::Transform);
+    static_cast<TransformComponent*>(transform)->local().translate(position);
+    if (mesh)
+    {
+        Component* meshComp = Engine::scene().addComponent(node, ComponentTypes::Mesh);
+        static_cast<MeshComponent*>(meshComp)->setMesh(mesh);
+        if (material)
+        {
+            Component* materialComp = Engine::scene().addComponent(node, ComponentTypes::Material);
+            static_cast<MaterialComponent*>(materialComp)->setMaterial(material);
+        }
+    }
+    return node;
+}
+
+Node* SceneManager::addCameraNode(const std::string& name, Node* parent, float fieldOfView, float aspectRatio,
+                                  float nearPlane, float farPlane, const math::Vector3& position,
+                                  const math::Vector3& targetPosition, const math::Vector3& up)
+{
+    Node*               node = Engine::scene().addNode(name, parent);
+    TransformComponent* transform =
+        static_cast<TransformComponent*>(Engine::scene().addComponent(node, ComponentTypes::Transform));
+    Camera* camera = static_cast<Camera*>(Engine::scene().addComponent(node, ComponentTypes::Camera));
+
+    transform->local().translate(position);
+    math::Matrix::createLookAt(position, targetPosition, up, &(transform->local()));
+    camera->setPerspective(fieldOfView, aspectRatio, nearPlane, farPlane);
+
+    return node;
 }
 
 void SceneManager::updateNode(Node* node, float dt)

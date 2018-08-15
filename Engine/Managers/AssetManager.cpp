@@ -15,13 +15,9 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager()
-{
-}
+AssetManager::AssetManager() {}
 
-AssetManager::~AssetManager()
-{
-}
+AssetManager::~AssetManager() {}
 
 void AssetManager::registerAssetType(AssetType assetType, std::string assetTypeName, AssetFactoryFunc f)
 {
@@ -69,7 +65,7 @@ AssetPtr AssetManager::addAsset(AssetType type, const std::string& filename, u32
         return nullptr;
 
     Engine::log().info("Adding asset: '{}' of type: '{}'", filename.c_str(), assetName(type));
-    _assets.emplace_back(asset);
+    _assets.push_back(asset);
     _hashedAssets.insert(std::make_pair(filename, asset));
 
     return asset;
@@ -131,10 +127,13 @@ bool AssetManager::loadAsset(AssetPtr asset)
 
 void AssetManager::loadAssets()
 {
-    _loadingCount = _assets.size();
-    _loadedCount  = 0;
-    for (AssetPtr asset : _assets)
+    _loadedCount = 0;
+    // using classic for as range based for loops might have issues when
+    // elements are added during loop
+    for (size_t i = 0; i < _assets.size(); ++i)
     {
+        _loadingCount  = _assets.size();
+        AssetPtr asset = _assets[i];
         loadAsset(asset);
         ++_loadedCount;
         LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);

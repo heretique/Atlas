@@ -18,6 +18,9 @@ public:
 
     MeshComponent(ComponentType type);
 
+    void setMesh(AssetPtr mesh);
+    void clearMesh();
+
 private:
     AssetPtr _mesh;
 };

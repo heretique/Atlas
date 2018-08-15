@@ -8,5 +8,15 @@ MeshComponent::MeshComponent(ComponentType type)
 {
 }
 
+void MeshComponent::setMesh(AssetPtr mesh)
+{
+    _mesh = mesh;
+}
+
+void MeshComponent::clearMesh()
+{
+    _mesh = nullptr;
+}
+
 }  // namespace atlas
 CEREAL_REGISTER_TYPE(atlas::MeshComponent)

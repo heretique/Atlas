@@ -30,7 +30,7 @@ public:
     virtual ~Node();
 
     std::string name() const;
-    void setName(std::string name);
+    void        setName(std::string name);
 
     StringHash hash() const;
 
@@ -42,7 +42,7 @@ public:
 
     Node*  parent() const;
     size_t childCount() const;
-    Node* childAt(size_t index) const;
+    Node*  childAt(size_t index) const;
 
     void attach(Node* parent);
     void detach();
@@ -56,21 +56,12 @@ public:
 
     Component* getComponent(ComponentType type);
 
-protected:
-    virtual bool canAttach(Node* node);
-    virtual void onAttach();
-    virtual void onDetach();
-    virtual void onInit();
-    virtual void onUpdate(float dt);
-    virtual void onGUI();
-    virtual void onDestroy();
-
 private:
-    void addChild(Node* child);
-    void removeChild(Node* child);
+    void     addChild(Node* child);
+    void     removeChild(Node* child);
     NodeVec& children();
-    void addComponent(ComponentPtr component);
-    void removeComponent(ComponentType type);
+    void     addComponent(ComponentPtr component);
+    void     removeComponent(ComponentType type);
 
 private:
     std::string                 _name;
