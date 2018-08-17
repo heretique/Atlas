@@ -8,8 +8,6 @@
 
 namespace atlas
 {
-static const uint32_t kInvalidPackedIndex = 0xFFFFFFFF;
-
 template <typename T, bool IsPOD = true>
 struct FreelistConstructor
 {
@@ -96,10 +94,8 @@ struct FreeList
         if (!isValid(handle))
             return;
 
-        // reconstruct object, so it's clean the next time we use it
-        // TODO: uncomment bellow and fix in text engine??
-        //        FreelistConstructor<T, IsPOD>::destruct( &m_storage[handle.index()] );
-        //        FreelistConstructor<T, IsPOD>::construct( &m_storage[handle.index()] );
+        FreelistConstructor<T, IsPOD>::destruct(&_storage[handle.index()]);
+        FreelistConstructor<T, IsPOD>::construct(&_storage[handle.index()]);
 
         _freeList[handle.index()].setGeneration(_freeList[handle.index()].generation() + 1);
 
@@ -189,12 +185,8 @@ struct PackedFreeList
 
     bool isValid(const H& handle) const
     {
-        if (handle.index() >= StorageSize)
-            return false;
-        if (handle.generation() == 0)
-            return false;
-        // check generation
-        return (_freeList[handle.index()].generation() == handle.generation());
+        return ((handle.index() < StorageSize) && (handle.generation() != 0) &&
+                (_freeList[handle.index()].generation() == handle.generation()));
     }
 
     H alloc()
@@ -249,13 +241,7 @@ struct PackedFreeList
 
     T* get(const H& handle)
     {
-        // double indirection because of the free list but
-        // we gained cache friendly packed object array
-
-        if (isValid(handle))
-            return &(_storage.array[_freeList[handle.index()].index()]);
-
-        return NULL;
+        return const_cast<T*>(static_cast<const PackedFreeList*>(this)->get(handle));
     }
 
     const T* get(const H& handle) const

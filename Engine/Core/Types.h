@@ -3,6 +3,7 @@
 //#include <cinttypes>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 
 // Types
 using uint = unsigned int;
@@ -17,3 +18,5 @@ using u32 = uint32_t;
 using u64 = uint64_t;
 
 using uptr = uintptr_t;
+
+static const size_t kInvalidPackedIndex = std::numeric_limits<size_t>::max();
