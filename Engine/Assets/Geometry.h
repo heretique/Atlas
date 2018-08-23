@@ -19,6 +19,9 @@ public:
     GeometryAsset(const std::string& filename, u32 flags);
     ~GeometryAsset() override;
 
+    bgfx::VertexBufferHandle vbo() const;
+    bgfx::IndexBufferHandle  ibo() const;
+
     // Asset interface
 protected:
     virtual bool loadImpl(std::istream& data) override;

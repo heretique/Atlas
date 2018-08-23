@@ -32,9 +32,9 @@ void MaterialAsset::setMaterialInfo(const MaterialInfo& info)
     _materialInfo = info;
 }
 
-void MaterialAsset::write()
+void MaterialAsset::write(const std::string& filename)
 {
-    std::ofstream             ofs("test.material", std::ios::out | std::ios::binary);
+    std::ofstream             ofs(filename, std::ios::out | std::ios::binary);
     cereal::JSONOutputArchive archive(ofs);
     archive(_materialInfo);
 }

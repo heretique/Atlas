@@ -12,8 +12,8 @@ Project {
 //        "3rdparty/projects/easy_profiler/easy_profiler.qbs",
         "3rdparty/projects/fmt/fmt.qbs",
         "3rdparty/projects/imgui/imgui.qbs",
-        "3rdparty/projects/wren/wren.qbs",
-        "3rdparty/projects/wrenpp/wrenpp.qbs",
+//        "3rdparty/projects/wren/wren.qbs",
+//        "3rdparty/projects/wrenpp/wrenpp.qbs",
         "Engine/Engine.qbs",
         "Tests/Tests.qbs",
     ]

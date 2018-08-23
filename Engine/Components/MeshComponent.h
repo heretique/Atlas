@@ -1,25 +1,22 @@
 #pragma once
 
+#include "Assets/Geometry.h"
 #include "Assets/Types.h"
-#include "Component.h"
-#include "Core/Types.h"
-
-#include <bgfx/bgfx.h>
 
 namespace atlas
 {
-class MeshComponent : public Component
+class MeshComponent
 {
 public:
-    static ComponentPtr factoryFunc()
+    std::shared_ptr<GeometryAsset> geometry()
     {
-        return std::make_unique<MeshComponent>(StringHash(ComponentNames::Mesh));
+        return std::static_pointer_cast<GeometryAsset>(_mesh);
     }
 
-    MeshComponent(ComponentType type);
-
-    void setMesh(AssetPtr mesh);
-    void clearMesh();
+    void setGeomtry(AssetPtr geometryAsset)
+    {
+        _mesh = geometryAsset;
+    }
 
 private:
     AssetPtr _mesh;

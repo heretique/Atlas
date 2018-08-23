@@ -1,4 +1,6 @@
 #include "Script.h"
+
+#include <istream>
 #include <string>
 
 namespace atlas
@@ -8,7 +10,9 @@ ScriptAsset::ScriptAsset(const std::string& name, u32 flags)
 {
 }
 
-ScriptAsset::~ScriptAsset() {}
+ScriptAsset::~ScriptAsset()
+{
+}
 
 bool ScriptAsset::loadImpl(std::istream& data)
 {

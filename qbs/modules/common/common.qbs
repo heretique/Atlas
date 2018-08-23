@@ -23,8 +23,8 @@ Module {
         path + "/../../../3rdparty/bgfx/3rdparty",
         path + "/../../../3rdparty/bgfx/3rdparty/dxsdk/include",
         path + "/../../../3rdparty/concurrentqueue",
-        path + "/../../../3rdparty/wren/src/include",
-        path + "/../../../3rdparty/wrenpp"
+//        path + "/../../../3rdparty/wren/src/include",
+//        path + "/../../../3rdparty/wrenpp"
     ]
 
 //    cpp.debugInformation: true

@@ -45,9 +45,4 @@ namespace AssetTypes
     static const AssetType Template{AssetNames::Template};
 }  // AssetTypes namespace
 
-namespace wren
-{
-    void bindAssetTypes();
-}
-
 }  // atlas namespace

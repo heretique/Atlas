@@ -70,7 +70,7 @@ public:
     ~MaterialAsset() override;
 
     void setMaterialInfo(const MaterialInfo& info);
-    void write();
+    void write(const std::string& filename);
 
     /// "Binds" the material, setting all uniform values and texture samplers to bgfx pipeline
     /// readying for submision to render thread

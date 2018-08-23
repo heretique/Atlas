@@ -29,6 +29,16 @@ GeometryAsset::~GeometryAsset()
     bgfx::destroy(_ibh);
 }
 
+bgfx::VertexBufferHandle GeometryAsset::vbo() const
+{
+    return _vbh;
+}
+
+bgfx::IndexBufferHandle GeometryAsset::ibo() const
+{
+    return _ibh;
+}
+
 namespace
 {
     using namespace tinyobj;
@@ -92,7 +102,7 @@ bool GeometryAsset::loadImpl(std::istream& is)
         Engine::log().warn("\n\t- affected resource: {}", _filename);
     }
 
-    const shape_t&                                        shape = shapes.front();
+    const shape_t& shape = shapes.front();
     std::unordered_set<index_t, HasherIndex, EqualsIndex> uniqueVerticesCombination;
     _indices.reserve(shape.mesh.indices.size());
 
@@ -122,18 +132,18 @@ bool GeometryAsset::loadImpl(std::istream& is)
     for (const index_t& index : uniqueVerticesCombination)
     {
         SimpleMeshVertex vertex;
-        vertex.x       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
-        vertex.y       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
-        vertex.z       = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
-        vertex.normal  = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
-                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
-                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
-                                0.f);
-        vertex.tangent = packF4u(0.f, 0.f, 0.f, 0.f);
-        vertex.color   = packF4u(0.f, 0.f, 0.f, 0.f);
+        vertex.x = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
+        vertex.y = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
+        vertex.z = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
+        //        vertex.normal = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
+        //                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
+        //                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
+        //                                0.f);
+        //        vertex.tangent = packF4u(0.f, 0.f, 0.f, 0.f);
+        vertex.color = packUF4u(0.278, 0.843, 0.384, 1.f);
 
-        vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
-        vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
+        //        vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
+        //        vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
         _vertices.emplace_back(vertex);
         // update bbox
         _aabb.extend(math::Vector3(vertex.x, vertex.y, vertex.z));

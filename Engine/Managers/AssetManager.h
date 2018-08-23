@@ -66,10 +66,4 @@ typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::valu
 {
     return std::static_pointer_cast<T>(getAsset(hash));
 }
-
-namespace wren
-{
-    void bindAssetManager();
-}
-
 }  // atlas

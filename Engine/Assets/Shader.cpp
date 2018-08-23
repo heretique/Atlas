@@ -2,9 +2,8 @@
 
 #include "Core/Engine.h"
 #include "spdlog/spdlog.h"
-
+#include <istream>
 #include <SDL2/SDL_filesystem.h>
-#include <wrenpp/Wren++.h>
 
 namespace atlas
 {
@@ -65,50 +64,6 @@ bool ShaderAsset::isGPUResource()
 bool ShaderAsset::uploadGPUImpl()
 {
     return true;
-}
-
-namespace wren
-{
-    void shaderTypeNone(WrenVM* vm)
-    {
-        wrenSetSlotDouble(vm, 0, (double)ShaderTypes::None);
-    }
-
-    void shaderTypeVertex(WrenVM* vm)
-    {
-        wrenSetSlotDouble(vm, 0, (double)ShaderTypes::Vertex);
-    }
-
-    void shaderTypeFragment(WrenVM* vm)
-    {
-        wrenSetSlotDouble(vm, 0, (double)ShaderTypes::Fragment);
-    }
-
-    void shaderTypeCompute(WrenVM* vm)
-    {
-        wrenSetSlotDouble(vm, 0, (double)ShaderTypes::Compute);
-    }
-
-    void bindShaderTypes()
-    {
-        Engine::vm()
-            .beginModule("main")                                  //
-            .beginClass("ShaderTypes")                            //
-            .bindCFunction(true, "None", &shaderTypeNone)         //
-            .bindCFunction(true, "Vertex", &shaderTypeVertex)     //
-            .bindCFunction(true, "Fragment", shaderTypeFragment)  //
-            .bindCFunction(true, "Compute", &shaderTypeCompute)   //
-            .endClass()                                           //
-            .endModule();
-
-        Engine::wrenModule() +=
-            "foreign class ShaderTypes {\n"
-            "    foreign static None\n"
-            "    foreign static Vertex\n"
-            "    foreign static Fragment\n"
-            "    foreign static Compute\n"
-            "}\n";
-    }
 }
 
 }  // atlas namespace

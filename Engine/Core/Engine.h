@@ -7,12 +7,6 @@ namespace spdlog
 {
 class logger;
 }
-
-namespace wrenpp
-{
-class VM;
-}
-
 namespace bx
 {
 struct AllocatorI;
@@ -23,6 +17,13 @@ namespace bgfx
 struct Stats;
 }
 
+namespace entt
+{
+template <typename>
+class Registry;
+using DefaultRegistry = Registry<std::uint32_t>;
+}
+
 namespace atlas
 {
 // Forward declarations
@@ -31,7 +32,6 @@ class AssetManager;
 class AudioManager;
 class PhysicsManager;
 class JobManager;
-class SceneManager;
 class MainWindow;
 
 class Engine
@@ -45,9 +45,9 @@ public:
     {
         return *_assetManager;
     }
-    static SceneManager& scene()
+    static entt::DefaultRegistry& ecs()
     {
-        return *_sceneManager;
+        return *_ecsManager;
     }
     static JobManager& jobs()
     {
@@ -57,11 +57,6 @@ public:
     {
         return *_logger;
     }
-    static wrenpp::VM& vm()
-    {
-        return *_vm;
-    }
-    static std::string& wrenModule();
 
     static bx::AllocatorI* bxAllocator();
 
@@ -70,27 +65,18 @@ public:
 private:
     static bool init();
     static void initVertDecl();
-    static void initVM();
-    static void registerAssetTypes();
-    static void registerComponentTypes();
+    static void registerDefaultAssetTypes();
     static void release();
 
 private:
-    static spdlog::logger* _logger;
-    static PluginManager*  _pluginManager;
-    static AssetManager*   _assetManager;
-    static SceneManager*   _sceneManager;
-    static JobManager*     _jobManager;
-    static wrenpp::VM*     _vm;
+    static spdlog::logger*        _logger;
+    static PluginManager*         _pluginManager;
+    static AssetManager*          _assetManager;
+    static entt::DefaultRegistry* _ecsManager;
+    static JobManager*            _jobManager;
 
     friend class MainWindow;
 };
-
-namespace wren
-{
-    void bindEngine();
-}
-
 }  // namespace atlas
 
 #endif  // ENGINE_H

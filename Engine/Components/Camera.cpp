@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include "Components/TransformComponent.h"
-#include "Nodes/Node.h"
 
 #include <cassert>
 
@@ -8,13 +7,14 @@ namespace atlas
 {
 using namespace math;
 
-Camera::Camera(ComponentType type)
-    : Component(type)
-    , _cameraType(CameraType::ePerspective)
+Camera::Camera()
+    : _cameraType(CameraType::ePerspective)
 {
 }
 
-Camera::~Camera() {}
+Camera::~Camera()
+{
+}
 
 void Camera::setPerspective(float fieldOfView, float aspectRatio, float nearPlane, float farPlane)
 {
@@ -35,6 +35,11 @@ void Camera::setOrthographic(float zoomX, float zoomY, float aspectRatio, float 
     _nearPlane   = nearPlane;
     _farPlane    = farPlane;
     updateCamera();
+}
+
+void Camera::setTransform(const Matrix& transform)
+{
+    updateCamera(transform);
 }
 
 CameraType Camera::getCameraType() const
@@ -244,20 +249,9 @@ void Camera::pickRay(const Rectangle& viewport, float x, float y, Ray* dst) cons
     dst->set(nearPoint, direction);
 }
 
-void Camera::onLateUpdate(float /*dt*/)
+void Camera::updateCamera(const Matrix& transform)
 {
-    updateCamera();
-}
-
-void Camera::updateCamera()
-{
-    TransformComponent* transform = static_cast<TransformComponent*>(_node->getComponent(ComponentTypes::Transform));
-    if (nullptr != transform)
-        // The view matrix is the inverse of our transform matrix.
-        transform->world().invert(&_view);
-    else
-        _view.setIdentity();
-
+    _view = transform;
     _view.invert(&_inverseView);
 
     if (_cameraType == CameraType::ePerspective)
@@ -266,7 +260,7 @@ void Camera::updateCamera()
     }
     else
     {
-        // Create an ortho projection with the origin at the bottom left of the viewport, +X to the right and +Y up.
+        // Create an ortho projection with the origin at the bottom left of the viewport, +X to the right and +Y
         Matrix::createOrthographic(_zoom[0], _zoom[1], _nearPlane, _farPlane, &_projection);
     }
 

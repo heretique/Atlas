@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Component.h"
 #include "Math/Frustum.h"
 #include "Math/Matrix.h"
 #include "Math/Rectangle.h"
@@ -20,15 +19,10 @@ enum class CameraType
 /**
  * Defines a camera which acts as a view of a scene to be rendered.
  */
-class Camera : public Component
+class Camera
 {
 public:
-    static ComponentPtr factoryFunc()
-    {
-        return std::make_unique<Camera>(StringHash(ComponentNames::Camera));
-    }
-
-    Camera(ComponentType type);
+    Camera();
 
     /**
      * Destructor.
@@ -58,6 +52,8 @@ public:
      * @param farPlane The far plane distance.
      */
     void setOrthographic(float zoomX, float zoomY, float aspectRatio, float nearPlane, float farPlane);
+
+    void setTransform(const math::Matrix& transform);
 
     /**
      * Gets the type of camera.
@@ -272,8 +268,7 @@ public:
     void pickRay(const math::Rectangle& viewport, float x, float y, math::Ray* dst) const;
 
 protected:
-    virtual void onLateUpdate(float dt) override;
-    void         updateCamera();
+    void updateCamera(const math::Matrix& transform = math::Matrix::identity());
 
 private:
     /**

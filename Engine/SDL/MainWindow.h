@@ -6,7 +6,6 @@
 #include <chrono>
 #include <memory>
 #include <vector>
-#include <wrenpp/Wren++.h>
 
 namespace atlas
 {
@@ -22,6 +21,14 @@ public:
     void init() override;
     void update(float dt) override;
     void onGUI() override;
+
+private:
+    void renderAxes();
+    void render(float dt);
+
+    bgfx::VertexBufferHandle _axesVbh;
+    bgfx::IndexBufferHandle  _axesIbh;
+    bgfx::ProgramHandle      _axesProgram;
 };
 
 }  // namespace atlas

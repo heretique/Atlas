@@ -14,6 +14,8 @@
 #include <bgfx/platform.h>
 #include <bx/math.h>
 //#include <easy/profiler.h>
+#include <cstdarg>
+
 #include <fmt/printf.h>  // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
@@ -25,6 +27,8 @@ SDL_GLContext SDLWindow::_glContext   = 0;
 u32           SDLWindow::_debug       = BGFX_DEBUG_NONE;  // BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER;
 u32           SDLWindow::_reset       = BGFX_RESET_NONE;
 u8            SDLWindow::_windowCount = 0;
+
+///////////////// IMGUI Rendering
 
 struct ImGuiBgfx
 {
@@ -88,7 +92,7 @@ struct ImGuiBgfx
                                          bgfx::copy(data, texWidth * texHeight * texBits));
     }
 
-    void render(u8 viewId, ImDrawData* drawData)
+    void render(u8 viewId, bgfx::FrameBufferHandle framebuffer, ImDrawData* drawData)
     {
         //        EASY_FUNCTION(profiler::colors::Teal);
         const ImGuiIO& io     = ImGui::GetIO();
@@ -96,6 +100,8 @@ struct ImGuiBgfx
         const float    height = io.DisplaySize.y;
 
         {
+            bgfx::setViewFrameBuffer(viewId, framebuffer);
+            bgfx::setViewRect(viewId, 0, 0, uint16_t(width), uint16_t(height));
             const bgfx::Caps* caps = bgfx::getCaps();
             float             ortho[16];
             bx::mtxOrtho(ortho, 0.0f, width, height, 0.0f, -1.0f, 1.0f, 0, caps->homogeneousDepth);
@@ -174,6 +180,80 @@ struct ImGuiBgfx
 
 static ImGuiBgfx s_imguiBgfx;
 
+////////// BGFX Callbacks ////////////
+
+struct BGFXCallbacs : public bgfx::CallbackI
+{
+    BGFXCallbacs()
+    {
+    }
+
+    // CallbackI interface
+public:
+    virtual void fatal(bgfx::Fatal::Enum _code, const char* _str) override
+    {
+        Engine::log().error(_str);
+    }
+
+    virtual void traceVargs(const char* _filePath, uint16_t _line, const char* _format, va_list _argList) override
+    {
+        Engine::log().info(format(_format, _argList));
+    }
+    virtual void profilerBegin(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override
+    {
+    }
+    virtual void profilerBeginLiteral(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override
+    {
+    }
+    virtual void profilerEnd() override
+    {
+    }
+    virtual uint32_t cacheReadSize(uint64_t _id) override
+    {
+    }
+    virtual bool cacheRead(uint64_t _id, void* _data, uint32_t _size) override
+    {
+    }
+    virtual void cacheWrite(uint64_t _id, const void* _data, uint32_t _size) override
+    {
+    }
+    virtual void screenShot(const char* _filePath, uint32_t _width, uint32_t _height, uint32_t _pitch,
+                            const void* _data, uint32_t _size, bool _yflip) override
+    {
+    }
+    virtual void captureBegin(uint32_t _width, uint32_t _height, uint32_t _pitch, bgfx::TextureFormat::Enum _format,
+                              bool _yflip) override
+    {
+    }
+    virtual void captureEnd() override
+    {
+    }
+    virtual void captureFrame(const void* _data, uint32_t _size) override
+    {
+    }
+
+private:
+    std::string format(const char* const format, ...)
+    {
+        auto         temp   = std::vector<char>{};
+        auto         length = std::size_t{63};
+        std::va_list args;
+        while (temp.size() <= length)
+        {
+            temp.resize(length + 1);
+            va_start(args, format);
+            const auto status = std::vsnprintf(temp.data(), temp.size(), format, args);
+            va_end(args);
+            if (status < 0)
+                throw std::runtime_error{"string formatting error"};
+            length = static_cast<std::size_t>(status);
+        }
+        return std::string{temp.data(), length};
+    }
+};
+
+static BGFXCallbacs s_bgfxCallbacks;
+
 SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
 {
     _width  = w;
@@ -186,9 +266,7 @@ SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
     //  SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_DisplayMode current;
     SDL_GetCurrentDisplayMode(0, &current);
-    _window = SDL_CreateWindow(
-        title, x, y, w, h,
-        SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
+    _window = SDL_CreateWindow(title, x, y, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
     if (_window == nullptr)
     {
         fmt::print("SDL Window creation failed, err: {}\n", SDL_GetError());
@@ -251,7 +329,9 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init() {}
+void SDLWindow::init()
+{
+}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -275,7 +355,7 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
     {
         // Get new dimensions and recreate framebuffer
         case SDL_WINDOWEVENT_RESIZED:
-            if (_width != e.data1 || _height != e.data2)
+            if (_width != (u32)e.data1 || _height != (u32)e.data2)
             {
                 _width  = e.data1;
                 _height = e.data2;
@@ -348,7 +428,9 @@ void SDLWindow::update(float /*dt*/)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI() {}
+void SDLWindow::onGUI()
+{
+}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -361,12 +443,13 @@ void SDLWindow::doUpdate(float dt)
     bgfx::setViewFrameBuffer(_viewId, _framebuffer);
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
     bgfx::touch(_viewId);
+
     // render content
     update(dt);
+
     // GUI
     imguiPushCtx();
     imguiNewFrame();
-    //    imguiMoveWindow();
     onGUI();
     imguiRender();
     imguiPopCtx();
@@ -431,19 +514,6 @@ void SDLWindow::imguiNewFrame()
     io.DisplaySize = ImVec2((float)_width, (float)_height);
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
     ImGui::NewFrame();
-    //    ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
-    //    ImGui::Begin(_title.c_str(), &_open, ImVec2(_width, _height), 0.0f,
-    //                 ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-    //    ImGui::SetWindowSize(_title.c_str(), ImVec2(_width, _height));
-
-    //    if (!_open)
-    //    {
-    //        SDL_Event event;
-    //        event.type            = SDL_WINDOWEVENT;
-    //        event.window.event    = SDL_WINDOWEVENT_CLOSE;
-    //        event.window.windowID = _windowId;
-    //        SDL_PushEvent(&event);
-    //    }
 }
 
 void SDLWindow::imguiPushCtx()
@@ -488,7 +558,7 @@ void SDLWindow::imguiRender()
     ImGui::Render();
     ImDrawData* drawData = ImGui::GetDrawData();
 
-    s_imguiBgfx.render(_viewId, drawData);
+    s_imguiBgfx.render(255, _framebuffer, drawData);
 }
 
 bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
@@ -519,6 +589,8 @@ bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
     setPlatformData(pd);
 
     bgfx::Init initParams;
+    initParams.debug                  = true;
+    initParams.callback               = &s_bgfxCallbacks;
     initParams.resolution.width       = w;
     initParams.resolution.height      = h;
     initParams.limits.transientIbSize = 1 << 20;

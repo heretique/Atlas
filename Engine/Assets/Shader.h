@@ -37,9 +37,4 @@ private:
     std::string _shaderBuffer;
 };
 
-namespace wren
-{
-    void bindShaderTypes();
-}
-
 }  // atlas namespace

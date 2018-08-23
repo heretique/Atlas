@@ -1,23 +1,18 @@
 #pragma once
 
+#include "Assets/Material.h"
 #include "Assets/Types.h"
-#include "Component.h"
 #include <cereal/cereal.hpp>
 
 namespace atlas
 {
-class MaterialComponent : public Component
+class MaterialAsset;
+class MaterialComponent
 {
 public:
-    static ComponentPtr factoryFunc()
-    {
-        return std::make_unique<MaterialComponent>(StringHash(ComponentNames::Material));
-    }
-
-    MaterialComponent(ComponentType type);
-
     void setMaterial(AssetPtr material);
-    void clearMaterial();
+    void                           clearMaterial();
+    std::shared_ptr<MaterialAsset> material();
 
 private:
     AssetPtr _material;

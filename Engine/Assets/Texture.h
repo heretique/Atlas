@@ -26,9 +26,4 @@ private:
     bgfx::TextureInfo   _textureInfo;
 };
 
-namespace wren
-{
-    void bindTextureTypes();
-}
-
 }  // atlas namespace

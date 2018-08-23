@@ -7,7 +7,6 @@
 #include <fstream>
 
 #include <spdlog/spdlog.h>
-#include <wrenpp/Wren++.h>
 
 namespace atlas
 {
@@ -15,9 +14,13 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager() {}
+AssetManager::AssetManager()
+{
+}
 
-AssetManager::~AssetManager() {}
+AssetManager::~AssetManager()
+{
+}
 
 void AssetManager::registerAssetType(AssetType assetType, std::string assetTypeName, AssetFactoryFunc f)
 {
@@ -233,30 +236,4 @@ const std::string AssetManager::assetName(AssetType type)
 
     return "";
 }
-
-void wren::bindAssetManager()
-{
-    Engine::vm()
-        .beginModule("main")
-        .bindClass<AssetManager>("AssetManager")
-        .bindMethod<decltype(&AssetManager::addAsset), &AssetManager::addAsset>(false, "addAsset(_,_,_)")       //
-        .bindMethod<decltype(&AssetManager::removeAsset), &AssetManager::removeAsset>(false, "removeAsset(_)")  //
-        .bindMethod<decltype(&AssetManager::removeAssetByHash), &AssetManager::removeAssetByHash>(
-            false, "removeAssetByHash(_)")                                                                  //
-        .bindMethod<decltype(&AssetManager::loadAssets), &AssetManager::loadAssets>(false, "loadAssets()")  //
-        .bindMethod<decltype(&AssetManager::loadAssetsAsync), &AssetManager::loadAssetsAsync>(false,
-                                                                                              "loadAssetsAsync()")  //
-        .endClass()
-        .endModule();
-
-    Engine::wrenModule() +=
-        "foreign class AssetManager {\n"
-        "   foreign addAsset(type, filename, flags)\n"
-        "   foreign removeAsset(ptr)\n"
-        "   foreign removeAssetByHash(hash)\n"
-        "   foreign loadAssets()\n"
-        "   foreign loadAssetsAsync()\n"
-        "}\n";
-}
-
 }  // atlas

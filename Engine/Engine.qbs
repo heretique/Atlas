@@ -20,10 +20,6 @@ Product {
         "Math/*.inl",
         "Managers/*.cpp",
         "Managers/*.h",
-        "Nodes/*.h",
-        "Nodes/*.cpp",
-        "Scripting/*.cpp",
-        "Scripting/*.h",
         "SDL/*.cpp",
         "SDL/*.h",
         "Systems/*cpp",
@@ -37,6 +33,7 @@ Product {
     cpp.includePaths: [
         ".",
         "../3rdparty/concurrentqueue",
+        "../3rdparty/entt/src",
         "../3rdparty/cereal/include",
         "../3rdparty/projects",
         "../3rdparty/bx/include",
@@ -55,9 +52,7 @@ Product {
     Depends { name: "bx" }
     Depends { name: "bgfx" }
     Depends { name: "imgui" }
-    Depends { name: "wren" }
     Depends { name: "fmt" }
-    Depends { name: "wrenpp" }
 
     Properties {
         condition: qbs.targetOS.contains("windows")
@@ -95,15 +90,6 @@ Product {
         fileTagsFilter: product.type
         qbs.install: true
         qbs.installDir: "home/pi/atlas"
-    }
-
-    Group {
-        name: "Wren scripts"
-        files: [
-        "Scripting/wren/*.wren"
-        ]
-        qbs.install: true
-        qbs.installDir: "home/pi/atlas/scripts"
     }
 
     Group {
