@@ -19,6 +19,7 @@ StaticLibrary {
         "../../bgfx/3rdparty/glslang/SPIRV/Logger.h",
         "../../bgfx/3rdparty/glslang/SPIRV/SPVRemapper.cpp",
         "../../bgfx/3rdparty/glslang/SPIRV/SPVRemapper.h",
+        "../../bgfx/3rdparty/glslang/SPIRV/SpvPostProcess.cpp",
         "../../bgfx/3rdparty/glslang/SPIRV/SpvBuilder.cpp",
         "../../bgfx/3rdparty/glslang/SPIRV/SpvBuilder.h",
         "../../bgfx/3rdparty/glslang/SPIRV/bitutils.h",
