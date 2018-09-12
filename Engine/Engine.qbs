@@ -97,8 +97,8 @@ Product {
         files: [
             "../Assets/Models/caruta.obj",
             "../Assets/Models/caruta.mtl",
-            "../Assets/Shaders/cube/fs_cubes.bin",
-            "../Assets/Shaders/cube/vs_cubes.bin",
+            "../Assets/Shaders/textured_unlit/fs_textured_unlit.bin",
+            "../Assets/Shaders/textured_unlit/vs_textured_unlit.bin",
             "../Assets/Textures/caruta.png",
             "../Assets/Materials/unlit_textured.material"
         ]

@@ -1,8 +1,8 @@
 {
     "value0": {
         "name": "unlit_textured",
-        "vertexShader": "assets/vs_cubes.bin",
-        "fragmentShader": "assets/fs_cubes.bin",
+        "vertexShader": "assets/vs_textured_unlit.bin",
+        "fragmentShader": "assets/fs_textured_unlit.bin",
         "params": [
             {
                 "key": "u_time",
@@ -11,7 +11,7 @@
         ],
         "textures": [
             {
-                "key": "s_diffuse",
+                "key": "s_texColor",
                 "value": "assets/caruta.png"
             }
         ]

@@ -10,9 +10,10 @@ StaticLibrary {
         "../../imgui/imgui_internal.h",
         "../../imgui/imgui.cpp",
         "../../imgui/imgui_draw.cpp",
-        "../../imgui/stb_rect_pack.h",
-        "../../imgui/stb_textedit.h",
-        "../../imgui/stb_truetype.h",
+        "../../imgui/imgui_widgets.cpp",
+        "../../imgui/imstb_rectpack.h",
+        "../../imgui/imstb_textedit.h",
+        "../../imgui/imstb_truetype.h",
     ]
     Depends { name: "cpp" }
 

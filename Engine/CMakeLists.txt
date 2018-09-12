@@ -26,14 +26,13 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Assets/Texture.cpp
     Assets/Texture.h
     Assets/Types.cpp
-    Components/Component.h
+    Components/Camera.cpp
+    Components/Camera.h
     Components/MaterialComponent.cpp
     Components/MaterialComponent.h
-    Components/MeshComponent.cpp
     Components/MeshComponent.h
     Components/TransformComponent.cpp
     Components/TransformComponent.h
-    Components/Types.h
     Core/CompileMurmur.h
     Core/Debug.h
     Core/Delegate.h
@@ -57,8 +56,6 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Managers/JobManager.h
     Managers/PluginManager.cpp
     Managers/PluginManager.h
-    Managers/SceneManager.cpp
-    Managers/SceneManager.h
     Math/BoundingBox.cpp
     Math/BoundingBox.h
     Math/BoundingBox.inl
@@ -97,16 +94,6 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Math/Vector4.cpp
     Math/Vector4.h
     Math/Vector4.inl
-    Nodes/Node.cpp
-    Nodes/Node.h
-    Nodes/NodePath.cpp
-    Nodes/NodePath.h
-    Nodes/NodeScript.cpp
-    Nodes/NodeScript.h
-    Scripting/WrenBindings.cpp
-    Scripting/WrenBindings.h
-    Scripting/WrenBindingsImpl.cpp
-    Scripting/WrenBindingsImpl.h
     SDL/fs_ocornut_imgui.bin.h
     SDL/Main.cpp
     SDL/MainWindow.cpp
@@ -116,6 +103,8 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     SDL/SDLWindow.cpp
     SDL/SDLWindow.h
     SDL/vs_ocornut_imgui.bin.h
+    Systems/RenderSystem.cpp
+    Systems/RenderSystem.h
     Utils/BgfxUtils.cpp
     Utils/BgfxUtils.h
     Utils/PrintContainers.h)
@@ -123,6 +112,7 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
 find_package(SDL2 REQUIRED)
 
 target_include_directories(atlas PRIVATE .
+    ../3rdparty/entt/src
     ../3rdparty/cereal/include
     ../3rdparty/spdlog/include
     ../3rdparty/concurrentqueue
@@ -177,11 +167,11 @@ add_custom_command(TARGET atlas POST_BUILD
     $<TARGET_FILE_DIR:atlas>/assets
     )
 
-add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/TestNodeScript.wren
-    $<TARGET_FILE_DIR:atlas>/scripts
-    )
+#add_custom_command(TARGET atlas POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#    ${CMAKE_CURRENT_SOURCE_DIR}/Scripting/wren/TestNodeScript.wren
+#    $<TARGET_FILE_DIR:atlas>/scripts
+#    )
 
 
 #install(TARGETS atlas RUNTIME DESTINATION ~/atlas)
