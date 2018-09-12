@@ -29,7 +29,7 @@ Product {
 
     Properties {
         condition: qbs.targetOS.contains("linux")
-        cpp.dynamicLibraries: [ "rt", "dl", "GL", "pthread", "X11" ]
+        cpp.dynamicLibraries: [ "rt", "dl", "bcm_host", "EGL", "GLESv2", "pthread", "udev", "SDL2" ]
     }
 
     Properties {
@@ -43,6 +43,7 @@ Product {
     Group {     // Properties for the produced executable
         fileTagsFilter: product.type
         qbs.install: true
+        qbs.installDir: "home/pi/atlas"
     }
 
     Group {
@@ -51,6 +52,6 @@ Product {
             "../../3rdparty/bgfx/examples/runtime/textures/*"
         ]
         qbs.install: true
-        qbs.installDir: "textures"
+        qbs.installDir: "home/pi/atlas/textures"
     }
 }
