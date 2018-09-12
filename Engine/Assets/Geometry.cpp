@@ -125,25 +125,25 @@ bool GeometryAsset::loadImpl(std::istream& is)
 
     // reverse order to get the normals right again
     // order was reversed by unique combination insertion
-    std::reverse(_indices.begin(), _indices.end());
+    //    std::reverse(_indices.begin(), _indices.end());
 
     // interleave vertex attributes
     _vertices.reserve(uniqueVerticesCombination.size());
     for (const index_t& index : uniqueVerticesCombination)
     {
         SimpleMeshVertex vertex;
-        vertex.x = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
-        vertex.y = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
-        vertex.z = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
-        //        vertex.normal = packF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
-        //                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
-        //                                vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
-        //                                0.f);
+        vertex.x      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3)];
+        vertex.y      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 1)];
+        vertex.z      = vertexData.vertices[static_cast<size_t>(index.vertex_index * 3 + 2)];
+        vertex.normal = packNF4u(vertexData.normals[static_cast<size_t>(index.normal_index * 3)],      //
+                                 vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 1)],  //
+                                 vertexData.normals[static_cast<size_t>(index.normal_index * 3 + 2)],  //
+                                 0.f);
         //        vertex.tangent = packF4u(0.f, 0.f, 0.f, 0.f);
-        vertex.color = packUF4u(0.278, 0.843, 0.384, 1.f);
+        //        vertex.color   = packUF4u(0.278, 0.843, 0.384, 1.f);
 
-        //        vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
-        //        vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
+        vertex.u = vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2)];
+        vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
         _vertices.emplace_back(vertex);
         // update bbox
         _aabb.extend(math::Vector3(vertex.x, vertex.y, vertex.z));

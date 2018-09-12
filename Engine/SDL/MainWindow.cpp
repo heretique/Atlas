@@ -100,7 +100,7 @@ void MainWindow::init()
                                &transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -111,6 +111,7 @@ void MainWindow::init()
         mat.setMaterial(material);
         transform.world().translate(10 * MATH_RANDOM_MINUS1_1(), 10 * MATH_RANDOM_MINUS1_1(),
                                     10 * MATH_RANDOM_MINUS1_1());
+        transform.world().rotateX(-M_PI_2);
     }
 }
 
