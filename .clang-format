@@ -65,47 +65,7 @@ SpacesInSquareBrackets: false
 Standard:        Cpp03
 TabWidth:        4
 UseTab:          Never
-SortIncludes: true
-
-# how many empty lines to go through before giving up
-# on unifying multiple include blocks
-#IncludeBlocksSearchDistance: 4
-
-# if a generated sorted include block is smaller 
-# than the threshold, it won't get separated by newline
-#IncludeBlocksSegregationSizeThreshold: 1
-
-IncludeCategories:
-
-# Our api include subdirs
-  - Regex:      '^(<|")(RenderEngine|DataAccess)\/'
-    Priority:    7
-
-# Our own include subdirs
-  - Regex:      '^(<|")(RenderInterface|Pipeline|StyleEngine|Engine|Renderer|Input|Profiler|Texture)\/'
-    Priority:    6
-
-# Our own "foundation" headers
-  - Regex:           '^(<|")(common|math|thread|stl|util|spatial)\/'
-    Priority:        5
-
-# Actual foundation headers 
-  - Regex:           '^(<|")foundation\/(Bind.h|ConditionVariable.h|Error.h|Exceptions.h|FoundationFactory.h|FoundationLogger.h|Function.h|Init.hpp|Locks.h|Log.hpp|Logger.h|Mutex.h|RecursiveMutex.h|SharedArray.h|SharedMutex.h|SharedPtr.h|SimpleFileSystem.h|TaskManager.h|Thread.h|ThreadPool.h|TnTime.h|TnTypes.h|WeakPtr.h|array.hpp|cerrno|chrono.hpp|condition_variable.hpp|cxx11compat.hpp|functional.hpp|math.hpp|memory.hpp|mutex.hpp|noncopyable.hpp|simple_filesystem.hpp|simple_log.hpp|simple_time.hpp|stdint.hpp|stdio_unlocked.hpp|thread.hpp|unordered_map.hpp|unordered_set.hpp)'
-    Priority:        4
-
-# Other libraries
-  - Regex:      '^(<|")(DataAccess|Eigen|GLU|LandmarkDataAccess|MViewerSDK|NavProtocol|TnUrl|boost|curl|delta|foundation|harfbuzz|freetype|geometry|google|gtest|lz4|openlr|r2z2|rds_tmc_receiver|tinyxml|tpeg|traffic|traffic_decoder|traffic_util|TnUrl.h|cdjpeg.h|jerror.h|jpeglib.h|sqlite3.h|xdelta.h|xdelta3-fgk.h|xdelta3-main.h|zip.h|TnUrlPool.h|ft2build.h|jinclude.h|jversion.h|sqlite3ext.h|xdelta3-blkcache.h|xdelta3-hash.h|xdelta3-merge.h|zlib.h|bs_diff.h|ioapi.h|jmemsys.h|png.h|terrainAccess.h|xdelta3-cfgs.h|xdelta3-internal.h|xdelta3-second.h|cJSON.h|jconfig.h|jmorecfg.h|pngconf.h|transupp.h|xdelta3-decode.h|xdelta3-list.h|xdelta3.h|cderror.h|jdct.h|jpegint.h|pnglibconf.h|unzip.h|xdelta3-djw.h|xdelta3-lzma.h|zconf.h|glu.h)'
-    Priority:    4
-
-# C++ headers
-  - Regex:       '(<cstddef>|<limits>|<climits>|<cfloat>|<cstdint>|<new>|<typeinfo>|<exception>|<ciso646>|<exception_list>|<initializer_list>|<csignal>|<csetjmp>|<cstdalign>|<cstdarg>|<cstdbool>|<ctime>|<stdexcept>|<cassert>|<cerrno>|<system_error>|<utility>|<tuple>|<optional>|<any>|<memory>|<memory_resource>|<scoped_allocator>|<cstdlib>|<bitset>|<functional>|<type_traits>|<ratio>|<chrono>|<ctime>|<typeindex>|<string>|<cctype>|<cwctype>|<cstring>|<string_view>|<cwchar>|<cuchar>|<locale>|<codecvt>|<clocale>|<array>|<deque>|<forward_list>|<list>|<vector>|<map>|<set>|<unordered_map>|<unordered_set>|<queue>|<stack>|<iterator>|<algorithm>|<execution_policy>|<cfenv>|<complex>|<random>|<valarray>|<numeric>|<cmath>|<ctgmath>|<iosfwd>|<iostream>|<ios>|<streambuf>|<istream>|<ostream>|<iomanip>|<sstream>|<fstream>|<filesystem>|<cstdio>|<cinttypes>|<regex>|<thread>|<mutex>|<atomic>|<shared_mutex>|<condition_variable>|<future>|<cstdlib>|<csignal>|<csetjmp>|<cstdarg>|<typeinfo>|<typeindex>|<type_traits>|<bitset>|<functional>|<utility>|<ctime>|<chrono>|<cstddef>|<initializer_list>|<tuple>|<any>|<optional>|<variant>|<new>|<memory>|<scoped_allocator>|<memory_resource>|<climits>|<cfloat>|<cstdint>|<cinttypes>|<limits>|<exception>|<stdexcept>|<cassert>|<system_error>|<cerrno>|<cctype>|<cwctype>|<cstring>|<cwchar>|<cuchar>|<string>|<string_view>|<array>|<vector>|<deque>|<list>|<forward_list>|<set>|<map>|<unordered_set>|<unordered_map>|<stack>|<queue>|<algorithm>|<execution>|<iterator>|<cmath>|<complex>|<valarray>|<random>|<numeric>|<ratio>|<cfenv>|<iosfwd>|<ios>|<istream>|<ostream>|<iostream>|<fstream>|<sstream>|<strstream>|<iomanip>|<streambuf>|<cstdio>|<locale>|<clocale>|<codecvt>|<regex>|<atomic>|<thread>|<mutex>|<shared_mutex>|<future>|<condition_variable>|<filesystem>|<experimental\/algorithm>|<experimental\/any>|<experimental\/chrono>|<experimental\/deque>|<experimental\/execution_policy>|<experimental\/exception_list>|<experimental\/filesystem>|<experimental\/forward_list>|<experimental\/future>|<experimental\/list>|<experimental\/functional>|<experimental\/map>|<experimental\/memory>|<experimental\/memory_resource>|<experimental\/numeric>|<experimental\/optional>|<experimental\/ratio>|<experimental\/regex>|<experimental\/set>|<experimental\/string>|<experimental\/string_view>|<experimental\/system_error>|<experimental\/tuple>|<experimental\/type_traits>|<experimental\/unordered_map>|<experimental\/unordered_set>|<experimental\/utility>|<experimental\/vector>|<ciso646>|<ccomplex>|<ctgmath>|<cstdalign>|<cstdbool>|<cassert>|<ccomplex>|<cctype>|<cerrno>|<cfenv>|<cfloat>|<cinttypes>|<ciso646>|<climits>|<clocale>|<cmath>|<csetjmp>|<csignal>|<cstdalign>|<cstdarg>|<cstdbool>|<cstddef>|<cstdint>|<cstdio>|<cstdlib>|<cstring>|<ctgmath>|<ctime>|<cuchar>|<cwchar>|<cwctype>)'
-    Priority:    3
- # C headers
-  - Regex:      '^[<|"](aio.h|libgen.h|spawn.h|sys\/time.h|arpa\/inet.h|limits.h|stdarg.h|sys\/times.h|assert.h|locale.h|stdbool.h|sys\/types.h|complex.h|math.h|stddef.h|sys\/uio.h|cpio.h|monetary.h|stdint.h|sys\/un.h|ctype.h|mqueue.h|stdio.h|sys\/utsname.h|dirent.h|ndbm.h|stdlib.h|sys\/wait.h|dlfcn.h|net\/if.h|string.h|syslog.h|errno.h|netdb.h|strings.h|tar.h|fcntl.h|netinet\/in.h|stropts.h|termios.h|fenv.h|netinet\/tcp.h|sys\/ipc.h|tgmath.h|float.h|nl_types.h|sys\/mman.h|time.h|fmtmsg.h|poll.h|sys\/msg.h|trace.h|fnmatch.h|pthread.h|sys\/resource.h|ulimit.h|ftw.h|pwd.h|sys\/select.h|unistd.h|glob.h|regex.h|sys\/sem.h|utime.h|grp.h|sched.h|sys\/shm.h|utmpx.h|iconv.h|search.h|sys\/socket.h|wchar.h|inttypes.h|semaphore.h|sys\/stat.h|wctype.h|iso646.h|setjmp.h|sys\/statvfs.h|wordexp.h|langinfo.h|signal.h)'
-    Priority:    2
- # Local/relative headers
-  - Regex:           '\".*'
-    Priority:        1
+SortIncludes: false
 
 ...
 

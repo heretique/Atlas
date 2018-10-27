@@ -19,6 +19,7 @@
 #include <bgfx/bgfx.h>
 #include <bx/allocator.h>
 #include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 namespace atlas
 {

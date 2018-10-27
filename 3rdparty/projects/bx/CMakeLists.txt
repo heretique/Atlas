@@ -30,8 +30,16 @@ target_include_directories(bx PUBLIC
     $<INSTALL_INTERFACE:include>
     PRIVATE ../../bx/src ../../bx/3rdparty)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        target_include_directories(bx PUBLIC ../../bx/include/compat/msvc)
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+        target_include_directories(bx PUBLIC ../../bx/include/compat/mingw)
+    endif()
+endif()
+
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    target_include_directories(bx PRIVATE ../../bx/include/compat/osx)
+    target_include_directories(bx PUBLIC ../../bx/include/compat/osx)
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")

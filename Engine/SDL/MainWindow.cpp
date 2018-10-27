@@ -23,7 +23,7 @@ namespace atlas
 void testJob(void* data, uint count)
 {
     float* testData = static_cast<float*>(data);
-    for (uint i     = 0; i < count; ++i)
+    for (uint i = 0; i < count; ++i)
         testData[i] = std::sin((float)i / count) + std::cos((float)i / count);
 }
 
@@ -64,9 +64,7 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 {
 }
 
-MainWindow::~MainWindow()
-{
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::init()
 {
@@ -92,7 +90,7 @@ void MainWindow::init()
 
     auto&           registry        = Engine::ecs();
     auto            camera          = registry.create();
-    Camera&         cameraComponent = registry.assign<Camera>(entt::tag_t{}, camera);
+    Camera&         cameraComponent = registry.assign<Camera>(entt::tag_t {}, camera);
     SDLWindow::Size size            = windowSize();
     cameraComponent.setPerspective(60.f, (float)size.width / size.height, .1f, 100.f);
     TransformComponent& transform = registry.assign<TransformComponent>(camera);

@@ -1,4 +1,6 @@
 #include "SDLWindow.h"
+#include <bx/math.h>
+#include <bgfx/platform.h>
 
 #include "Core/Engine.h"
 #include "SDLApp.h"
@@ -7,23 +9,18 @@
 
 #include <chrono>
 #include <thread>
+#include <cstdarg>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
-#include <bgfx/bgfx.h>
-#include <bgfx/platform.h>
-#include <bx/math.h>
 //#include <easy/profiler.h>
-#include <cstdarg>
-
-#include <fmt/printf.h>  // needs to be included before SDL on linux because of False macro define somewhere in XLib
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
 
 namespace atlas
 {
 bool          SDLWindow::_initialized = false;
-SDL_GLContext SDLWindow::_glContext   = 0;
+SDL_GLContext SDLWindow::_glContext   = nullptr;
 u32           SDLWindow::_debug       = BGFX_DEBUG_NONE;  // BGFX_DEBUG_TEXT | BGFX_DEBUG_STATS | BGFX_DEBUG_PROFILER;
 u32           SDLWindow::_reset       = BGFX_RESET_NONE;
 u8            SDLWindow::_windowCount = 0;
@@ -182,15 +179,13 @@ static ImGuiBgfx s_imguiBgfx;
 
 ////////// BGFX Callbacks ////////////
 
-struct BGFXCallbacs : public bgfx::CallbackI
+struct BGFXCallbacss : public bgfx::CallbackI
 {
-    BGFXCallbacs()
-    {
-    }
+    BGFXCallbacss() {}
 
     // CallbackI interface
 public:
-    virtual void fatal(bgfx::Fatal::Enum _code, const char* _str) override
+    virtual void fatal(const char* _filePath, uint16_t _line, bgfx::Fatal::Enum _code, const char* _str) override
     {
         Engine::log().error(_str);
     }
@@ -199,24 +194,20 @@ public:
     {
         Engine::log().info(format(_format, _argList));
     }
-    virtual void profilerBegin(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override
-    {
-    }
+    virtual void profilerBegin(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override {}
     virtual void profilerBeginLiteral(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override
     {
     }
-    virtual void profilerEnd() override
-    {
-    }
+    virtual void     profilerEnd() override {}
     virtual uint32_t cacheReadSize(uint64_t _id) override
     {
+        return 0;
     }
     virtual bool cacheRead(uint64_t _id, void* _data, uint32_t _size) override
     {
+        return false;
     }
-    virtual void cacheWrite(uint64_t _id, const void* _data, uint32_t _size) override
-    {
-    }
+    virtual void cacheWrite(uint64_t _id, const void* _data, uint32_t _size) override {}
     virtual void screenShot(const char* _filePath, uint32_t _width, uint32_t _height, uint32_t _pitch,
                             const void* _data, uint32_t _size, bool _yflip) override
     {
@@ -225,18 +216,14 @@ public:
                               bool _yflip) override
     {
     }
-    virtual void captureEnd() override
-    {
-    }
-    virtual void captureFrame(const void* _data, uint32_t _size) override
-    {
-    }
+    virtual void captureEnd() override {}
+    virtual void captureFrame(const void* _data, uint32_t _size) override {}
 
 private:
     std::string format(const char* const format, ...)
     {
-        auto         temp   = std::vector<char>{};
-        auto         length = std::size_t{63};
+        auto         temp   = std::vector<char> {};
+        auto         length = std::size_t {63};
         std::va_list args;
         while (temp.size() <= length)
         {
@@ -245,14 +232,14 @@ private:
             const auto status = std::vsnprintf(temp.data(), temp.size(), format, args);
             va_end(args);
             if (status < 0)
-                throw std::runtime_error{"string formatting error"};
+                throw std::runtime_error {"string formatting error"};
             length = static_cast<std::size_t>(status);
         }
-        return std::string{temp.data(), length};
+        return std::string {temp.data(), length};
     }
 };
 
-static BGFXCallbacs s_bgfxCallbacks;
+static BGFXCallbacss s_bgfxCallbacks;
 
 SDLWindow::SDLWindow(const char* title, int x, int y, int w, int h)
 {
@@ -329,9 +316,7 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init()
-{
-}
+void SDLWindow::init() {}
 
 void SDLWindow::handleEvent(SDL_Event& e)
 {
@@ -355,7 +340,7 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
     {
         // Get new dimensions and recreate framebuffer
         case SDL_WINDOWEVENT_RESIZED:
-            if (_width != (u32)e.data1 || _height != (u32)e.data2)
+            if (_width != u32(e.data1) || _height != u32(e.data2))
             {
                 _width  = e.data1;
                 _height = e.data2;
@@ -428,13 +413,11 @@ void SDLWindow::update(float /*dt*/)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI()
-{
-}
+void SDLWindow::onGUI() {}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
-    return Size{_width, _height};
+    return Size {_width, _height};
 }
 
 void SDLWindow::doUpdate(float dt)
@@ -468,7 +451,7 @@ bool SDLWindow::imguiInit()
     ImGuiIO& io = ImGui::GetIO();
     imguiPopCtx();
     io.ImeWindowHandle   = nativeHandle();
-    io.RenderDrawListsFn = NULL;
+    io.RenderDrawListsFn = nullptr;
 
     io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;  // Keyboard mapping. ImGui will use those
                                          // indices to peek into the io.KeyDown[]
@@ -511,7 +494,7 @@ void SDLWindow::imguiNewFrame()
 {
     //    EASY_FUNCTION(profiler::colors::Teal);
     ImGuiIO& io    = ImGui::GetIO();
-    io.DisplaySize = ImVec2((float)_width, (float)_height);
+    io.DisplaySize = ImVec2(float(_width), float(_height));
     io.DeltaTime   = 1.0f / 60.0f;  // TODO
     ImGui::NewFrame();
 }
@@ -582,15 +565,15 @@ bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
     pd.ndt = NULL;
     pd.nwh = wmi.info.cocoa.window;
 #endif
-    pd.context      = NULL;
-    pd.backBuffer   = NULL;
-    pd.backBufferDS = NULL;
+    pd.context      = nullptr;
+    pd.backBuffer   = nullptr;
+    pd.backBufferDS = nullptr;
 
     setPlatformData(pd);
 
     bgfx::Init initParams;
+    initParams.type                   = bgfx::RendererType::OpenGL;
     initParams.debug                  = true;
-    initParams.callback               = &s_bgfxCallbacks;
     initParams.resolution.width       = w;
     initParams.resolution.height      = h;
     initParams.limits.transientIbSize = 1 << 20;

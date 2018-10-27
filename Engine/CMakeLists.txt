@@ -115,10 +115,9 @@ target_include_directories(atlas PRIVATE .
     ../3rdparty/entt/src
     ../3rdparty/cereal/include
     ../3rdparty/spdlog/include
-    ../3rdparty/concurrentqueue
-    ${SDL2_INCLUDE_DIRS})
+    ../3rdparty/concurrentqueue)
 
-target_link_libraries(atlas bx bimg bgfx fmt imgui wren wrenpp ${SDL2_LIBRARIES})
+target_link_libraries(atlas bx bimg bgfx atlas::fmt imgui wren wrenpp SDL2::SDL2 SDL2::SDL2main)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     find_library(COCOA_LIBRARY Cocoa)
@@ -133,35 +132,39 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-	set(RPI_LIB_PATHS "/opt/vc/lib")
+        set(RPI_LIB_PATHS "/opt/vc/lib")
 	find_package(Threads REQUIRED)
 	find_library(GLES2_LIBRARY GLESv2 PATHS ${RPI_LIB_PATHS})
 	find_library(EGL_LIBRARY EGL PATHS ${RPI_LIB_PATHS})
 	find_library(BCM_HOST_LIBRARY bcm_host PATHS ${RPI_LIB_PATHS})
 	find_library(DL_LIBRARY dl)
 	find_library(RT_LIBRARY rt)
-	find_library(SDL2_LIBRARY SDL2)
+        find_library(SDL2_LIBRARY SDL2)
+        find_path(SDL2_INCLUDE SDL2)
 	
 	message(${GLES2_LIBRARY})
 	message(${EGL_LIBRARY})
 	message(${BCM_HOST_LIBRARY})
 	message(${DL_LIBRARY})
 	message(${RT_LIBRARY})
-	message(${SDL2_LIBRARY})
+        message(${SDL2_LIBRARY})
+        message(${SDL2_INCLUDE})
 	
-	target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${BCM_HOST_LIBRARY} ${EGL_LIBRARY} ${GLES2_LIBRARY} ${SDL2_LIBRARY})
+        target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
+        target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${BCM_HOST_LIBRARY} ${EGL_LIBRARY} ${GLES2_LIBRARY} ${SDL2_LIBRARY})
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_14)
-target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
+#target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
+target_compile_definitions(atlas PRIVATE _USE_MATH_DEFINES)
 
 
 add_custom_command(TARGET atlas POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.obj
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.mtl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/cube/fs_cubes.bin
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/cube/vs_cubes.bin
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/fs_textured_unlit.bin
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/vs_textured_unlit.bin
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Textures/caruta.png
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Materials/unlit_textured.material
     $<TARGET_FILE_DIR:atlas>/assets

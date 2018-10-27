@@ -24,7 +24,14 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/topology.cpp
     ../../bgfx/src/vertexdecl.cpp)
 
-message("System name: ${CMAKE_SYSTEM_NAME}")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        target_include_directories(bgfx PRIVATE ../../bgfx/3rdparty/dxsdk/include)
+    elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#        target_include_directories(bx PUBLIC ../../bx/include/compat/mingw)
+    endif()
+endif()
+
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_sources(bgfx PRIVATE ../../bgfx/src/glcontext_eagl.mm
@@ -42,7 +49,7 @@ target_include_directories(bgfx PUBLIC
     ../../bgfx/3rdparty/khronos)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    target_include_directories(bgfx BEFORE PUBLIC /opt/vc/include)
+    target_include_directories(bgfx BEFORE PUBLIC ${CMAKE_FIND_ROOT_PATH}/opt/vc/include)
     target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_OPENGLES)
 endif()
 
