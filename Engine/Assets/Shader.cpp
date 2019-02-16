@@ -3,7 +3,7 @@
 #include "Core/Engine.h"
 #include "spdlog/spdlog.h"
 #include <istream>
-#include <SDL2/SDL_filesystem.h>
+#include <SDL_filesystem.h>
 
 namespace atlas
 {

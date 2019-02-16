@@ -100,7 +100,7 @@ bool MaterialAsset::loadImpl(std::istream& data)
             return false;
         }
 
-        bgfx::UniformHandle samplerHandle = bgfx::createUniform(pair.first.c_str(), bgfx::UniformType::Int1);
+        bgfx::UniformHandle samplerHandle = bgfx::createUniform(pair.first.c_str(), bgfx::UniformType::Sampler);
         MaterialSampler     sampler       = {samplerHandle, textureHandle};
         _samplers.insert(std::make_pair(pair.first, sampler));
     }
@@ -135,7 +135,7 @@ bgfx::UniformType::Enum MaterialParam::toBgfxUniformType() const
     switch (type)
     {
         case 0:
-            return bgfx::UniformType::Int1;
+            return bgfx::UniformType::Sampler;
         case 1:
             break;
         case 2:

@@ -11,8 +11,8 @@
 #include <thread>
 #include <cstdarg>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 //#include <easy/profiler.h>
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
@@ -73,7 +73,7 @@ struct ImGuiBgfx
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
             .end();
 
-        _tex = bgfx::createUniform("s_tex", bgfx::UniformType::Int1);
+        _tex = bgfx::createUniform("s_tex", bgfx::UniformType::Sampler);
 
         u8* data;
         i32 texWidth;

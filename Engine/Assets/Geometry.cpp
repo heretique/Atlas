@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include <SDL2/SDL_filesystem.h>
+#include <SDL_filesystem.h>
 #include <spdlog/spdlog.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
@@ -102,7 +102,7 @@ bool GeometryAsset::loadImpl(std::istream& is)
         Engine::log().warn("\n\t- affected resource: {}", _filename);
     }
 
-    const shape_t& shape = shapes.front();
+    const shape_t&                                        shape = shapes.front();
     std::unordered_set<index_t, HasherIndex, EqualsIndex> uniqueVerticesCombination;
     _indices.reserve(shape.mesh.indices.size());
 

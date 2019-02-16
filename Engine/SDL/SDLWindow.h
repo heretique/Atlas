@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <bgfx/bgfx.h>
 
 struct ImDrawData;
@@ -61,21 +61,21 @@ private:
     static u32           _reset;
     static u8            _windowCount;
 
-    u8                      _viewId{0};
-    SDL_Window*             _window{nullptr};
-    u32                     _windowId{0};
+    u8                      _viewId {0};
+    SDL_Window*             _window {nullptr};
+    u32                     _windowId {0};
     bgfx::FrameBufferHandle _framebuffer;
 
-    bool _isDefault{false};
+    bool _isDefault {false};
 
     std::string   _title;
-    bool          _open{true};
-    u32           _width{0};
-    u32           _height{0};
-    ImGuiContext* _imguiCtx{nullptr};
-    ImGuiContext* _prevImguiCtx{nullptr};
+    bool          _open {true};
+    u32           _width {0};
+    u32           _height {0};
+    ImGuiContext* _imguiCtx {nullptr};
+    ImGuiContext* _prevImguiCtx {nullptr};
 
-    int _moveOffsetX{0};
-    int _moveOffsetY{0};
+    int _moveOffsetX {0};
+    int _moveOffsetY {0};
 };
 }  // namespace atlas
