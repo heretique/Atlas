@@ -17,6 +17,8 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Assets/Asset.h
     Assets/Geometry.cpp
     Assets/Geometry.h
+    Assets/Light.cpp
+    Assets/Light.h
     Assets/Material.cpp
     Assets/Material.h
     Assets/Script.cpp
@@ -28,6 +30,7 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Assets/Types.cpp
     Components/Camera.cpp
     Components/Camera.h
+    Components/LightComponent.h
     Components/MaterialComponent.cpp
     Components/MaterialComponent.h
     Components/MeshComponent.h
