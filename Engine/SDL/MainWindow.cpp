@@ -42,10 +42,10 @@ struct PosColorVertex
             .end();
     }
 
-    static bgfx::VertexDecl ms_decl;
+	static bgfx::VertexLayout ms_decl;
 };
 
-bgfx::VertexDecl PosColorVertex::ms_decl;
+bgfx::VertexLayout PosColorVertex::ms_decl;
 
 static PosColorVertex s_axesVertices[] = {
     {0.f, 0.f, 0.f, 0xff0000ff}, {1.f, 0.f, 0.f, 0xff0000ff},  // x axis
@@ -98,7 +98,7 @@ void MainWindow::init()
                                &transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 1000; ++i)
+	for (int i = 0; i < 500; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);

@@ -29,7 +29,7 @@ AssetManager*          Engine::_assetManager  = nullptr;
 entt::DefaultRegistry* Engine::_ecsManager    = nullptr;
 JobManager*            Engine::_jobManager    = nullptr;
 
-bgfx::VertexDecl SimpleMeshVertex::vertDecl;
+bgfx::VertexLayout SimpleMeshVertex::vertLayout;
 
 bx::AllocatorI* Engine::bxAllocator()
 {

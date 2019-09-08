@@ -11,8 +11,8 @@
 #include <thread>
 #include <cstdarg>
 
-#include <SDL.h>
-#include <SDL_syswm.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_syswm.h>
 //#include <easy/profiler.h>
 #include <imgui/imgui.h>
 #include <spdlog/spdlog.h>
@@ -67,7 +67,7 @@ struct ImGuiBgfx
         bgfx::ShaderHandle fsh = bgfx::createShader(fsmem);
         _program               = bgfx::createProgram(vsh, fsh, true);
 
-        _vDecl.begin()
+		_layout.begin()
             .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
@@ -115,14 +115,14 @@ struct ImGuiBgfx
             u32               numVertices = (u32)drawList->VtxBuffer.size();
             u32               numIndices  = (u32)drawList->IdxBuffer.size();
 
-            if (numVertices != bgfx::getAvailTransientVertexBuffer(numVertices, _vDecl) ||
+			if (numVertices != bgfx::getAvailTransientVertexBuffer(numVertices, _layout) ||
                 numIndices != bgfx::getAvailTransientIndexBuffer(numIndices))
             {
                 // not enough space in transient buffer just quit drawing the rest...
                 break;
             }
 
-            bgfx::allocTransientVertexBuffer(&tvb, numVertices, _vDecl);
+			bgfx::allocTransientVertexBuffer(&tvb, numVertices, _layout);
             bgfx::allocTransientIndexBuffer(&tib, numIndices);
 
             ImDrawVert* verts = (ImDrawVert*)tvb.data;
@@ -169,7 +169,7 @@ struct ImGuiBgfx
         bgfx::destroy(_program);
     }
 
-    bgfx::VertexDecl    _vDecl;
+	bgfx::VertexLayout    _layout;
     bgfx::ProgramHandle _program;
     bgfx::TextureHandle _texture;
     bgfx::UniformHandle _tex;

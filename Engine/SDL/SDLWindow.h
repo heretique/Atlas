@@ -5,7 +5,7 @@
 
 #include <string>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <bgfx/bgfx.h>
 
 struct ImDrawData;
