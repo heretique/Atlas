@@ -1,6 +1,6 @@
 #include "SDLApp.h"
 
-#include "SDL.h"
+#include <SDL2/SDL.h>
 #include "SDLWindow.h"
 
 #include <chrono>

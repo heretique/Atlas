@@ -10,7 +10,7 @@
 #include <algorithm>
 #include <unordered_set>
 
-#include <SDL_filesystem.h>
+#include <SDL2/SDL_filesystem.h>
 #include <spdlog/spdlog.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
@@ -169,7 +169,7 @@ bool atlas::GeometryAsset::uploadGPUImpl()
 
     const bgfx::Memory* vertexMem =
         bgfx::copy(reinterpret_cast<u8*>(_vertices.data()), _vertices.size() * SimpleMeshVertex::size());
-    _vbh = bgfx::createVertexBuffer(vertexMem, SimpleMeshVertex::vertDecl);
+	_vbh = bgfx::createVertexBuffer(vertexMem, SimpleMeshVertex::vertLayout);
 
     const bgfx::Memory* indexMem = bgfx::copy(reinterpret_cast<u8*>(_indices.data()), _indices.size() * sizeof(u16));
     _ibh                         = bgfx::createIndexBuffer(indexMem);

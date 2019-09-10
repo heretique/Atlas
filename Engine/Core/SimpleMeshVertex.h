@@ -17,7 +17,7 @@ struct SimpleMeshVertex
 
     static void init()
     {
-        vertDecl.begin()
+		vertLayout.begin()
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Normal, 4, bgfx::AttribType::Uint8, true, true)
@@ -30,6 +30,6 @@ struct SimpleMeshVertex
         return sizeof(SimpleMeshVertex);
     }
 
-    static bgfx::VertexDecl vertDecl;
+	static bgfx::VertexLayout vertLayout;
 };
 }  // atlas namespace
