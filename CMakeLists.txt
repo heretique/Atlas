@@ -22,3 +22,4 @@ add_subdirectory(3rdparty/projects/wren)
 add_subdirectory(3rdparty/projects/wrenpp)
 add_subdirectory(Engine)
 add_subdirectory(Tests)
+

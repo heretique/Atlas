@@ -1,8 +1,5 @@
-#include "BoundingBox.h"
-
 namespace math
 {
-
 inline BoundingBox& BoundingBox::operator*=(const Matrix& matrix)
 {
     transform(matrix);

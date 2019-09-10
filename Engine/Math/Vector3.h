@@ -1,8 +1,12 @@
 #pragma once
 
+#include <initializer_list>
+#include "Vector2.h"
+
 namespace math
 {
 class Matrix;
+class Vector2;
 
 /**
  * Defines a 3-element floating point vector.
@@ -16,26 +20,28 @@ class Matrix;
 class Vector3
 {
 public:
-    /**
-     * The x-coordinate.
-     */
-    float x;
-
-    /**
-     * The y-coordinate.
-     */
-    float y;
-
-    /**
-     * The z-coordinate.
-     */
-    float z;
+    union {
+        float data[3];
+        struct
+        {
+            float x, y, z;
+        };
+        struct
+        {
+            float r, g, b;
+        };
+        Vector2 xy;
+    };
 
     /**
      * Constructs a new vector initialized to all zeros.
      */
     Vector3();
 
+    explicit Vector3(float a);
+    explicit Vector3(const Vector2& v);
+    explicit Vector3(const Vector2& v, float a);
+    Vector3(std::initializer_list<float> initList);
     /**
      * Constructs a new vector initialized to the specified values.
      *

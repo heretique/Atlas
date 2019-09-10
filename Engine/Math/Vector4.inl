@@ -1,9 +1,5 @@
-#include "Matrix.h"
-#include "Vector4.h"
-
 namespace math
 {
-
 inline const Vector4 Vector4::operator+(const Vector4& v) const
 {
     Vector4 result(*this);
@@ -74,12 +70,12 @@ inline bool Vector4::operator<(const Vector4& v) const
 
 inline bool Vector4::operator==(const Vector4& v) const
 {
-    return x==v.x && y==v.y && z==v.z && w==v.w;
+    return x == v.x && y == v.y && z == v.z && w == v.w;
 }
 
 inline bool Vector4::operator!=(const Vector4& v) const
 {
-    return x!=v.x || y!=v.y || z!=v.z || w!=v.w;
+    return x != v.x || y != v.y || z != v.z || w != v.w;
 }
 
 inline const Vector4 operator*(float x, const Vector4& v)

@@ -1,8 +1,5 @@
-#include "Quaternion.h"
-
 namespace math
 {
-
 inline const Quaternion Quaternion::operator*(const Quaternion& q) const
 {
     Quaternion result(*this);
@@ -16,4 +13,4 @@ inline Quaternion& Quaternion::operator*=(const Quaternion& q)
     return *this;
 }
 
-}
+}  // math namespace

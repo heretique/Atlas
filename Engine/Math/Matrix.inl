@@ -1,8 +1,5 @@
-#include "Matrix.h"
-
 namespace math
 {
-
 inline const Matrix Matrix::operator+(const Matrix& m) const
 {
     Matrix result(*this);

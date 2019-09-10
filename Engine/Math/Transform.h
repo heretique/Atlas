@@ -1,5 +1,4 @@
-#ifndef TRANSFORM_H_
-#define TRANSFORM_H_
+#pragma once
 
 #include "Matrix.h"
 #include "Quaternion.h"
@@ -120,9 +119,7 @@ public:
     class Listener
     {
     public:
-        virtual ~Listener()
-        {
-        }
+        virtual ~Listener() {}
 
         /**
          * Handles when an transform has changed.
@@ -833,6 +830,4 @@ protected:
      */
     mutable char _matrixDirtyBits;
 };
-}
-
-#endif
+}  // math namespace

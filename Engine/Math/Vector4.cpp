@@ -12,6 +12,59 @@ Vector4::Vector4()
 {
 }
 
+Vector4::Vector4(std::initializer_list<float> initList)
+{
+    size_t m    = std::min(static_cast<size_t>(4), initList.size());
+    auto   iter = initList.begin();
+    for (size_t i = 0; i < m; ++i)
+    {
+        data[i] = *iter;
+        ++iter;
+    }
+    /* Zero-fill any remaining elements */
+    for (size_t i = m; i < 4; ++i)
+        data[i] = 0.f;
+}
+Vector4::Vector4(float a)
+    : x(a)
+    , y(a)
+    , z(a)
+    , w(a)
+{
+}
+
+Vector4::Vector4(const Vector2& v)
+    : x(v.x)
+    , y(v.y)
+    , z(0.f)
+    , w(0.f)
+{
+}
+
+Vector4::Vector4(const Vector2& v, float a, float b)
+    : x(v.x)
+    , y(v.y)
+    , z(a)
+    , w(b)
+{
+}
+
+Vector4::Vector4(const Vector3& v)
+{
+    x = v.x;
+    y = v.y;
+    z = v.z;
+    w = 0.f;
+}
+
+Vector4::Vector4(const Vector3& v, float a)
+{
+    x = v.x;
+    y = v.y;
+    z = v.z;
+    w = a;
+}
+
 Vector4::Vector4(float x, float y, float z, float w)
     : x(x)
     , y(y)
@@ -50,9 +103,7 @@ Vector4 Vector4::fromColor(unsigned int color)
     return value;
 }
 
-Vector4::~Vector4()
-{
-}
+Vector4::~Vector4() {}
 
 const Vector4& Vector4::zero()
 {

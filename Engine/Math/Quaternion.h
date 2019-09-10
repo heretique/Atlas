@@ -1,5 +1,4 @@
-#ifndef QUATERNION_H_
-#define QUATERNION_H_
+#pragma once
 
 #include "Matrix.h"
 #include "Plane.h"
@@ -147,14 +146,14 @@ public:
     bool isZero() const;
 
     /**
-    * Creates this quaternion equal to the rotation from the specified euler angles
-    * and stores the result in dst.
-    *
-    * @param yaw The yaw angle (in radians)
-    * @param pitch The pitch angle (in radians)
-    * @param roll The roll angle (in radians)
-    * @param dst A quaternion to store the result in.
-    */
+     * Creates this quaternion equal to the rotation from the specified euler angles
+     * and stores the result in dst.
+     *
+     * @param yaw The yaw angle (in radians)
+     * @param pitch The pitch angle (in radians)
+     * @param roll The roll angle (in radians)
+     * @param dst A quaternion to store the result in.
+     */
     static void createFromEuler(float yaw, float pitch, float roll, Quaternion* dst);
 
     /**
@@ -177,13 +176,13 @@ public:
     static void createFromAxisAngle(const Vector3& axis, float angle, Quaternion* dst);
 
     /**
-    * Calculates (in radians) the yaw, pitch and roll angles of this quaternion
-    * and stores the results in the specified pointers.
-    *
-    * @param yaw The returned yaw angle
-    * @param pitch The returned pitch angle
-    * @param roll The returned roll angle
-    */
+     * Calculates (in radians) the yaw, pitch and roll angles of this quaternion
+     * and stores the results in the specified pointers.
+     *
+     * @param yaw The returned yaw angle
+     * @param pitch The returned pitch angle
+     * @param roll The returned roll angle
+     */
     void computeEuler(float* yaw, float* pitch, float* roll);
 
     /**
@@ -428,8 +427,6 @@ private:
 
     static void slerpForSquad(const Quaternion& q1, const Quaternion& q2, float t, Quaternion* dst);
 };
-}
+}  // math namespace
 
 #include "Quaternion.inl"
-
-#endif

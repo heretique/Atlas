@@ -17,6 +17,20 @@ Vector2::Vector2(float constant)
 {
 }
 
+Vector2::Vector2(std::initializer_list<float> initList)
+{
+    size_t m    = std::min(static_cast<size_t>(2), initList.size());
+    auto   iter = initList.begin();
+    for (size_t i = 0; i < m; ++i)
+    {
+        data[i] = *iter;
+        ++iter;
+    }
+    /* Zero-fill any remaining elements */
+    for (size_t i = m; i < 2; ++i)
+        data[i] = 0.f;
+}
+
 Vector2::Vector2(float x, float y)
     : x(x)
     , y(y)
@@ -38,9 +52,7 @@ Vector2::Vector2(const Vector2& copy)
     set(copy);
 }
 
-Vector2::~Vector2()
-{
-}
+Vector2::~Vector2() {}
 
 const Vector2& Vector2::zero()
 {
@@ -219,8 +231,8 @@ void Vector2::scale(const Vector2& scale)
 
 void Vector2::rotate(const Vector2& point, float angle)
 {
-    double sinAngle = sin(angle);
-    double cosAngle = cos(angle);
+    float sinAngle = sin(angle);
+    float cosAngle = cos(angle);
 
     if (point.isZero())
     {

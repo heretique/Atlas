@@ -31,9 +31,7 @@ Matrix::Matrix(const Matrix& copy)
     memcpy(m, copy.m, MATRIX_SIZE);
 }
 
-Matrix::~Matrix()
-{
-}
+Matrix::~Matrix() {}
 
 const Matrix& Matrix::identity()
 {
@@ -956,4 +954,4 @@ void Matrix::transpose(Matrix* dst) const
 
     MathUtil::transposeMatrix(m, dst->m);
 }
-}
+}  // math namespace

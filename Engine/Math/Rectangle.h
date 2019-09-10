@@ -1,5 +1,4 @@
-#ifndef RECTANGLE_H_
-#define RECTANGLE_H_
+#pragma once
 
 namespace math
 {
@@ -240,6 +239,4 @@ public:
         ar(x, y, width, height);
     }
 };
-}
-
-#endif
+}  // math namespace

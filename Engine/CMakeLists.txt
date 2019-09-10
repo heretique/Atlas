@@ -71,6 +71,8 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Math/MathUtil.h
     Math/MathUtil.inl
     Math/MathUtilNeon.inl
+    Math/MathUtilNeon64.inl
+    Math/MathUtilSSE.inl
     Math/Matrix.cpp
     Math/Matrix.h
     Math/Matrix.inl

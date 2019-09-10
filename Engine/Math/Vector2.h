@@ -1,5 +1,7 @@
 #pragma once
 
+#include <initializer_list>
+
 namespace math
 {
 class Matrix;
@@ -10,15 +12,17 @@ class Matrix;
 class Vector2
 {
 public:
-    /**
-     * The x coordinate.
-     */
-    float x;
-
-    /**
-     * The y coordinate.
-     */
-    float y;
+    union {
+        float data[2];
+        struct
+        {
+            float x, y;
+        };
+        struct
+        {
+            float u, v;
+        };
+    };
 
     /**
      * Constructs a new vector initialized to all zeros.
@@ -27,6 +31,7 @@ public:
 
     Vector2(float constant);
 
+    Vector2(std::initializer_list<float> initList);
     /**
      * Constructs a new vector initialized to the specified values.
      *

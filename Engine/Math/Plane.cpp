@@ -30,9 +30,7 @@ Plane::Plane(const Plane& copy)
     set(copy);
 }
 
-Plane::~Plane()
-{
-}
+Plane::~Plane() {}
 
 const Vector3& Plane::getNormal() const
 {
@@ -305,4 +303,4 @@ void Plane::normalize()
         _distance *= normalizeFactor;
     }
 }
-}
+}  // math namespace

@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Vector2.h"
+#include "Vector3.h"
+#include <initializer_list>
+
 namespace math
 {
 class Matrix;
@@ -10,30 +14,32 @@ class Matrix;
 class Vector4
 {
 public:
-    /**
-     * The x-coordinate.
-     */
-    float x;
-
-    /**
-     * The y-coordinate.
-     */
-    float y;
-
-    /**
-     * The z-coordinate.
-     */
-    float z;
-
-    /**
-     * The w-coordinate.
-     */
-    float w;
+    union {
+        float data[4];
+        struct
+        {
+            float x, y, z, w;
+        };
+        struct
+        {
+            float r, g, b, a;
+        };
+        Vector2 xy;
+        Vector3 xyz;
+        Vector3 rgb;
+    };
 
     /**
      * Constructs a new vector initialized to all zeros.
      */
     Vector4();
+
+    explicit Vector4(float a);
+    explicit Vector4(const Vector2& v);
+    explicit Vector4(const Vector2& v, float a, float b);
+    explicit Vector4(const Vector3& v);
+    explicit Vector4(const Vector3& v, float a);
+    Vector4(std::initializer_list<float> initList);
 
     /**
      * Constructs a new vector initialized to the specified values.

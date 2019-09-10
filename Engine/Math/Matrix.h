@@ -1,5 +1,4 @@
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#pragma once
 
 #include "Vector3.h"
 #include "Vector4.h"
@@ -315,13 +314,13 @@ public:
     static void createRotationZ(float angle, Matrix* dst);
 
     /**
-    * Creates a matrix describing the yaw, pitch and roll rotations
-    *
-    * @param yaw The yaw angle (in radians)
-    * @param pitch The pitch angle (in radians)
-    * @param roll The roll angle (in radians)
-    * @param dst A matrix to store the result in.
-    */
+     * Creates a matrix describing the yaw, pitch and roll rotations
+     *
+     * @param yaw The yaw angle (in radians)
+     * @param pitch The pitch angle (in radians)
+     * @param roll The roll angle (in radians)
+     * @param dst A matrix to store the result in.
+     */
     static void createFromEuler(float yaw, float pitch, float roll, Matrix* dst);
 
     /**
@@ -975,5 +974,3 @@ inline const Vector4 operator*(const Matrix& m, const Vector4& v);
 }
 
 #include "Matrix.inl"
-
-#endif

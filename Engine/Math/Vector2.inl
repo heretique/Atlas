@@ -1,5 +1,3 @@
-#include "Vector2.h"
-
 namespace math
 {
 inline const Vector2 Vector2::operator+(const Vector2& v) const

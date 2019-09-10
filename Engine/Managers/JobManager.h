@@ -1,29 +1,27 @@
 #pragma once
 
 #include "Core/Types.h"
-#include "blockingconcurrentqueue.h"
+#include "concurrentqueue.h"
 #include "signals-cpp/signals.hpp"
 
 namespace atlas
 {
 typedef std::function<void(void*, uint)> JobFunc;
-typedef std::function<void()> JobDoneFunc;
+typedef std::function<void()>            JobDoneFunc;
 
 struct Job
 {
     JobFunc func;
     void*   data;
     uint    count;
-    bool    pending{true};  // used for jobs you wait for
+    bool    pending {true};  // used for jobs you wait for
 };
 
 template <typename DataType, int Size>
 class CountSplitter
 {
 public:
-    CountSplitter()
-    {
-    }
+    CountSplitter() {}
 
     static bool split(uint count)
     {
@@ -35,9 +33,7 @@ template <typename DataType, int Size>
 class DataSizeSplitter
 {
 public:
-    DataSizeSplitter()
-    {
-    }
+    DataSizeSplitter() {}
 
     static bool split(uint count)
     {
@@ -67,11 +63,11 @@ public:
     void wait();
 
 private:
-    moodycamel::BlockingConcurrentQueue<Job, ConcurrentQueueTraits> _jobQueue;
-    std::vector<std::thread> _runners;
-    uint                     _cpuCount{0};
-    std::atomic<uint>        _pendingTasks{0};
-    std::atomic_flag         _running;
+    moodycamel::ConcurrentQueue<Job, ConcurrentQueueTraits> _jobQueue;
+    std::vector<std::thread>                                _runners;
+    uint                                                    _cpuCount {0};
+    std::atomic<uint>                                       _pendingTasks {0};
+    std::atomic_flag                                        _running;
 };
 
 template <typename DataType, typename SplitterType>

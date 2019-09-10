@@ -1,8 +1,5 @@
-#include "BoundingSphere.h"
-
 namespace math
 {
-
 inline BoundingSphere& BoundingSphere::operator*=(const Matrix& matrix)
 {
     transform(matrix);

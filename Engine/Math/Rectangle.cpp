@@ -33,9 +33,7 @@ Rectangle::Rectangle(const Rectangle& copy)
     set(copy);
 }
 
-Rectangle::~Rectangle()
-{
-}
+Rectangle::~Rectangle() {}
 
 const Rectangle& Rectangle::empty()
 {
@@ -174,4 +172,4 @@ bool Rectangle::operator!=(const Rectangle& r) const
 {
     return (x != r.x || width != r.width || y != r.y || height != r.height);
 }
-}
+}  // math namespace

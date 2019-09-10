@@ -98,7 +98,7 @@ void MainWindow::init()
                                &transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 1000; ++i)
+    for (int i = 0; i < 10000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);

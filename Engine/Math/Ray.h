@@ -1,6 +1,4 @@
-#ifndef RAY_H_
-#define RAY_H_
-
+#pragma once
 #include "Vector3.h"
 
 namespace math
@@ -201,8 +199,6 @@ private:
  * @return The resulting transformed ray.
  */
 inline const Ray operator*(const Matrix& matrix, const Ray& ray);
-}
+}  // math namespace
 
 #include "Ray.inl"
-
-#endif

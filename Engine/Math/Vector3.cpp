@@ -12,6 +12,41 @@ Vector3::Vector3()
 {
 }
 
+Vector3::Vector3(float a)
+    : x(a)
+    , y(a)
+    , z(a)
+{
+}
+
+Vector3::Vector3(const Vector2& v)
+    : x(v.x)
+    , y(v.y)
+    , z(0.f)
+{
+}
+
+Vector3::Vector3(const Vector2& v, float a)
+    : x(v.x)
+    , y(v.y)
+    , z(a)
+{
+}
+
+Vector3::Vector3(std::initializer_list<float> initList)
+{
+    size_t m    = std::min(static_cast<size_t>(3), initList.size());
+    auto   iter = initList.begin();
+    for (size_t i = 0; i < m; ++i)
+    {
+        data[i] = *iter;
+        ++iter;
+    }
+    /* Zero-fill any remaining elements */
+    for (size_t i = m; i < 3; ++i)
+        data[i] = 0.f;
+}
+
 Vector3::Vector3(float x, float y, float z)
     : x(x)
     , y(y)
@@ -49,9 +84,7 @@ Vector3 Vector3::fromColor(unsigned int color)
     return value;
 }
 
-Vector3::~Vector3()
-{
-}
+Vector3::~Vector3() {}
 
 const Vector3& Vector3::zero()
 {

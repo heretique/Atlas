@@ -1,8 +1,5 @@
-#include "Plane.h"
-
 namespace math
 {
-
 inline Plane& Plane::operator*=(const Matrix& matrix)
 {
     transform(matrix);
@@ -16,4 +13,4 @@ inline const Plane operator*(const Matrix& matrix, const Plane& plane)
     return p;
 }
 
-}
+}  // math namspace
