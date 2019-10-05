@@ -114,8 +114,6 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Utils/BgfxUtils.h
     Utils/PrintContainers.h)
 
-find_package(SDL2 REQUIRED)
-
 target_include_directories(atlas PRIVATE .
     ../3rdparty/entt/src
     ../3rdparty/cereal/include
@@ -123,6 +121,15 @@ target_include_directories(atlas PRIVATE .
     ../3rdparty/concurrentqueue)
 
 target_link_libraries(atlas bx bimg bgfx atlas::fmt imgui wren wrenpp)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    add_library(sdl2 STATIC IMPORTED)
+    set_target_properties(sdl2 PROPERTIES
+        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/sdl/include)
+    set_target_properties(sdl2 PROPERTIES
+        IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/../3rdparty/sdl/win/msvc/x64/SDL2.lib)
+    target_link_libraries(atlas sdl2)
+endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     find_library(COCOA_LIBRARY Cocoa)
@@ -137,28 +144,23 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-        set(RPI_LIB_PATHS "/opt/vc/lib")
-	find_package(Threads REQUIRED)
-        find_package(OpenGL REQUIRED)
-        find_package(X11 REQUIRED)
-#	find_library(GLES2_LIBRARY GLESv2 PATHS ${RPI_LIB_PATHS})
-#	find_library(EGL_LIBRARY EGL PATHS ${RPI_LIB_PATHS})
-#	find_library(BCM_HOST_LIBRARY bcm_host PATHS ${RPI_LIB_PATHS})
-	find_library(DL_LIBRARY dl)
-	find_library(RT_LIBRARY rt)
-        find_library(SDL2_LIBRARY SDL2)
-        find_path(SDL2_INCLUDE SDL2)
-	
-#	message(${GLES2_LIBRARY})
-#	message(${EGL_LIBRARY})
-#	message(${BCM_HOST_LIBRARY})
-	message(${DL_LIBRARY})
-	message(${RT_LIBRARY})
-        message(${SDL2_LIBRARY})
-        message(${SDL2_INCLUDE})
-	
-        target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
-        target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY})
+
+    set(RPI_LIB_PATHS "/opt/vc/lib")
+    find_package(Threads REQUIRED)
+    find_package(OpenGL REQUIRED)
+    find_package(X11 REQUIRED)
+    find_library(DL_LIBRARY dl)
+    find_library(RT_LIBRARY rt)
+    find_library(SDL2_LIBRARY SDL2)
+    find_path(SDL2_INCLUDE SDL2)
+
+    message(${DL_LIBRARY})
+    message(${RT_LIBRARY})
+    message(${SDL2_LIBRARY})
+    message(${SDL2_INCLUDE})
+
+    target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
+    target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY})
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_14)
