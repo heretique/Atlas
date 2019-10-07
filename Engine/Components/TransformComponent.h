@@ -1,20 +1,20 @@
 #pragma once
 
-#include "Math/Transform.h"
+#include "Hq/Math/MathTypes.h"
 
 namespace atlas
 {
 class TransformComponent
 {
 public:
-    const math::Matrix& world() const;
-    math::Matrix&       world();
-    const math::Matrix& local() const;
-    math::Matrix&       local();
+    const hq::math::Mat4x4& world() const;
+    hq::math::Mat4x4&       world();
+    const hq::math::Mat4x4& local() const;
+    hq::math::Mat4x4&       local();
 
 private:
-    math::Matrix _worldTransform;
-    math::Matrix _localTransform;
+    hq::math::Mat4x4 _worldTransform {hq::math::Mat4x4::Identity};
+    hq::math::Mat4x4 _localTransform {hq::math::Mat4x4::Identity};
 };
 
 }  // atlas namespace

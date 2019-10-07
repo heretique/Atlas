@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Debug.h"
-#include "Core/Types.h"
+#include "Hq/BasicTypes.h"
 
 #include <string>
 

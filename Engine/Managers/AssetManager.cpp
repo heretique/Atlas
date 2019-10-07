@@ -2,11 +2,13 @@
 
 #include "Assets/Asset.h"
 #include "Core/Engine.h"
-#include "Managers/JobManager.h"
+#include "Hq/JobManager.h"
 
 #include <fstream>
 
 #include <spdlog/spdlog.h>
+
+using namespace hq;
 
 namespace atlas
 {
@@ -14,13 +16,9 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager()
-{
-}
+AssetManager::AssetManager() {}
 
-AssetManager::~AssetManager()
-{
-}
+AssetManager::~AssetManager() {}
 
 void AssetManager::registerAssetType(AssetType assetType, std::string assetTypeName, AssetFactoryFunc f)
 {
@@ -29,7 +27,7 @@ void AssetManager::registerAssetType(AssetType assetType, std::string assetTypeN
         Engine::log().warn("Asset type '{}', already registered", assetName(assetType));
         return;
     }
-    AssetRegistryEntry entry{assetTypeName, f};
+    AssetRegistryEntry entry {assetTypeName, f};
     _registry.insert(std::make_pair(assetType, entry));
 }
 

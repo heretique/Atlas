@@ -2,7 +2,7 @@
 
 #include "Assets/Asset.h"
 #include "Core/SimpleMeshVertex.h"
-#include "Math/BoundingBox.h"
+#include "Hq/Math/MathTypes.h"
 #include "bgfx/bgfx.h"
 #include <vector>
 
@@ -32,7 +32,7 @@ private:
     //    bool                          _16BitIndices{true};
     bgfx::VertexBufferHandle      _vbh = BGFX_INVALID_HANDLE;
     bgfx::IndexBufferHandle       _ibh = BGFX_INVALID_HANDLE;
-    math::BoundingBox             _aabb;
+    hq::math::Box3                _aabb;
     std::vector<SimpleMeshVertex> _vertices;
     std::vector<u16>              _indices;
     AssetPtr                      _texture;

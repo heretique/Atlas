@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Assets/Types.h"
-#include "Core/StringHash.h"
-#include "Core/Types.h"
+#include "Hq/StringHash.h"
+#include "Hq/BasicTypes.h"
 
 #include <functional>
 #include <memory>
@@ -15,7 +15,7 @@ class Asset
 public:
     virtual ~Asset();
 
-    StringHash         hash() const;
+    hq::StringHash     hash() const;
     AssetType          type() const;
     u32                flags() const;
     const std::string& filename() const;
@@ -32,16 +32,16 @@ protected:
     virtual bool uploadGPUImpl();
 
 protected:
-    AssetType   _type{AssetTypes::Undefined};
-    std::string _filename{};
-    StringHash  _hash{};
-    u32         _flags{0};
-    bool        _loaded{false};
+    AssetType      _type {AssetTypes::Undefined};
+    std::string    _filename {};
+    hq::StringHash _hash {};
+    u32            _flags {0};
+    bool           _loaded {false};
 
     friend class AssetManager;
 };
 
-inline StringHash Asset::hash() const
+inline hq::StringHash Asset::hash() const
 {
     return _hash;
 }

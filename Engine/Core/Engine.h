@@ -24,6 +24,11 @@ class Registry;
 using DefaultRegistry = Registry<std::uint32_t>;
 }
 
+namespace hq
+{
+class JobManager;
+}
+
 namespace atlas
 {
 // Forward declarations
@@ -31,7 +36,6 @@ class PluginManager;
 class AssetManager;
 class AudioManager;
 class PhysicsManager;
-class JobManager;
 class MainWindow;
 
 class Engine
@@ -49,7 +53,7 @@ public:
     {
         return *_ecsManager;
     }
-    static JobManager& jobs()
+    static hq::JobManager& jobs()
     {
         return *_jobManager;
     }
@@ -73,7 +77,7 @@ private:
     static PluginManager*         _pluginManager;
     static AssetManager*          _assetManager;
     static entt::DefaultRegistry* _ecsManager;
-    static JobManager*            _jobManager;
+    static hq::JobManager*        _jobManager;
 
     friend class MainWindow;
 };

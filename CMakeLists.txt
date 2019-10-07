@@ -11,6 +11,7 @@ cmake_minimum_required(VERSION 3.5)
 project(atlas VERSION 0.1.0 LANGUAGES CXX C)
 include(CMakeToolsHelpers OPTIONAL)
 
+add_subdirectory(hq hq)
 add_subdirectory(3rdparty/projects/bx)
 add_subdirectory(3rdparty/projects/bimg)
 add_subdirectory(3rdparty/projects/bgfx)

@@ -12,7 +12,7 @@
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
-#include "Managers/JobManager.h"
+#include "Hq/JobManager.h"
 #include "Managers/PluginManager.h"
 #include "entt/entity/registry.hpp"
 
@@ -27,7 +27,7 @@ spdlog::logger*        Engine::_logger        = nullptr;
 PluginManager*         Engine::_pluginManager = nullptr;
 AssetManager*          Engine::_assetManager  = nullptr;
 entt::DefaultRegistry* Engine::_ecsManager    = nullptr;
-JobManager*            Engine::_jobManager    = nullptr;
+hq::JobManager*        Engine::_jobManager    = nullptr;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
 
@@ -47,7 +47,7 @@ bool Engine::init()
     _logger = spdlog::stdout_color_mt("console").get();
 
     if (_jobManager == nullptr)
-        _jobManager = new JobManager();
+        _jobManager = new hq::JobManager();
     if (_pluginManager == nullptr)
         _pluginManager = new PluginManager();
     if (_assetManager == nullptr)

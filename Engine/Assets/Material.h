@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Asset.h"
-#include "Core/Types.h"
+#include "Hq/BasicTypes.h"
 #include <vector>
 #include <bgfx/bgfx.h>
 #include <cereal/cereal.hpp>

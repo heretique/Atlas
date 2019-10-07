@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Math/Frustum.h"
-#include "Math/Matrix.h"
-#include "Math/Rectangle.h"
-#include "Math/Vector2.h"
+#include "Hq/Math/MathTypes.h"
 
 namespace atlas
 {
@@ -53,7 +50,7 @@ public:
      */
     void setOrthographic(float zoomX, float zoomY, float aspectRatio, float nearPlane, float farPlane);
 
-    void setTransform(const math::Matrix& transform);
+    void setTransform(const hq::math::Mat4x4& transform);
 
     /**
      * Gets the type of camera.
@@ -154,21 +151,21 @@ public:
      *
      * @return The camera view matrix.
      */
-    const math::Matrix& getViewMatrix() const;
+    const hq::math::Mat4x4& getViewMatrix() const;
 
     /**
      * Gets the camera's inverse view matrix.
      *
      * @return The camera inverse view matrix.
      */
-    const math::Matrix& getInverseViewMatrix() const;
+    const hq::math::Mat4x4& getInverseViewMatrix() const;
 
     /**
      * Gets the camera's projection matrix.
      *
      * @return The camera projection matrix.
      */
-    const math::Matrix& getProjectionMatrix() const;
+    const hq::math::Mat4x4& getProjectionMatrix() const;
 
     /**
      * Sets a custom projection matrix to be used by the camera.
@@ -182,7 +179,7 @@ public:
      *
      * @param matrix Custom projection matrix.
      */
-    void setProjectionMatrix(const math::Matrix& matrix);
+    void setProjectionMatrix(const hq::math::Mat4x4& matrix);
 
     /**
      * Resets the camera to use the internally computed projection matrix
@@ -195,21 +192,21 @@ public:
      *
      * @return The camera view * projection matrix.
      */
-    const math::Matrix& getViewProjectionMatrix() const;
+    const hq::math::Mat4x4& getViewProjectionMatrix() const;
 
     /**
      * Gets the camera's inverse view * projection matrix.
      *
      * @return The camera inverse view * projection matrix.
      */
-    const math::Matrix& getInverseViewProjectionMatrix() const;
+    const hq::math::Mat4x4& getInverseViewProjectionMatrix() const;
 
     /**
      * Gets the view bounding frustum.
      *
      * @return The viewing bounding frustum.
      */
-    const math::Frustum& getFrustum() const;
+    const hq::math::Frustum& getFrustum() const;
 
     /**
      * Projects the specified world position into the viewport coordinates.
@@ -222,8 +219,8 @@ public:
      *
      * @script{ignore}
      */
-    void project(const math::Rectangle& viewport, const math::Vector3& position, float* x, float* y,
-                 float* depth = nullptr) const;
+    void project(const hq::math::Rect& viewport, const hq::math::Vec3& position, float& x, float& y,
+                 float& depth) const;
 
     /**
      * Projects the specified world position into the viewport coordinates.
@@ -232,7 +229,7 @@ public:
      * @param position The world space position.
      * @param out Populated with the resulting screen-space position.
      */
-    void project(const math::Rectangle& viewport, const math::Vector3& position, math::Vector2* out) const;
+    void project(const hq::math::Rect& viewport, const hq::math::Vec3& position, hq::math::Vec2& out) const;
 
     /**
      * Projects the specified world position into the viewport coordinates.
@@ -241,7 +238,7 @@ public:
      * @param position The world space position.
      * @param out Populated with the resulting screen-space position, with the pixel depth in the Z coordinate.
      */
-    void project(const math::Rectangle& viewport, const math::Vector3& position, math::Vector3* out) const;
+    void project(const hq::math::Rect& viewport, const hq::math::Vec3& position, hq::math::Vec3& out) const;
 
     /**
      * Converts a viewport-space coordinate to a world-space position for the given depth value.
@@ -255,7 +252,7 @@ public:
      * @param depth The depth range.
      * @param dst The world space position.
      */
-    void unproject(const math::Rectangle& viewport, float x, float y, float depth, math::Vector3* dst) const;
+    void unproject(const hq::math::Rect& viewport, float x, float y, float depth, hq::math::Vec3& dst) const;
 
     /**
      * Picks a ray that can be used for picking given the specified viewport-space coordinates.
@@ -265,10 +262,10 @@ public:
      * @param y The viewport y-coordinate.
      * @param dst The computed pick ray.
      */
-    void pickRay(const math::Rectangle& viewport, float x, float y, math::Ray* dst) const;
+    void pickRay(const hq::math::Rect& viewport, float x, float y, hq::math::Ray3& dst) const;
 
 protected:
-    void updateCamera(const math::Matrix& transform = math::Matrix::identity());
+    void updateCamera(const hq::math::Mat4x4& transform = hq::math::Mat4x4::Identity);
 
 private:
     /**
@@ -276,17 +273,17 @@ private:
      */
     Camera& operator=(const Camera&);
 
-    CameraType            _cameraType;
-    float                 _fieldOfView;
-    float                 _zoom[2];
-    float                 _aspectRatio;
-    float                 _nearPlane;
-    float                 _farPlane;
-    mutable math::Matrix  _view;
-    mutable math::Matrix  _projection;
-    mutable math::Matrix  _viewProjection;
-    mutable math::Matrix  _inverseView;
-    mutable math::Matrix  _inverseViewProjection;
-    mutable math::Frustum _bounds;
+    CameraType                _cameraType;
+    float                     _fieldOfView;
+    float                     _zoom[2];
+    float                     _aspectRatio;
+    float                     _nearPlane;
+    float                     _farPlane;
+    mutable hq::math::Mat4x4  _view;
+    mutable hq::math::Mat4x4  _projection;
+    mutable hq::math::Mat4x4  _viewProjection;
+    mutable hq::math::Mat4x4  _inverseView;
+    mutable hq::math::Mat4x4  _inverseViewProjection;
+    mutable hq::math::Frustum _bounds;
 };
 }

@@ -3,22 +3,22 @@
 
 namespace atlas
 {
-const math::Matrix& TransformComponent::world() const
+const hq::math::Mat4x4& TransformComponent::world() const
 {
     return _worldTransform;
 }
 
-math::Matrix& TransformComponent::world()
+hq::math::Mat4x4& TransformComponent::world()
 {
     return _worldTransform;
 }
 
-const math::Matrix& TransformComponent::local() const
+const hq::math::Mat4x4& TransformComponent::local() const
 {
     return _localTransform;
 }
 
-math::Matrix& TransformComponent::local()
+hq::math::Mat4x4& TransformComponent::local()
 {
     return _localTransform;
 }

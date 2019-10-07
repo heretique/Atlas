@@ -7,9 +7,10 @@
 #include "Components/TransformComponent.h"
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
-#include "Managers/JobManager.h"
-#include "Math/Utils.h"
-#include <cmath>
+#include "Hq/Math/Math.h"
+#include "Hq/JobManager.h"
+#include "Hq/Rng.h"
+#include "Hq/Math/Mat4x4.h"
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
 
@@ -18,13 +19,16 @@
 #include "vs_axes.bin.h"
 #include <imgui/imgui.h>
 
+using namespace hq;
+using namespace hq::math;
+
 namespace atlas
 {
 void testJob(void* data, uint count)
 {
     float* testData = static_cast<float*>(data);
     for (uint i = 0; i < count; ++i)
-        testData[i] = std::sin((float)i / count) + std::cos((float)i / count);
+        testData[i] = math::sin((float)i / count) + math::cos((float)i / count);
 }
 
 struct PosColorVertex
@@ -42,7 +46,7 @@ struct PosColorVertex
             .end();
     }
 
-	static bgfx::VertexLayout ms_decl;
+    static bgfx::VertexLayout ms_decl;
 };
 
 bgfx::VertexLayout PosColorVertex::ms_decl;
@@ -94,11 +98,10 @@ void MainWindow::init()
     SDLWindow::Size size            = windowSize();
     cameraComponent.setPerspective(60.f, (float)size.width / size.height, .1f, 100.f);
     TransformComponent& transform = registry.assign<TransformComponent>(camera);
-    math::Matrix::createLookAt(math::Vector3(5, 5, 10), math::Vector3::zero(), math::Vector3::unitY(),
-                               &transform.world());
+    createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
-	for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 5000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -107,9 +110,8 @@ void MainWindow::init()
 
         mesh.setGeomtry(object);
         mat.setMaterial(material);
-        transform.world().translate(10 * MATH_RANDOM_MINUS1_1(), 10 * MATH_RANDOM_MINUS1_1(),
-                                    10 * MATH_RANDOM_MINUS1_1());
-        transform.world().rotateX(-M_PI_2);
+        translate(transform.world(), 10 * hq::randMinus11(), 10 * hq::randMinus11(), 10 * hq::randMinus11());
+        rotateX(transform.world(), -kPiHalf);
     }
 }
 
@@ -118,7 +120,7 @@ void MainWindow::update(float dt)
     //    EASY_FUNCTION(profiler::colors::Amber);
 
     const Camera& cameraComponent = Engine::ecs().get<Camera>();
-    bgfx::setViewTransform(0, cameraComponent.getViewMatrix().m, cameraComponent.getProjectionMatrix().m);
+    bgfx::setViewTransform(0, cameraComponent.getViewMatrix().data, cameraComponent.getProjectionMatrix().data);
     renderAxes();
     render(dt);
 }
@@ -155,7 +157,7 @@ void MainWindow::render(float dt)
         MeshComponent&      mesh      = view.get<MeshComponent>(entity);
         MaterialComponent&  material  = view.get<MaterialComponent>(entity);
 
-        bgfx::setTransform(transform.world().m);
+        bgfx::setTransform(transform.world().data);
         bgfx::setVertexBuffer(0, mesh.geometry()->vbo());
         bgfx::setIndexBuffer(mesh.geometry()->ibo());
         material.material()->bind();

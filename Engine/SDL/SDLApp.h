@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Types.h"
+#include "Hq/BasicTypes.h"
 #include <list>
 #include <memory>
 
@@ -23,14 +23,14 @@ public:
         return _instance;
     }
 
-    int init(u32 flags);
-    int addWindow(SDLWindow* window);
+    int  init(u32 flags);
+    int  addWindow(SDLWindow* window);
     int  exec();
     bool shouldCloseWindow(SDL_Event& e, SDLWindow& window);
     void quit();
 
 private:
-    bool                                   _running{true};
+    bool                                   _running {true};
     std::list<std::unique_ptr<SDLWindow> > _windows;
 };
 }

@@ -2,10 +2,10 @@
 
 #include "Assets/Types.h"
 #include "Core/Engine.h"
-#include "Core/Hash.h"
-#include "Core/PackUtils.h"
+#include "Hq/Hash.h"
+#include "Hq/PackUtils.h"
 #include "Managers/AssetManager.h"
-#include "Math/Vector3.h"
+#include "Hq/Math/Box3.h"
 
 #include <algorithm>
 #include <unordered_set>
@@ -57,13 +57,14 @@ namespace
     {
         size_t operator()(const index_t& k) const
         {
-            return make_hash(k.vertex_index, k.texcoord_index, k.normal_index);
+            return hq::make_hash(k.vertex_index, k.texcoord_index, k.normal_index);
         }
     };
 }
 
 bool GeometryAsset::loadImpl(std::istream& is)
 {
+    using namespace hq;
     tinyobj::attrib_t                vertexData;
     std::vector<tinyobj::shape_t>    shapes;
     std::vector<tinyobj::material_t> materials;
@@ -146,7 +147,8 @@ bool GeometryAsset::loadImpl(std::istream& is)
         vertex.v = 1.f - vertexData.texcoords[static_cast<size_t>(index.texcoord_index * 2 + 1)];
         _vertices.emplace_back(vertex);
         // update bbox
-        _aabb.extend(math::Vector3(vertex.x, vertex.y, vertex.z));
+
+        math::extend(_aabb, math::Vec3(vertex.x, vertex.y, vertex.z));
     }
 
     material_t material = materials.front();
@@ -169,7 +171,7 @@ bool atlas::GeometryAsset::uploadGPUImpl()
 
     const bgfx::Memory* vertexMem =
         bgfx::copy(reinterpret_cast<u8*>(_vertices.data()), _vertices.size() * SimpleMeshVertex::size());
-	_vbh = bgfx::createVertexBuffer(vertexMem, SimpleMeshVertex::vertLayout);
+    _vbh = bgfx::createVertexBuffer(vertexMem, SimpleMeshVertex::vertLayout);
 
     const bgfx::Memory* indexMem = bgfx::copy(reinterpret_cast<u8*>(_indices.data()), _indices.size() * sizeof(u16));
     _ibh                         = bgfx::createIndexBuffer(indexMem);

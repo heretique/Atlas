@@ -2,17 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 add_executable(atlas "")
 
-target_sources(atlas PRIVATE Allocators/Allocator.h
-    Allocators/FreelistAllocator.cpp
-    Allocators/FreelistAllocator.h
-    Allocators/LinearAllocator.cpp
-    Allocators/LinearAllocator.h
-    Allocators/PoolAllocator.cpp
-    Allocators/PoolAllocator.h
-    Allocators/ProxyAllocator.cpp
-    Allocators/ProxyAllocator.h
-    Allocators/StackAllocator.cpp
-    Allocators/StackAllocator.h
+target_sources(atlas PRIVATE
     Assets/Asset.cpp
     Assets/Asset.h
     Assets/Geometry.cpp
@@ -36,69 +26,16 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Components/MeshComponent.h
     Components/TransformComponent.cpp
     Components/TransformComponent.h
-    Core/CompileMurmur.h
     Core/Debug.h
     Core/Delegate.h
     Core/Engine.cpp
     Core/Engine.h
-    Core/FreeList.h
-    Core/Handle.h
-    Core/Hash.h
-    Core/NonCopyable.h
-    Core/PackUtils.h
     Core/SerializationArchives.h
     Core/SimpleMeshVertex.h
-    Core/Spinlock.h
-    Core/Streams.h
-    Core/Stringhash.cpp
-    Core/StringHash.h
-    Core/Types.h
     Managers/AssetManager.cpp
     Managers/AssetManager.h
-    Managers/JobManager.cpp
-    Managers/JobManager.h
     Managers/PluginManager.cpp
     Managers/PluginManager.h
-    Math/BoundingBox.cpp
-    Math/BoundingBox.h
-    Math/BoundingBox.inl
-    Math/BoundingSphere.cpp
-    Math/BoundingSphere.h
-    Math/BoundingSphere.inl
-    Math/Frustum.cpp
-    Math/Frustum.h
-    Math/MathUtil.cpp
-    Math/MathUtil.h
-    Math/MathUtil.inl
-    Math/MathUtilNeon.inl
-    Math/MathUtilNeon64.inl
-    Math/MathUtilSSE.inl
-    Math/Matrix.cpp
-    Math/Matrix.h
-    Math/Matrix.inl
-    Math/Plane.cpp
-    Math/Plane.h
-    Math/Plane.inl
-    Math/Quaternion.cpp
-    Math/Quaternion.h
-    Math/Quaternion.inl
-    Math/Ray.cpp
-    Math/Ray.h
-    Math/Ray.inl
-    Math/Rectangle.cpp
-    Math/Rectangle.h
-    Math/Transform.cpp
-    Math/Transform.h
-    Math/Utils.h
-    Math/Vector2.cpp
-    Math/Vector2.h
-    Math/Vector2.inl
-    Math/Vector3.cpp
-    Math/Vector3.h
-    Math/Vector3.inl
-    Math/Vector4.cpp
-    Math/Vector4.h
-    Math/Vector4.inl
     SDL/fs_ocornut_imgui.bin.h
     SDL/Main.cpp
     SDL/MainWindow.cpp
@@ -111,16 +48,14 @@ target_sources(atlas PRIVATE Allocators/Allocator.h
     Systems/RenderSystem.cpp
     Systems/RenderSystem.h
     Utils/BgfxUtils.cpp
-    Utils/BgfxUtils.h
-    Utils/PrintContainers.h)
+    Utils/BgfxUtils.h)
 
 target_include_directories(atlas PRIVATE .
     ../3rdparty/entt/src
     ../3rdparty/cereal/include
-    ../3rdparty/spdlog/include
-    ../3rdparty/concurrentqueue)
+    ../3rdparty/spdlog/include)
 
-target_link_libraries(atlas bx bimg bgfx atlas::fmt imgui wren wrenpp)
+target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui wren wrenpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)
