@@ -27,9 +27,12 @@ public:
     virtual ~SDLWindow();
     u32          winId() const;
     bool         isMain() const;
-    virtual void init();
-    virtual void update(float dt);
+    virtual void onInit();
+    virtual void onUpdate(float dt);
     virtual void onGUI();
+    virtual void onEvent(const SDL_Event& e);
+    virtual void onWindowEvent(const SDL_WindowEvent& e);
+    virtual void onInputEvent(const SDL_Event& e);
     Size         windowSize() const;
 
 protected:
@@ -49,9 +52,9 @@ protected:
 private:
     void* nativeHandle();
     void  doUpdate(float dt);
-    void  handleEvent(SDL_Event& e);
-    void  handleWindowEvent(SDL_WindowEvent& e);
-    void  handleInputEvent(SDL_Event& e);
+    void  handleEvent(const SDL_Event& e);
+    void  handleWindowEvent(const SDL_WindowEvent& e);
+    void  handleInputEvent(const SDL_Event& e);
     void  releaseFramebuffer();
 
 private:

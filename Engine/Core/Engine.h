@@ -34,6 +34,7 @@ namespace atlas
 // Forward declarations
 class PluginManager;
 class AssetManager;
+class InputManager;
 class AudioManager;
 class PhysicsManager;
 class MainWindow;
@@ -48,6 +49,10 @@ public:
     static AssetManager& assets()
     {
         return *_assetManager;
+    }
+    static InputManager& input()
+    {
+        return *_inputManager;
     }
     static entt::DefaultRegistry& ecs()
     {
@@ -76,6 +81,7 @@ private:
     static spdlog::logger*        _logger;
     static PluginManager*         _pluginManager;
     static AssetManager*          _assetManager;
+    static InputManager*          _inputManager;
     static entt::DefaultRegistry* _ecsManager;
     static hq::JobManager*        _jobManager;
 

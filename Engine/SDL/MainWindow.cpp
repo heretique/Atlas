@@ -7,10 +7,13 @@
 #include "Components/TransformComponent.h"
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
+#include "Managers/InputManager.h"
 #include "Hq/Math/Math.h"
 #include "Hq/JobManager.h"
 #include "Hq/Rng.h"
 #include "Hq/Math/Mat4x4.h"
+#include "Hq/Math/Vec3.h"
+#include "Hq/Math/Quat.h"
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
 
@@ -70,7 +73,7 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::init()
+void MainWindow::onInit()
 {
     std::string basePath = SDL_GetBasePath();
     Engine::init();
@@ -101,7 +104,7 @@ void MainWindow::init()
     createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 500; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -111,18 +114,39 @@ void MainWindow::init()
         mesh.setGeomtry(object);
         mat.setMaterial(material);
         translate(transform.world(), 10 * hq::randMinus11(), 10 * hq::randMinus11(), 10 * hq::randMinus11());
-        rotateX(transform.world(), -kPiHalf);
+        rotateX(transform.world(), -kPiHalf + i * kDegToRad);
+        rotateY(transform.world(), -kPiHalf + i * kDegToRad);
+        rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
     }
 }
 
-void MainWindow::update(float dt)
+void MainWindow::onUpdate(float dt)
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
 
-    const Camera& cameraComponent = Engine::ecs().get<Camera>();
+    Camera& cameraComponent = Engine::ecs().get<Camera>();
+
+    Mat4x4 trans {cameraComponent.getViewMatrix()};
+    Vec3   forward(0.f, 0.f, 1.f);
+    Vec3   right(-1.f, 0.f, 0.f);
+    Vec3   up(0.f, 1.f, 0.f);
+    //    transform(forward, cameraComponent.getInverseViewMatrix());
+    //    transform(right, cameraComponent.getInverseViewMatrix());
+    //    transform(up, cameraComponent.getInverseViewMatrix());
+    Vec3 translation;
+    Vec3 scale;
+    Quat rotation;
+    decompose(trans, rotation, scale, translation);
+    Quat rotateHoriz = createFromAxisAngle(up, dt * Engine::input().mouseHorizontalAxis());
+    Quat rotateVert  = createFromAxisAngle(right, -1.f * dt * Engine::input().mouseVerticalAxis());
+    rotation         = mul(rotation, mul(rotateHoriz, rotateVert));
+    translation      = add(translation, mul(forward, 5 * dt * Engine::input().verticalAxis()));
+    translation      = add(translation, mul(right, 5 * dt * Engine::input().horizontalAxis()));
+    cameraComponent.setTransform(Mat4x4(rotation, scale, translation));
     bgfx::setViewTransform(0, cameraComponent.getViewMatrix().data, cameraComponent.getProjectionMatrix().data);
     renderAxes();
     render(dt);
+    Engine::input().resetInput();
 }
 
 void MainWindow::onGUI()
@@ -136,6 +160,16 @@ void MainWindow::onGUI()
 
     ImGui::Text("Submit CPU %0.3f, GPU %0.3f (L: %d)", double(stats->cpuTimeEnd - stats->cpuTimeBegin) * toMsCpu,
                 double(stats->gpuTimeEnd - stats->gpuTimeBegin) * toMsGpu, stats->maxGpuLatency);
+    ImGui::Separator();
+    ImGui::Text("Horizontal Axis: %0.1f", Engine::input().horizontalAxis());
+    ImGui::Text("Vertical Axis: %0.1f", Engine::input().verticalAxis());
+    ImGui::Text("Mouse Horizontal Axis: %0.1f", Engine::input().mouseHorizontalAxis());
+    ImGui::Text("Mouse Vertical Axis: %0.1f", Engine::input().mouseVerticalAxis());
+}
+
+void MainWindow::onInputEvent(const SDL_Event& e)
+{
+    Engine::input().handleInputEvent(e);
 }
 
 void MainWindow::renderAxes()
@@ -156,6 +190,18 @@ void MainWindow::render(float dt)
         TransformComponent& transform = view.get<TransformComponent>(entity);
         MeshComponent&      mesh      = view.get<MeshComponent>(entity);
         MaterialComponent&  material  = view.get<MaterialComponent>(entity);
+
+        Vec3 forward(0.f, 0.f, 1.f);
+        Vec3 right(1.f, 0.f, 0.f);
+        Vec3 up(0.f, 1.f, 0.f);
+
+        Quat rotZ = createFromAxisAngle(forward, 10 * kDegToRad * dt);
+        Quat rotY = createFromAxisAngle(up, 10 * kDegToRad * dt);
+        Quat rotX = createFromAxisAngle(right, 10 * kDegToRad * dt);
+
+        Mat4x4 rot;
+        createRotation(mul(mul(rotZ, rotY), rotX), rot);
+        mul(transform.world(), rot);
 
         bgfx::setTransform(transform.world().data);
         bgfx::setVertexBuffer(0, mesh.geometry()->vbo());

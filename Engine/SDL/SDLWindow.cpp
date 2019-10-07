@@ -67,7 +67,7 @@ struct ImGuiBgfx
         bgfx::ShaderHandle fsh = bgfx::createShader(fsmem);
         _program               = bgfx::createProgram(vsh, fsh, true);
 
-		_layout.begin()
+        _layout.begin()
             .add(bgfx::Attrib::Position, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Color0, 4, bgfx::AttribType::Uint8, true)
@@ -115,14 +115,14 @@ struct ImGuiBgfx
             u32               numVertices = (u32)drawList->VtxBuffer.size();
             u32               numIndices  = (u32)drawList->IdxBuffer.size();
 
-			if (numVertices != bgfx::getAvailTransientVertexBuffer(numVertices, _layout) ||
+            if (numVertices != bgfx::getAvailTransientVertexBuffer(numVertices, _layout) ||
                 numIndices != bgfx::getAvailTransientIndexBuffer(numIndices))
             {
                 // not enough space in transient buffer just quit drawing the rest...
                 break;
             }
 
-			bgfx::allocTransientVertexBuffer(&tvb, numVertices, _layout);
+            bgfx::allocTransientVertexBuffer(&tvb, numVertices, _layout);
             bgfx::allocTransientIndexBuffer(&tib, numIndices);
 
             ImDrawVert* verts = (ImDrawVert*)tvb.data;
@@ -169,7 +169,7 @@ struct ImGuiBgfx
         bgfx::destroy(_program);
     }
 
-	bgfx::VertexLayout    _layout;
+    bgfx::VertexLayout  _layout;
     bgfx::ProgramHandle _program;
     bgfx::TextureHandle _texture;
     bgfx::UniformHandle _tex;
@@ -316,14 +316,15 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::init() {}
+void SDLWindow::onInit() {}
 
-void SDLWindow::handleEvent(SDL_Event& e)
+void SDLWindow::handleEvent(const SDL_Event& e)
 {
     // If an event was detected for this window
     if (e.type == SDL_WINDOWEVENT && e.window.windowID == _windowId)
     {
         handleWindowEvent(e.window);
+        onEvent(e);
         return;
     }
 
@@ -332,9 +333,10 @@ void SDLWindow::handleEvent(SDL_Event& e)
     {
         handleInputEvent(e);
     }
+    onEvent(e);
 }
 
-void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
+void SDLWindow::handleWindowEvent(const SDL_WindowEvent& e)
 {
     switch (e.event)
     {
@@ -364,9 +366,10 @@ void SDLWindow::handleWindowEvent(SDL_WindowEvent& e)
             }
             break;
     }
+    onWindowEvent(e);
 }
 
-void SDLWindow::handleInputEvent(SDL_Event& e)
+void SDLWindow::handleInputEvent(const SDL_Event& e)
 {
     imguiPushCtx();
     ImGuiIO& io = ImGui::GetIO();
@@ -394,6 +397,7 @@ void SDLWindow::handleInputEvent(SDL_Event& e)
             io.KeySuper      = ((SDL_GetModState() & KMOD_GUI) != 0);
             break;
     }
+    onInputEvent(e);
 }
 
 void SDLWindow::releaseFramebuffer()
@@ -408,12 +412,18 @@ void SDLWindow::releaseFramebuffer()
     }
 }
 
-void SDLWindow::update(float /*dt*/)
+void SDLWindow::onUpdate(float /*dt*/)
 {
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
 void SDLWindow::onGUI() {}
+
+void SDLWindow::onEvent(const SDL_Event& e) {}
+
+void SDLWindow::onWindowEvent(const SDL_WindowEvent& e) {}
+
+void SDLWindow::onInputEvent(const SDL_Event& e) {}
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -428,7 +438,7 @@ void SDLWindow::doUpdate(float dt)
     bgfx::touch(_viewId);
 
     // render content
-    update(dt);
+    onUpdate(dt);
 
     // GUI
     imguiPushCtx();

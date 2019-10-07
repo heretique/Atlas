@@ -12,6 +12,7 @@
 #include "Core/SerializationArchives.h"
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
+#include "Managers/InputManager.h"
 #include "Hq/JobManager.h"
 #include "Managers/PluginManager.h"
 #include "entt/entity/registry.hpp"
@@ -26,6 +27,7 @@ namespace atlas
 spdlog::logger*        Engine::_logger        = nullptr;
 PluginManager*         Engine::_pluginManager = nullptr;
 AssetManager*          Engine::_assetManager  = nullptr;
+InputManager*          Engine::_inputManager  = nullptr;
 entt::DefaultRegistry* Engine::_ecsManager    = nullptr;
 hq::JobManager*        Engine::_jobManager    = nullptr;
 
@@ -52,6 +54,8 @@ bool Engine::init()
         _pluginManager = new PluginManager();
     if (_assetManager == nullptr)
         _assetManager = new AssetManager();
+    if (_inputManager == nullptr)
+        _inputManager = new InputManager();
     if (_ecsManager == nullptr)
         _ecsManager = new entt::DefaultRegistry();
 

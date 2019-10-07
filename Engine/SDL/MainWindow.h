@@ -13,14 +13,17 @@ struct JobData;
 
 class MainWindow : public SDLWindow
 {
-public:
-    MainWindow(const char* title, int x, int y, int w, int h);
-    ~MainWindow();
+    using Super = SDLWindow;
 
 public:
-    void init() override;
-    void update(float dt) override;
+    MainWindow(const char* title, int x, int y, int w, int h);
+    ~MainWindow() override;
+
+public:
+    void onInit() override;
+    void onUpdate(float dt) override;
     void onGUI() override;
+    void onInputEvent(const SDL_Event& e) override;
 
 private:
     void renderAxes();

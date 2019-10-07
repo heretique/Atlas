@@ -34,6 +34,8 @@ target_sources(atlas PRIVATE
     Core/SimpleMeshVertex.h
     Managers/AssetManager.cpp
     Managers/AssetManager.h
+    Managers/InputManager.cpp
+    Managers/InputManager.h
     Managers/PluginManager.cpp
     Managers/PluginManager.h
     SDL/fs_ocornut_imgui.bin.h
