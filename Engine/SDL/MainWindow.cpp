@@ -126,23 +126,22 @@ void MainWindow::onUpdate(float dt)
 
     Camera& cameraComponent = Engine::ecs().get<Camera>();
 
-    Mat4x4 trans {cameraComponent.getViewMatrix()};
+    Mat4x4 trans {Mat4x4::Identity};
     Vec3   forward(0.f, 0.f, 1.f);
-    Vec3   right(-1.f, 0.f, 0.f);
+    Vec3   right(1.f, 0.f, 0.f);
     Vec3   up(0.f, 1.f, 0.f);
-    //    transform(forward, cameraComponent.getInverseViewMatrix());
-    //    transform(right, cameraComponent.getInverseViewMatrix());
-    //    transform(up, cameraComponent.getInverseViewMatrix());
-    Vec3 translation;
-    Vec3 scale;
-    Quat rotation;
-    decompose(trans, rotation, scale, translation);
+    Vec3   translation;
+    Quat   rotation;
+    //    decompose(cameraComponent.getViewMatrix(), rotation, scale, translation);
     Quat rotateHoriz = createFromAxisAngle(up, dt * Engine::input().mouseHorizontalAxis());
-    Quat rotateVert  = createFromAxisAngle(right, -1.f * dt * Engine::input().mouseVerticalAxis());
-    rotation         = mul(rotation, mul(rotateHoriz, rotateVert));
+    Quat rotateVert  = createFromAxisAngle(right, dt * Engine::input().mouseVerticalAxis());
+    rotation         = mul(rotateHoriz, rotateVert);
     translation      = add(translation, mul(forward, 5 * dt * Engine::input().verticalAxis()));
     translation      = add(translation, mul(right, 5 * dt * Engine::input().horizontalAxis()));
-    cameraComponent.setTransform(Mat4x4(rotation, scale, translation));
+    rotate(trans, rotation);
+    translate(trans, translation);
+    mul(trans, cameraComponent.getViewMatrix());
+    cameraComponent.setTransform(trans);
     bgfx::setViewTransform(0, cameraComponent.getViewMatrix().data, cameraComponent.getProjectionMatrix().data);
     renderAxes();
     render(dt);

@@ -62,13 +62,13 @@ void InputManager::handleInputEvent(const SDL_Event& e)
                     _vAxis = 1.f;
                     break;
                 case SDLK_a:
-                    _hAxis = -1.f;
+                    _hAxis = 1.f;
                     break;
                 case SDLK_s:
                     _vAxis = -1.f;
                     break;
                 case SDLK_d:
-                    _hAxis = 1.f;
+                    _hAxis = -1.f;
                     break;
             }
         }
@@ -82,7 +82,7 @@ void InputManager::handleInputEvent(const SDL_Event& e)
                         _vAxis = 0.f;
                     break;
                 case SDLK_a:
-                    if (_hAxis == -1.f)
+                    if (_hAxis == 1.f)
                         _hAxis = 0;
                     break;
                 case SDLK_s:
@@ -90,7 +90,7 @@ void InputManager::handleInputEvent(const SDL_Event& e)
                         _vAxis = 0;
                     break;
                 case SDLK_d:
-                    if (_hAxis == 1.f)
+                    if (_hAxis == -1.f)
                         _hAxis = 0;
                     break;
             }
