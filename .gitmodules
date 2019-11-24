@@ -1,9 +1,6 @@
 [submodule "3rdparty/bgfx"]
 	path = 3rdparty/bgfx
 url=https://github.com/heretique/bgfx.git
-[submodule "3rdparty/wren"]
-	path = 3rdparty/wren
-url=https://github.com/heretique/wren.git
 [submodule "3rdparty/cereal"]
 	path = 3rdparty/cereal
 	url = https://github.com/USCiLab/cereal.git
@@ -13,9 +10,6 @@ url=https://github.com/heretique/wren.git
 [submodule "3rdparty/imgui"]
 	path = 3rdparty/imgui
 	url = https://github.com/ocornut/imgui.git
-[submodule "3rdparty/wrenpp"]
-	path = 3rdparty/wrenpp
-url=https://github.com/heretique/wrenpp.git
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
