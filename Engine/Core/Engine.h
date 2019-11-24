@@ -1,6 +1,6 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#pragma once
 
+#include "entt/fwd.hpp"
 #include <string>
 
 namespace spdlog
@@ -15,13 +15,6 @@ struct AllocatorI;
 namespace bgfx
 {
 struct Stats;
-}
-
-namespace entt
-{
-template <typename>
-class Registry;
-using DefaultRegistry = Registry<std::uint32_t>;
 }
 
 namespace hq
@@ -54,7 +47,7 @@ public:
     {
         return *_inputManager;
     }
-    static entt::DefaultRegistry& ecs()
+    static entt::registry& ecs()
     {
         return *_ecsManager;
     }
@@ -78,15 +71,13 @@ private:
     static void release();
 
 private:
-    static spdlog::logger*        _logger;
-    static PluginManager*         _pluginManager;
-    static AssetManager*          _assetManager;
-    static InputManager*          _inputManager;
-    static entt::DefaultRegistry* _ecsManager;
-    static hq::JobManager*        _jobManager;
+    static spdlog::logger* _logger;
+    static PluginManager*  _pluginManager;
+    static AssetManager*   _assetManager;
+    static InputManager*   _inputManager;
+    static entt::registry* _ecsManager;
+    static hq::JobManager* _jobManager;
 
     friend class MainWindow;
 };
 }  // namespace atlas
-
-#endif  // ENGINE_H

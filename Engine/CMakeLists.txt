@@ -57,7 +57,7 @@ target_include_directories(atlas PRIVATE .
     ../3rdparty/cereal/include
     ../3rdparty/spdlog/include)
 
-target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui wren wrenpp)
+target_link_libraries(atlas hq bx bimg bgfx shaderc_lib atlas::fmt imgui wren wrenpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)
@@ -100,7 +100,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY})
 endif()
 
-target_compile_features(atlas PUBLIC cxx_std_14)
+target_compile_features(atlas PUBLIC cxx_std_17)
 #target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
 target_compile_definitions(atlas PRIVATE _USE_MATH_DEFINES)
 

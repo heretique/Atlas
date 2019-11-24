@@ -24,7 +24,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~Camera();
+    ~Camera();
 
     /**
      * Creates a perspective camera.
@@ -268,12 +268,7 @@ protected:
     void updateCamera(const hq::math::Mat4x4& transform = hq::math::Mat4x4::Identity);
 
 private:
-    /**
-     * Hidden copy assignment operator.
-     */
-    Camera& operator=(const Camera&);
-
-    CameraType                _cameraType;
+    CameraType                _cameraType {CameraType::ePerspective};
     float                     _fieldOfView;
     float                     _zoom[2];
     float                     _aspectRatio;

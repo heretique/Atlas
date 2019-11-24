@@ -24,12 +24,12 @@
 
 namespace atlas
 {
-spdlog::logger*        Engine::_logger        = nullptr;
-PluginManager*         Engine::_pluginManager = nullptr;
-AssetManager*          Engine::_assetManager  = nullptr;
-InputManager*          Engine::_inputManager  = nullptr;
-entt::DefaultRegistry* Engine::_ecsManager    = nullptr;
-hq::JobManager*        Engine::_jobManager    = nullptr;
+spdlog::logger* Engine::_logger        = nullptr;
+PluginManager*  Engine::_pluginManager = nullptr;
+AssetManager*   Engine::_assetManager  = nullptr;
+InputManager*   Engine::_inputManager  = nullptr;
+entt::registry* Engine::_ecsManager    = nullptr;
+hq::JobManager* Engine::_jobManager    = nullptr;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
 
@@ -57,7 +57,7 @@ bool Engine::init()
     if (_inputManager == nullptr)
         _inputManager = new InputManager();
     if (_ecsManager == nullptr)
-        _ecsManager = new entt::DefaultRegistry();
+        _ecsManager = new entt::registry();
 
     initVertDecl();
     registerDefaultAssetTypes();

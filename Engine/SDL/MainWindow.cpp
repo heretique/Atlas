@@ -14,10 +14,10 @@
 #include "Hq/Math/Mat4x4.h"
 #include "Hq/Math/Vec3.h"
 #include "Hq/Math/Quat.h"
+
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
 
-//#include <easy/profiler.h>
 #include "fs_axes.bin.h"
 #include "vs_axes.bin.h"
 #include <imgui/imgui.h>
@@ -95,12 +95,12 @@ void MainWindow::onInit()
     // Create static index buffer.
     _axesIbh = bgfx::createIndexBuffer(bgfx::makeRef(s_axesIndices, sizeof(s_axesIndices)));
 
-    auto&           registry        = Engine::ecs();
-    auto            camera          = registry.create();
-    Camera&         cameraComponent = registry.assign<Camera>(entt::tag_t {}, camera);
+    auto& registry                  = Engine::ecs();
+    _camera                         = registry.create();
+    Camera&         cameraComponent = registry.assign<Camera>(_camera);
     SDLWindow::Size size            = windowSize();
-    cameraComponent.setPerspective(60.f, (float)size.width / size.height, .1f, 100.f);
-    TransformComponent& transform = registry.assign<TransformComponent>(camera);
+    cameraComponent.setPerspective(60.f, (float)size.width / size.height, .1f, 1000.f);
+    TransformComponent& transform = registry.assign<TransformComponent>(_camera);
     createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
@@ -124,7 +124,7 @@ void MainWindow::onUpdate(float dt)
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
 
-    Camera& cameraComponent = Engine::ecs().get<Camera>();
+    Camera& cameraComponent = Engine::ecs().get<Camera>(_camera);
 
     Mat4x4 trans {Mat4x4::Identity};
     Vec3   forward(0.f, 0.f, 1.f);

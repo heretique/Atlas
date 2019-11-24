@@ -42,7 +42,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     target_include_directories(bx PUBLIC ../../bx/include/compat/osx)
 endif()
 
-target_compile_features(bx PUBLIC cxx_std_14)
+target_compile_features(bx PUBLIC cxx_std_17)
 
 target_compile_definitions(bx PUBLIC __STDC_LIMIT_MACROS
     __STDC_FORMAT_MACROS

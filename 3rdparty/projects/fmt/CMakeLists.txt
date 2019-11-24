@@ -12,4 +12,4 @@ target_include_directories(fmt PUBLIC
     $<INSTALL_INTERFACE:include>
     PRIVATE ../..)
 
-target_compile_features(fmt PUBLIC cxx_std_14)
+target_compile_features(fmt PUBLIC cxx_std_17)

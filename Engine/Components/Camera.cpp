@@ -5,7 +5,6 @@
 #include "Hq/Math/Mat4x4.h"
 #include "Hq/Math/Frustum.h"
 #include "Hq/Math/Rect.h"
-#include "Components/TransformComponent.h"
 
 #include <cassert>
 

@@ -10,4 +10,4 @@ target_include_directories(wrenpp PUBLIC
     $<INSTALL_INTERFACE:include>)
 
 target_link_libraries(wrenpp wren)
-target_compile_features(wrenpp PUBLIC cxx_std_14)
+target_compile_features(wrenpp PUBLIC cxx_std_17)

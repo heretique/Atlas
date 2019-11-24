@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "SDL/SDLWindow.h"
+#include "entt/fwd.hpp"
 
 #include <chrono>
 #include <memory>
@@ -26,9 +27,9 @@ public:
     void onInputEvent(const SDL_Event& e) override;
 
 private:
-    void renderAxes();
-    void render(float dt);
-
+    void                     renderAxes();
+    void                     render(float dt);
+    entt::entity             _camera;
     bgfx::VertexBufferHandle _axesVbh;
     bgfx::IndexBufferHandle  _axesIbh;
     bgfx::ProgramHandle      _axesProgram;
