@@ -23,10 +23,19 @@
 
 #pragma once
 
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#  define SIGNALS_CPP_NOEXCEPT throw()
+#else // defined(_MSC_VER) && (_MSC_VER < 1900)
+#  define SIGNALS_CPP_NOEXCEPT noexcept
+#endif // defined(_MSC_VER) && (_MSC_VER < 1900)
 
-#define SIGNALS_CPP_NOEXCEPT noexcept
-#define SIGNALS_CPP_HAVE_VARIADIC_TEMPLATES
+#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#  define SIGNALS_CPP_NEED_EXPLICIT_MOVE
+#endif // defined(_MSC_VER) && (_MSC_VER < 1900)
 
+#if defined(__clang__) || (defined(_MSC_VER) && (_MSC_VER >= 1900))
+#  define SIGNALS_CPP_HAVE_VARIADIC_TEMPLATES
+#endif
 
 namespace signals { }
 namespace sigs = signals;
