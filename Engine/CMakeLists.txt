@@ -57,7 +57,7 @@ target_include_directories(atlas PRIVATE .
     ../3rdparty/cereal/include
     ../3rdparty/spdlog/include)
 
-target_link_libraries(atlas hq bx bimg bgfx shaderc_lib atlas::fmt imgui wren wrenpp)
+target_link_libraries(atlas hq bx bimg bgfx shaderc_lib atlas::fmt imgui)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)

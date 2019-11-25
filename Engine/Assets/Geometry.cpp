@@ -69,13 +69,14 @@ bool GeometryAsset::loadImpl(std::istream& is)
     std::vector<tinyobj::shape_t>    shapes;
     std::vector<tinyobj::material_t> materials;
     std::string                      err;
+    std::string                      warn;
 
     std::string basePath     = SDL_GetBasePath();
     std::string relativePath = _filename.substr(0, _filename.find_last_of('/')) + "/";
     basePath += relativePath;
     tinyobj::MaterialFileReader materialReader(basePath);
 
-    if (!tinyobj::LoadObj(&vertexData, &shapes, &materials, &err, const_cast<std::istream*>(&is), &materialReader))
+    if (!tinyobj::LoadObj(&vertexData, &shapes, &materials, &warn, &err, const_cast<std::istream*>(&is), &materialReader))
     {
         Engine::log().error("Failed to load OBJ with error: {}", err.c_str());
         return false;

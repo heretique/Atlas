@@ -104,7 +104,7 @@ void MainWindow::onInit()
     createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 5000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -113,7 +113,7 @@ void MainWindow::onInit()
 
         mesh.setGeomtry(object);
         mat.setMaterial(material);
-        translate(transform.world(), 10 * hq::randMinus11(), 10 * hq::randMinus11(), 10 * hq::randMinus11());
+        translate(transform.world(), 30 * hq::randMinus11(), 30 * hq::randMinus11(), 30 * hq::randMinus11());
         rotateX(transform.world(), -kPiHalf + i * kDegToRad);
         rotateY(transform.world(), -kPiHalf + i * kDegToRad);
         rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
