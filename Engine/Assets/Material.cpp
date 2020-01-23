@@ -4,8 +4,8 @@
 #include "Managers/AssetManager.h"
 #include "Shader.h"
 #include <fstream>
-#include <cereal/archives/json.hpp>
 #include <spdlog/spdlog.h>
+#include "Hq/JsonSerializer.h"
 
 namespace atlas
 {
@@ -35,8 +35,8 @@ void MaterialAsset::setMaterialInfo(const MaterialInfo& info)
 void MaterialAsset::write(const std::string& filename)
 {
     std::ofstream             ofs(filename, std::ios::out | std::ios::binary);
-    cereal::JSONOutputArchive archive(ofs);
-    archive(_materialInfo);
+    hq::JsonSerializer serializer(ofs);
+    serializer(_materialInfo);
 }
 
 void MaterialAsset::bind() const
@@ -64,8 +64,8 @@ bgfx::ProgramHandle MaterialAsset::program() const
 
 bool MaterialAsset::loadImpl(std::istream& data)
 {
-    cereal::JSONInputArchive archive(data);
-    archive(_materialInfo);
+    hq::JsonDeserializer deserializer(data);
+    deserializer(_materialInfo);
 
     _vsh = Engine::assets().addAsset(AssetTypes::Shader, _materialInfo.vertexShader,
                                      static_cast<u32>(ShaderTypes::Vertex));

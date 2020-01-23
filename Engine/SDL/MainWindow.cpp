@@ -135,9 +135,9 @@ void MainWindow::onUpdate(float dt)
     //    decompose(cameraComponent.getViewMatrix(), rotation, scale, translation);
     Quat rotateHoriz = createFromAxisAngle(up, dt * Engine::input().mouseHorizontalAxis());
     Quat rotateVert  = createFromAxisAngle(right, dt * Engine::input().mouseVerticalAxis());
-    rotation         = mul(rotateHoriz, rotateVert);
-    translation      = add(translation, mul(forward, 5 * dt * Engine::input().verticalAxis()));
-    translation      = add(translation, mul(right, 5 * dt * Engine::input().horizontalAxis()));
+    rotation         = rotateHoriz * rotateVert;
+    translation      = translation + forward * (5 * dt * Engine::input().verticalAxis());
+    translation      = translation + right * (5 * dt * Engine::input().horizontalAxis());
     rotate(trans, rotation);
     translate(trans, translation);
     mul(trans, cameraComponent.getViewMatrix());
@@ -199,7 +199,7 @@ void MainWindow::render(float dt)
         Quat rotX = createFromAxisAngle(right, 10 * kDegToRad * dt);
 
         Mat4x4 rot;
-        createRotation(mul(mul(rotZ, rotY), rotX), rot);
+        createRotation(rotZ * rotY * rotX, rot);
         mul(transform.world(), rot);
 
         bgfx::setTransform(transform.world().data);

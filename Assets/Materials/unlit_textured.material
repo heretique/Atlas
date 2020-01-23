@@ -1,19 +1,17 @@
 {
-    "value0": {
-        "name": "unlit_textured",
-        "vertexShader": "assets/vs_textured_unlit.bin",
-        "fragmentShader": "assets/fs_textured_unlit.bin",
-        "params": [
-            {
-                "key": "u_time",
-                "value": { "type": 2, "value": [0]}
-            }
-        ],
-        "textures": [
-            {
-                "key": "s_texColor",
-                "value": "assets/caruta.png"
-            }
-        ]
-    }
+    "name": "unlit_textured",
+    "vertexShader": "assets/vs_textured_unlit.sc",
+    "fragmentShader": "assets/fs_textured_unlit.sc",
+    "params": [
+        {
+            "key": "u_time",
+            "value": { "type": 2, "value": [0]}
+        }
+    ],
+    "textures": [
+        {
+            "key": "s_texColor",
+            "value": "assets/caruta.png"
+        }
+    ]
 }

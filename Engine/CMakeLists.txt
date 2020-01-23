@@ -30,7 +30,6 @@ target_sources(atlas PRIVATE
     Core/Delegate.h
     Core/Engine.cpp
     Core/Engine.h
-    Core/SerializationArchives.h
     Core/SimpleMeshVertex.h
     Managers/AssetManager.cpp
     Managers/AssetManager.h
@@ -54,10 +53,9 @@ target_sources(atlas PRIVATE
 
 target_include_directories(atlas PRIVATE .
     ../3rdparty/entt/src
-    ../3rdparty/cereal/include
     ../3rdparty/spdlog/include)
 
-target_link_libraries(atlas hq bx bimg bgfx shaderc_lib atlas::fmt imgui)
+target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)
@@ -109,8 +107,15 @@ add_custom_command(TARGET atlas POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.obj
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.mtl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/fs_textured_unlit.bin
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/vs_textured_unlit.bin
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/fs_textured_unlit.sc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/varying.def.sc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/vs_textured_unlit.sc
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/bgfx_compute.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/bgfx_shader.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/common.sh
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/shaderlib.sh
+
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Textures/caruta.png
     ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Materials/unlit_textured.material
     $<TARGET_FILE_DIR:atlas>/assets

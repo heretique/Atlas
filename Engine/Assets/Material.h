@@ -4,10 +4,6 @@
 #include "Hq/BasicTypes.h"
 #include <vector>
 #include <bgfx/bgfx.h>
-#include <cereal/cereal.hpp>
-#include <cereal/types/string.hpp>
-#include <cereal/types/unordered_map.hpp>
-#include <cereal/types/vector.hpp>
 
 namespace atlas
 {
@@ -18,11 +14,11 @@ struct MaterialParam
 
     bgfx::UniformType::Enum toBgfxUniformType() const;
 
-    template <class Archive>
-    void serialize(Archive& ar)
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
     {
-        ar(CEREAL_NVP(type),  //
-           CEREAL_NVP(value));
+        SERIALIZE(type);
+        SERIALIZE(value);
     }
 };
 
@@ -37,14 +33,14 @@ struct MaterialInfo
     Params      params;
     Textures    textures;
 
-    template <class Archive>
-    void serialize(Archive& ar)
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
     {
-        ar(CEREAL_NVP(name),            //
-           CEREAL_NVP(vertexShader),    //
-           CEREAL_NVP(fragmentShader),  //
-           CEREAL_NVP(params),          //
-           CEREAL_NVP(textures));
+        SERIALIZE(name);
+        SERIALIZE(vertexShader);
+        SERIALIZE(fragmentShader);
+        SERIALIZE(params);
+        SERIALIZE(textures);
     }
 };
 
