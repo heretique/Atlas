@@ -92,7 +92,6 @@ source_list
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/reflection.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/reflection.h
   ../../../bgfx/3rdparty/glslang/glslang/OSDependent/Web/glslang.js.cpp
-  ../../../bgfx/3rdparty/glslang/glslang/OSDependent/Windows/ossource.cpp
   ../../../bgfx/3rdparty/glslang/glslang/OSDependent/osinclude.h
   ../../../bgfx/3rdparty/glslang/glslang/Public/ShaderLang.h
   ../../../bgfx/3rdparty/glslang/hlsl/hlslAttributes.cpp
@@ -113,6 +112,18 @@ source_list
   ../../../bgfx/3rdparty/glslang/hlsl/pch.cpp
   ../../../bgfx/3rdparty/glslang/hlsl/pch.h
 )
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    set(source_list ${source_list}
+        ../../../bgfx/3rdparty/glslang/glslang/OSDependent/Windows/ossource.cpp
+        )
+endif()
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    set(source_list ${source_list}
+        ../../../bgfx/3rdparty/glslang/glslang/OSDependent/Unix/ossource.cpp
+        )
+endif()
 
 include_directories(../../../bgfx/3rdparty/glslang)
 include_directories(../../../bgfx/3rdparty/spirv-tools/include)

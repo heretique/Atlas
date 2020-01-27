@@ -64,6 +64,17 @@ target_compile_definitions(shaderc PRIVATE SHADERC_STANDALONE)
 target_include_directories(shaderc PRIVATE ../../bgfx/tools/shaderc/include/shaderc)
 target_link_libraries(shaderc bx bgfx fcpp glslang glsl-optimizer spirv-opt spirv-cross)
 
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+
+    find_package(Threads REQUIRED)
+    find_package(OpenGL REQUIRED)
+    find_package(X11 REQUIRED)
+    find_library(DL_LIBRARY dl)
+    find_library(RT_LIBRARY rt)
+
+    target_link_libraries(shaderc Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES})
+endif()
+
 add_custom_command(TARGET shaderc
                    POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:shaderc> $<TARGET_FILE_DIR:shaderc>/../../../Engine)

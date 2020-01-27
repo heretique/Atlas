@@ -13,7 +13,11 @@ namespace atlas
 {
 
 static std::string kDefaultVarying = "varying.def.sc";
+#ifdef __unix__
+static std::string kShaderCompiler = "shaderc";
+#elif __win32__
 static std::string kShaderCompiler = "shaderc.exe";
+#endif
 
 AssetPtr ShaderAsset::factoryFunc(const std::string& filename, u32 flags)
 {

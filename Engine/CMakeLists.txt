@@ -95,7 +95,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     message(${SDL2_INCLUDE})
 
     target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
-    target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY})
+    target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY} stdc++fs)
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_17)
