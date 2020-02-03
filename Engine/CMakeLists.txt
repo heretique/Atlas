@@ -85,9 +85,7 @@ endif()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
-    set(RPI_LIB_PATHS "/opt/vc/lib")
     find_package(Threads REQUIRED)
-    find_package(OpenGL REQUIRED)
     find_package(X11 REQUIRED)
     find_library(DL_LIBRARY dl)
     find_library(RT_LIBRARY rt)
@@ -100,7 +98,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     message(${SDL2_INCLUDE})
 
     target_include_directories(atlas PRIVATE ${SDL2_INCLUDE})
-    target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES} ${SDL2_LIBRARY} stdc++fs)
+    target_link_libraries(atlas Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} EGL GLESv2 ${X11_LIBRARIES} ${SDL2_LIBRARY} stdc++fs)
 endif()
 
 target_compile_features(atlas PUBLIC cxx_std_17)

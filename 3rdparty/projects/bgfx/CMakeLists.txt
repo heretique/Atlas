@@ -50,9 +50,7 @@ target_include_directories(bgfx PUBLIC
     ../../bgfx/3rdparty/khronos)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    find_package(OpenGL REQUIRED)
-    target_include_directories(bgfx PRIVATE ${OPENGL_INCLUDE_DIRS})
-    target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_RENDERER_OPENGL)
+    target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_DEBUG=1 BGFX_CONFIG_RENDERER_OPENGLES=31)
 endif()
 
 target_link_libraries(bgfx bx bimg)

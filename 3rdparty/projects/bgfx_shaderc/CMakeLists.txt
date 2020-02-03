@@ -72,7 +72,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     find_library(DL_LIBRARY dl)
     find_library(RT_LIBRARY rt)
 
-    target_link_libraries(shaderc Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} ${OPENGL_LIBRARIES} ${X11_LIBRARIES})
+    target_link_libraries(shaderc Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} EGL GLESv2 ${X11_LIBRARIES})
 endif()
 
 add_custom_command(TARGET shaderc
