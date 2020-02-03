@@ -14,12 +14,13 @@ struct AllocatorI;
 
 namespace bgfx
 {
+struct Caps;
 struct Stats;
 }
 
-namespace hq
+namespace enki
 {
-class JobManager;
+class TaskScheduler;
 }
 
 namespace atlas
@@ -51,7 +52,7 @@ public:
     {
         return *_ecsManager;
     }
-    static hq::JobManager& jobs()
+    static enki::TaskScheduler& jobs()
     {
         return *_jobManager;
     }
@@ -61,7 +62,7 @@ public:
     }
 
     static bx::AllocatorI* bxAllocator();
-
+    static const bgfx::Caps* bgfxCaps();
     static const bgfx::Stats* bgfxStats();
 
 private:
@@ -71,12 +72,12 @@ private:
     static void release();
 
 private:
-    static spdlog::logger* _logger;
-    static PluginManager*  _pluginManager;
-    static AssetManager*   _assetManager;
-    static InputManager*   _inputManager;
-    static entt::registry* _ecsManager;
-    static hq::JobManager* _jobManager;
+    static spdlog::logger*      _logger;
+    static PluginManager*       _pluginManager;
+    static AssetManager*        _assetManager;
+    static InputManager*        _inputManager;
+    static entt::registry*      _ecsManager;
+    static enki::TaskScheduler* _jobManager;
 
     friend class MainWindow;
 };

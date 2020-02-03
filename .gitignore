@@ -1,6 +1,8 @@
 *.user
 *.user.*
+CMakeSettings.json
 3rdparty/build-easy_profiler-Desktop_Qt_5_9_2_MSVC2017_64bit-Release/
 3rdparty/build-easy_profiler-Desktop_Qt_5_9_2_MinGW_32bit-Release/
 .vscode/
 build/
+.vs/

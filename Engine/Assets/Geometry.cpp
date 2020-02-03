@@ -89,7 +89,6 @@ bool GeometryAsset::loadImpl(std::istream& is)
 
     assert(vertexData.texcoords.size());
     assert(vertexData.normals.size());
-    assert(materials.size());
     assert(shapes.size());
 
     if (shapes.size() > 1)
@@ -152,8 +151,8 @@ bool GeometryAsset::loadImpl(std::istream& is)
         math::extend(_aabb, math::Vec3(vertex.x, vertex.y, vertex.z));
     }
 
-    material_t material = materials.front();
-    _texture            = Engine::assets().addAsset(AssetTypes::Texture, relativePath + material.diffuse_texname);
+//    material_t material = materials.front();
+//    _texture            = Engine::assets().addAsset(AssetTypes::Texture, relativePath + material.diffuse_texname);
 
     return true;
 }

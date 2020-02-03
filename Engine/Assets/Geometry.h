@@ -35,7 +35,6 @@ private:
     hq::math::Box3                _aabb;
     std::vector<SimpleMeshVertex> _vertices;
     std::vector<u16>              _indices;
-    AssetPtr                      _texture;
 };
 
 }  // atlas

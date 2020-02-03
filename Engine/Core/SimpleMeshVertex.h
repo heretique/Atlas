@@ -17,7 +17,7 @@ struct SimpleMeshVertex
 
     static void init()
     {
-		vertLayout.begin()
+        vertLayout.begin()
             .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
             .add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
             .add(bgfx::Attrib::Normal, 4, bgfx::AttribType::Uint8, true, true)

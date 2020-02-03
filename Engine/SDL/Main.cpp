@@ -14,7 +14,6 @@ using namespace atlas;
 
 int main(int argc, char** argv)
 {
-    hq::DynFreeList<uint64_t, hq::Handle<20, 12> > test(1024);
     //    EASY_MAIN_THREAD;
 
     try

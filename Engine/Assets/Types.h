@@ -3,11 +3,11 @@
 #include "Hq/StringHash.h"
 #include <memory>
 #include <vector>
+#include <unordered_map>
 
 namespace atlas
 {
-// do not change bitfields size without changing the API handle bitfield size
-// these need to be the same
+
 class Asset;
 using AssetPtr     = std::shared_ptr<Asset>;
 using AssetStorage = std::vector<AssetPtr>;
@@ -44,5 +44,22 @@ namespace AssetTypes
     static const AssetType Pipeline {AssetNames::Pipeline};
     static const AssetType Template {AssetNames::Template};
 }  // AssetTypes namespace
+
+namespace DefaultAssets
+{
+    static const std::string Triangle {"DefaultTriangle"};
+    static const std::string Quad {"DefaultQuad"};
+    static const std::string Hexagon {"DefaultHexagon"};
+    static const std::string Tetrahedron {"DefaultTetrahedron"};
+    static const std::string Pyramid {"DefaultPyramid"};
+    static const std::string Cube {"DefaultCube"};
+    static const std::string Cylinder {"DefaultCylinder"};
+    static const std::string Cone {"DefaultCone"};
+    static const std::string Sphere {"DefaultSphere"};
+    static const std::string Torus {"DefaultTorus"};
+    static const std::string UnlitMaterial {"DefaultUnlitMaterial"};
+    static const std::string PBRMaterial {"DefaultPBRMaterial"};
+    static const std::string EDLMaterial {"DefaultEDLMaterial"}; // Eye Dome Lighting Material
+} // DefaultAssets namespace
 
 }  // atlas namespace

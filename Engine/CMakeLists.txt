@@ -11,6 +11,8 @@ target_sources(atlas PRIVATE
     Assets/Light.h
     Assets/Material.cpp
     Assets/Material.h
+    Assets/ParticleEffect.cpp
+    Assets/ParticleEffect.h
     Assets/Script.cpp
     Assets/Script.h
     Assets/Shader.cpp
@@ -24,6 +26,7 @@ target_sources(atlas PRIVATE
     Components/MaterialComponent.cpp
     Components/MaterialComponent.h
     Components/MeshComponent.h
+    Components/ParticleEffectComponent.h
     Components/TransformComponent.cpp
     Components/TransformComponent.h
     Core/Debug.h
@@ -46,6 +49,8 @@ target_sources(atlas PRIVATE
     SDL/SDLWindow.cpp
     SDL/SDLWindow.h
     SDL/vs_ocornut_imgui.bin.h
+    Systems/ParticleSystem.cpp
+    Systems/ParticleSystem.h
     Systems/RenderSystem.cpp
     Systems/RenderSystem.h
     Utils/BgfxUtils.cpp
@@ -102,6 +107,15 @@ target_compile_features(atlas PUBLIC cxx_std_17)
 #target_compile_definitions(atlas PRIVATE SPDLOG_FMT_EXTERNAL)
 target_compile_definitions(atlas PRIVATE _USE_MATH_DEFINES)
 
+
+add_custom_command(TARGET atlas POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultCube
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultFullscreenTriangle
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultTriangle
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultQuad
+    $<TARGET_FILE_DIR:atlas>/
+    )
 
 add_custom_command(TARGET atlas POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

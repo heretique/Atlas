@@ -11,11 +11,10 @@
 
 namespace atlas
 {
-
 static std::string kDefaultVarying = "varying.def.sc";
 #ifdef __unix__
 static std::string kShaderCompiler = "shaderc";
-#elif __win32__
+#elif defined(WIN32) || defined(WIN64)
 static std::string kShaderCompiler = "shaderc.exe";
 #endif
 
@@ -43,21 +42,21 @@ char shaderTypeToChar(ShaderTypes shaderType)
 {
     switch (shaderType)
     {
-    case ShaderTypes::Compute:
-        return 'c';
-    case ShaderTypes::Vertex:
-        return 'v';
-    case ShaderTypes::Fragment:
-        return 'f';
-    default:
-        return ' ';
+        case ShaderTypes::Compute:
+            return 'c';
+        case ShaderTypes::Vertex:
+            return 'v';
+        case ShaderTypes::Fragment:
+            return 'f';
+        default:
+            return ' ';
     }
 }
 
 bool ShaderAsset::loadImpl(std::istream& data)
 {
     namespace fs = std::filesystem;
-    _shader = BGFX_INVALID_HANDLE;
+    _shader      = BGFX_INVALID_HANDLE;
 
     if (ShaderTypes::None == static_cast<ShaderTypes>(_flags))
         return false;
@@ -69,8 +68,8 @@ bool ShaderAsset::loadImpl(std::istream& data)
     if (".sc" == filePath.extension())
     {
         fs::path compilerPath = fs::current_path().append(kShaderCompiler);
-        fs::path shaderPath = fs::absolute(filePath);
-        fs::path varyingPath = shaderPath.parent_path();
+        fs::path shaderPath   = fs::absolute(filePath);
+        fs::path varyingPath  = shaderPath.parent_path();
         varyingPath.append(kDefaultVarying);
 
         std::stringstream cmdArgs;
@@ -80,19 +79,19 @@ bool ShaderAsset::loadImpl(std::istream& data)
         cmdArgs << "-c ";
         cmdArgs << "--type " << shaderTypeToChar(static_cast<ShaderTypes>(_flags)) << " ";
 
-        std::string cmdArgsString(cmdArgs.str());
-        bx::Error err;
-        bx::StringView cmdArgsView(cmdArgsString.data(), cmdArgsString.length());
+        std::string       cmdArgsString(cmdArgs.str());
+        bx::Error         err;
+        bx::StringView    cmdArgsView(cmdArgsString.data(), cmdArgsString.length());
         bx::ProcessReader shaderProcess;
         if (!bx::open(&shaderProcess, compilerPath.string().c_str(), cmdArgsView, &err))
         {
             return false;
         }
 
-        char buffer[1024];
-        int32_t bytesRead = 0;
+        char         buffer[1024];
+        int32_t      bytesRead = 0;
         MemoryWriter compiledShaderWriter;
-        while ( (bytesRead = bx::read(&shaderProcess, buffer, sizeof (buffer), &err)) > 0)
+        while ((bytesRead = bx::read(&shaderProcess, buffer, sizeof(buffer), &err)) > 0)
         {
             bx::write(&compiledShaderWriter, buffer, bytesRead, &err);
         }
@@ -101,13 +100,12 @@ bool ShaderAsset::loadImpl(std::istream& data)
         auto ecode = shaderProcess.getExitCode();
         if (0 != ecode)
         {
-            return  false;
+            return false;
         }
 
         _shaderBuffer           = std::string(compiledShaderWriter.buffer.begin(), compiledShaderWriter.buffer.end());
         const bgfx::Memory* mem = bgfx::makeRef(_shaderBuffer.c_str(), _shaderBuffer.size());
         _shader                 = bgfx::createShader(mem);
-
     }
     else if (".bin" == filePath.extension())
     {
@@ -116,9 +114,6 @@ bool ShaderAsset::loadImpl(std::istream& data)
         const bgfx::Memory* mem = bgfx::makeRef(_shaderBuffer.c_str(), _shaderBuffer.size());
         _shader                 = bgfx::createShader(mem);
     }
-
-
-
 
     return bgfx::isValid(_shader);
 }

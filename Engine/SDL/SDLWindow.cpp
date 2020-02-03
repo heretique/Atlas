@@ -556,7 +556,9 @@ void SDLWindow::imguiRender()
 
 bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
 {
-    bgfx::PlatformData pd;
+    bgfx::Init initParams;
+
+    bgfx::PlatformData& pd = initParams.platformData;
     SDL_SysWMinfo      wmi;
     SDL_VERSION(&wmi.version);
     //  if (!SDL_GetWindowWMInfo(_window, &wmi))
@@ -579,10 +581,7 @@ bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
     pd.backBuffer   = nullptr;
     pd.backBufferDS = nullptr;
 
-    setPlatformData(pd);
-
-    bgfx::Init initParams;
-    initParams.type                   = bgfx::RendererType::OpenGL;
+    initParams.type                   = bgfx::RendererType::OpenGLES;
     initParams.debug                  = true;
     initParams.resolution.width       = w;
     initParams.resolution.height      = h;

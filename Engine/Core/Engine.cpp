@@ -5,6 +5,7 @@
 #include "Assets/Script.h"
 #include "Assets/Shader.h"
 #include "Assets/Texture.h"
+#include "Assets/ParticleEffect.h"
 #include "Components/Camera.h"
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
@@ -12,7 +13,7 @@
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
-#include "Hq/JobManager.h"
+#include "enkiTS/TaskScheduler.h"
 #include "Managers/PluginManager.h"
 #include "entt/entity/registry.hpp"
 
@@ -23,12 +24,12 @@
 
 namespace atlas
 {
-spdlog::logger* Engine::_logger        = nullptr;
-PluginManager*  Engine::_pluginManager = nullptr;
-AssetManager*   Engine::_assetManager  = nullptr;
-InputManager*   Engine::_inputManager  = nullptr;
-entt::registry* Engine::_ecsManager    = nullptr;
-hq::JobManager* Engine::_jobManager    = nullptr;
+spdlog::logger*      Engine::_logger        = nullptr;
+PluginManager*       Engine::_pluginManager = nullptr;
+AssetManager*        Engine::_assetManager  = nullptr;
+InputManager*        Engine::_inputManager  = nullptr;
+entt::registry*      Engine::_ecsManager    = nullptr;
+enki::TaskScheduler* Engine::_jobManager    = nullptr;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
 
@@ -36,6 +37,11 @@ bx::AllocatorI* Engine::bxAllocator()
 {
     static bx::DefaultAllocator allocator;
     return &allocator;
+}
+
+const bgfx::Caps* Engine::bgfxCaps()
+{
+    return bgfx::getCaps();
 }
 
 const bgfx::Stats* Engine::bgfxStats()
@@ -48,7 +54,7 @@ bool Engine::init()
     _logger = spdlog::stdout_color_mt("console").get();
 
     if (_jobManager == nullptr)
-        _jobManager = new hq::JobManager();
+        _jobManager = new enki::TaskScheduler();
     if (_pluginManager == nullptr)
         _pluginManager = new PluginManager();
     if (_assetManager == nullptr)
@@ -60,7 +66,7 @@ bool Engine::init()
 
     initVertDecl();
     registerDefaultAssetTypes();
-    jobs().init();
+    jobs().Initialize();
 
     return true;
 }
@@ -77,11 +83,13 @@ void Engine::registerDefaultAssetTypes()
     assets().registerAssetType(AssetTypes::Texture, AssetNames::Texture, TextureAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Shader, AssetNames::Shader, ShaderAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::Material, AssetNames::Material, MaterialAsset::factoryFunc);
+    assets().registerAssetType(AssetTypes::ParticleEffect, AssetNames::ParticleEffect,
+                               ParticleEffectAsset::factoryFunc);
 }
 
 void Engine::release()
 {
-    jobs().release();
+    jobs().WaitforAllAndShutdown();
 
     delete _ecsManager;
     _ecsManager = nullptr;
