@@ -88,7 +88,7 @@ void MainWindow::onInit()
     AssetPtr object   = Engine::assets().addAsset(AssetTypes::Geometry, "assets/caruta.obj");
     AssetPtr material = Engine::assets().addAsset(AssetTypes::Material, "assets/unlit_textured.material");
     Engine::assets().loadAssets();
-    std::srand(std::time(NULL));
+    std::srand((unsigned int)std::time(nullptr));
 
     PosColorVertex::init();
     bgfx::ShaderHandle axesVsh = bgfx::createShader(bgfx::makeRef(vs_axes_bin_h, sizeof(vs_axes_bin_h)));
@@ -111,7 +111,7 @@ void MainWindow::onInit()
     createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 500; ++i)
+    for (int i = 0; i < 10000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);

@@ -34,9 +34,10 @@ void MaterialAsset::setMaterialInfo(const MaterialInfo& info)
 
 void MaterialAsset::write(const std::string& filename)
 {
-    std::ofstream             ofs(filename, std::ios::out | std::ios::binary);
+    std::ofstream ofs(filename, std::ios::out | std::ios::binary);
     hq::JsonSerializer serializer(ofs);
-    serializer(_materialInfo);
+    hq::Serializer* baseSerializer = &serializer;
+    (*baseSerializer)(_materialInfo);
 }
 
 void MaterialAsset::bind() const
@@ -65,7 +66,8 @@ bgfx::ProgramHandle MaterialAsset::program() const
 bool MaterialAsset::loadImpl(std::istream& data)
 {
     hq::JsonDeserializer deserializer(data);
-    deserializer(_materialInfo);
+    hq::Serializer* baseSerializer = & deserializer;
+    (*baseSerializer)(_materialInfo);
 
     _vsh = Engine::assets().addAsset(AssetTypes::Shader, _materialInfo.vertexShader,
                                      static_cast<u32>(ShaderTypes::Vertex));
@@ -148,6 +150,21 @@ bgfx::UniformType::Enum MaterialParam::toBgfxUniformType() const
             break;
     }
     return bgfx::UniformType::Count;
+}
+
+void MaterialParam::Serialize(hq::Serializer &serializer)
+{
+    SERIALIZE(type);
+    SERIALIZE(value);
+}
+
+void MaterialInfo::Serialize(hq::Serializer &serializer)
+{
+    SERIALIZE(name);
+    SERIALIZE(vertexShader);
+    SERIALIZE(fragmentShader);
+    SERIALIZE(params);
+    SERIALIZE(textures);
 }
 
 }  // atlas namespace
