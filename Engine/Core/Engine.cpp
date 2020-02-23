@@ -13,9 +13,9 @@
 #include "Core/SimpleMeshVertex.h"
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
+#include "Managers/ECSManager.h"
 #include "enkiTS/TaskScheduler.h"
 #include "Managers/PluginManager.h"
-#include "entt/entity/registry.hpp"
 
 #include <bgfx/bgfx.h>
 #include <bx/allocator.h>
@@ -28,7 +28,7 @@ spdlog::logger*      Engine::_logger        = nullptr;
 PluginManager*       Engine::_pluginManager = nullptr;
 AssetManager*        Engine::_assetManager  = nullptr;
 InputManager*        Engine::_inputManager  = nullptr;
-entt::registry*      Engine::_ecsManager    = nullptr;
+ECSManager*          Engine::_ecsManager    = nullptr;
 enki::TaskScheduler* Engine::_jobManager    = nullptr;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
@@ -62,7 +62,7 @@ bool Engine::init()
     if (_inputManager == nullptr)
         _inputManager = new InputManager();
     if (_ecsManager == nullptr)
-        _ecsManager = new entt::registry();
+        _ecsManager = new ECSManager();
 
     initVertDecl();
     registerDefaultAssetTypes();

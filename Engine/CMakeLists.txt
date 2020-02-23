@@ -37,6 +37,8 @@ target_sources(atlas PRIVATE
     Core/SimpleMeshVertex.h
     Managers/AssetManager.cpp
     Managers/AssetManager.h
+    Managers/ECSManager.cpp
+    Managers/ECSManager.h
     Managers/InputManager.cpp
     Managers/InputManager.h
     Managers/PluginManager.cpp

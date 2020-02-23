@@ -1,6 +1,5 @@
 #pragma once
 
-#include "entt/fwd.hpp"
 #include <string>
 
 namespace spdlog
@@ -28,6 +27,7 @@ namespace atlas
 // Forward declarations
 class PluginManager;
 class AssetManager;
+class ECSManager;
 class InputManager;
 class AudioManager;
 class PhysicsManager;
@@ -48,7 +48,7 @@ public:
     {
         return *_inputManager;
     }
-    static entt::registry& ecs()
+    static ECSManager& ecs()
     {
         return *_ecsManager;
     }
@@ -76,7 +76,7 @@ private:
     static PluginManager*       _pluginManager;
     static AssetManager*        _assetManager;
     static InputManager*        _inputManager;
-    static entt::registry*      _ecsManager;
+    static ECSManager*          _ecsManager;
     static enki::TaskScheduler* _jobManager;
 
     friend class MainWindow;

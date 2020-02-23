@@ -8,12 +8,14 @@
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
+#include "Managers/ECSManager.h"
 #include "Hq/Math/Math.h"
 #include "Hq/JobManager.h"
 #include "Hq/Rng.h"
 #include "Hq/Math/Mat4x4.h"
 #include "Hq/Math/Vec3.h"
 #include "Hq/Math/Quat.h"
+#include "Hq/Serializer.h"
 
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
@@ -88,6 +90,12 @@ void MainWindow::onInit()
     AssetPtr object   = Engine::assets().addAsset(AssetTypes::Geometry, "assets/caruta.obj");
     AssetPtr material = Engine::assets().addAsset(AssetTypes::Material, "assets/unlit_textured.material");
     Engine::assets().loadAssets();
+
+    Engine::ecs().registerComponentSerialization<TransformComponent>();
+    Engine::ecs().registerComponentSerialization<MaterialComponent>();
+    Engine::ecs().registerComponentSerialization<MeshComponent>();
+
+
     std::srand((unsigned int)std::time(nullptr));
 
     PosColorVertex::init();
@@ -102,7 +110,7 @@ void MainWindow::onInit()
     // Create static index buffer.
     _axesIbh = bgfx::createIndexBuffer(bgfx::makeRef(s_axesIndices, sizeof(s_axesIndices)));
 
-    auto& registry                  = Engine::ecs();
+    auto& registry                  = Engine::ecs().registry();
     _camera                         = registry.create();
     Camera&         cameraComponent = registry.assign<Camera>(_camera);
     SDLWindow::Size size            = windowSize();
@@ -125,13 +133,14 @@ void MainWindow::onInit()
         rotateY(transform.world(), -kPiHalf + i * kDegToRad);
         rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
     }
+
 }
 
 void MainWindow::onUpdate(float dt)
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
 
-    Camera& cameraComponent = Engine::ecs().get<Camera>(_camera);
+    Camera& cameraComponent = Engine::ecs().registry().get<Camera>(_camera);
 
     Mat4x4 trans {Mat4x4::Identity};
     Vec3   forward(0.f, 0.f, 1.f);
@@ -189,7 +198,7 @@ void MainWindow::renderAxes()
 
 void MainWindow::render(float dt)
 {
-    auto view = Engine::ecs().view<TransformComponent, MeshComponent, MaterialComponent>();
+    auto view = Engine::ecs().registry().view<TransformComponent, MeshComponent, MaterialComponent>();
 
     for (auto entity : view)
     {
