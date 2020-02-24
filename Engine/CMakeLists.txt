@@ -22,7 +22,6 @@ target_sources(atlas PRIVATE
     Assets/Types.cpp
     Components/Camera.cpp
     Components/Camera.h
-    Components/Component.h
     Components/LightComponent.h
     Components/MaterialComponent.cpp
     Components/MaterialComponent.h

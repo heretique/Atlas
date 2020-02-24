@@ -1,15 +1,12 @@
 #pragma once
 
-#include "Component.h"
 #include "Assets/Geometry.h"
 #include "Assets/Types.h"
 
 namespace atlas
 {
-class MeshComponent : public Component
+class MeshComponent
 {
-    DECLARE_SUPER(Component)
-    CREATE_TYPEID(MeshComponent)
 public:
     std::shared_ptr<GeometryAsset> geometry()
     {
@@ -24,6 +21,5 @@ public:
 private:
     AssetPtr _mesh;
 };
-REGISTER_SERIALIZABLE_TYPE(MeshComponent)
 
 }  // namespace Atlas

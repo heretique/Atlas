@@ -2,30 +2,27 @@
 
 #include "Asset.h"
 #include "Hq/BasicTypes.h"
-#include "Hq/Serializable.h"
 #include <vector>
 #include <bgfx/bgfx.h>
 
-namespace hq
-{
-class Serializer;
-}
-
 namespace atlas
 {
-struct MaterialParam : public hq::Serializable
+struct MaterialParam
 {
     u32                type;
     std::vector<float> value;
 
     bgfx::UniformType::Enum toBgfxUniformType() const;
 
-    void Serialize(hq::Serializer& serializer) override;
-    CREATE_TYPEID(MaterialParam)
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
+    {
+        SERIALIZE(type);
+        SERIALIZE(value);
+    }
 };
-REGISTER_SERIALIZABLE_TYPE(MaterialParam)
 
-struct MaterialInfo : public hq::Serializable
+struct MaterialInfo
 {
     using Params   = std::unordered_map<std::string, MaterialParam>;
     using Textures = std::unordered_map<std::string, std::string>;
@@ -36,10 +33,16 @@ struct MaterialInfo : public hq::Serializable
     Params      params;
     Textures    textures;
 
-    void Serialize(hq::Serializer& serializer) override;
-    CREATE_TYPEID(MaterialInfo)
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
+    {
+        SERIALIZE(name);
+        SERIALIZE(vertexShader);
+        SERIALIZE(fragmentShader);
+        SERIALIZE(params);
+        SERIALIZE(textures);
+    }
 };
-REGISTER_SERIALIZABLE_TYPE(MaterialInfo)
 
 struct MaterialUniform
 {
