@@ -131,14 +131,26 @@ void AssetManager::loadAssets()
     _loadedCount = 0;
     // using classic for as range based for loops might have issues when
     // elements are added during loop
-    for (size_t i = 0; i < _assets.size(); ++i)
+    AssetStorage assetsToLoad;
+    _loadingCount = 0;
+    for(auto asset: _assets)
     {
-        _loadingCount  = _assets.size();
-        AssetPtr asset = _assets[i];
+        if (!asset->isLoaded())
+        {
+            _loadingCount++;
+            assetsToLoad.emplace_back(asset);
+        }
+    }
+
+    for (auto asset: assetsToLoad)
+    {
         loadAsset(asset);
         ++_loadedCount;
         LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
     }
+
+    _loadedCount = 0;
+    _loadingCount = 0;
 }
 
 void AssetManager::loadAssetsAsync()

@@ -39,6 +39,11 @@ bgfx::IndexBufferHandle GeometryAsset::ibo() const
     return _ibh;
 }
 
+const hq::math::Box3 &GeometryAsset::bounds() const
+{
+    return _aabb;
+}
+
 namespace
 {
     using namespace tinyobj;
@@ -130,6 +135,8 @@ bool GeometryAsset::loadImpl(std::istream& is)
 
     // interleave vertex attributes
     _vertices.reserve(uniqueVerticesCombination.size());
+    _aabb.min = hq::math::Vec3(FLT_MAX);
+    _aabb.max = hq::math::Vec3(-FLT_MAX);
     for (const index_t& index : uniqueVerticesCombination)
     {
         SimpleMeshVertex vertex;
@@ -148,7 +155,7 @@ bool GeometryAsset::loadImpl(std::istream& is)
         _vertices.emplace_back(vertex);
         // update bbox
 
-        math::extend(_aabb, math::Vec3(vertex.x, vertex.y, vertex.z));
+        math::merge(_aabb, math::Vec3(vertex.x, vertex.y, vertex.z));
     }
 
 //    material_t material = materials.front();

@@ -2,14 +2,11 @@
 
 #include "entt/fwd.hpp"
 #include "entt/core/type_info.hpp"
+#include "entt/entity/registry.hpp"
 
 #include <memory>
 #include <unordered_map>
 #include <functional>
-
-namespace hq {
-class Serializer;
-}
 
 namespace atlas
 {
@@ -22,22 +19,42 @@ public:
 
     entt::registry& registry();
 
-    void serializeEntity(entt::entity entity, hq::Serializer& serializer);
+    template <typename Serializer>
+    void serializeEntity(entt::entity entity, Serializer& serializer);
 
-    template<typename ComponentT>
-    void registerComponentSerialization()
-    {
-        _componentSerializationMap[entt::type_info<ComponentT>::id()] = [&](entt::entity entity, hq::Serializer& serializer) {
-            auto& component = _registry->get<ComponentT>(entity);
-            serializer(component);
-        };
-    }
-
-
+    template<typename Component, typename Serializer>
+    void registerComponentSerialization();
 
 private:
     std::unique_ptr<entt::registry> _registry;
-    std::unordered_map<ENTT_ID_TYPE, std::function<void(entt::entity, hq::Serializer&)>> _componentSerializationMap;
+    template<typename Serializer>
+    static std::unordered_map<ENTT_ID_TYPE, std::function<void(entt::entity, Serializer&)>> _componentSerializationMap;
 };
+
+template<typename Serializer>
+std::unordered_map<ENTT_ID_TYPE, std::function<void(entt::entity, Serializer&)>> ECSManager::_componentSerializationMap = {};
+
+template<typename Serializer>
+void ECSManager::serializeEntity(entt::entity entity, Serializer &serializer)
+{
+
+    _registry->visit(entity, [&](const auto component) {
+        auto it = _componentSerializationMap<Serializer>.find(component);
+        assert(it != _componentSerializationMap.end());
+        it->second(entity, serializer);
+    });
+}
+
+
+template<typename Component, typename Serializer>
+void ECSManager::registerComponentSerialization()
+{
+    _componentSerializationMap<Serializer>[entt::type_info<Component>::id()] = [&](entt::entity entity, Serializer& serializer) {
+        auto& component = _registry->get<Component>(entity);
+        serializer(component);
+    };
+}
+
+
 
 } // atlas namespace

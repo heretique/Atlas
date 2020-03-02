@@ -8,6 +8,8 @@ namespace atlas
 class MeshComponent
 {
 public:
+    MeshComponent() {}
+    MeshComponent(AssetPtr mesh) : _mesh(mesh) {}
     std::shared_ptr<GeometryAsset> geometry()
     {
         return std::static_pointer_cast<GeometryAsset>(_mesh);
@@ -18,6 +20,10 @@ public:
         _mesh = geometryAsset;
     }
 
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
+    {
+    }
 private:
     AssetPtr _mesh;
 };

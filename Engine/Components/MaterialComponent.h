@@ -13,6 +13,11 @@ public:
     void                           clearMaterial();
     std::shared_ptr<MaterialAsset> material();
 
+    template <class Serializer>
+    void Serialize(Serializer& serializer)
+    {
+    }
+
 private:
     AssetPtr _material;
 };

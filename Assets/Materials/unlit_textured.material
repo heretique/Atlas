@@ -1,7 +1,7 @@
 {
     "name": "unlit_textured",
-    "vertexShader": "assets/vs_textured_unlit.sc",
-    "fragmentShader": "assets/fs_textured_unlit.sc",
+    "vertexShader": "assets/shaders/textured_unlit/vs_textured_unlit.sc",
+    "fragmentShader": "assets//shaders/textured_unlit/fs_textured_unlit.sc",
     "params": [
         {
             "key": "u_time",
@@ -11,7 +11,7 @@
     "textures": [
         {
             "key": "s_texColor",
-            "value": "assets/caruta.png"
+            "value": "assets/textures/caruta.png"
         }
     ]
 }

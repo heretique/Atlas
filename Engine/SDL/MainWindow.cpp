@@ -5,17 +5,20 @@
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
+#include "Utils/DebugDraw.h"
 #include "Core/Engine.h"
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ECSManager.h"
+#include "Systems/PickingSystem.h"
 #include "Hq/Math/Math.h"
 #include "Hq/JobManager.h"
 #include "Hq/Rng.h"
 #include "Hq/Math/Mat4x4.h"
 #include "Hq/Math/Vec3.h"
 #include "Hq/Math/Quat.h"
-#include "Hq/Serializer.h"
+#include "Hq/JsonSerializer.h"
+#include "Hq/PackUtils.h"
 
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
@@ -73,7 +76,11 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 {
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() {
+    bgfx::destroy(_axesIbh);
+    bgfx::destroy(_axesVbh);
+    bgfx::destroy(_axesProgram);
+}
 
 void MainWindow::onInit()
 {
@@ -83,18 +90,13 @@ void MainWindow::onInit()
     (void*)caps;
 
     Engine::assets().setAssetsDir(basePath);
-    Engine::assets().addAsset(AssetTypes::Geometry, "DefaultCube");
-    Engine::assets().addAsset(AssetTypes::Geometry, "DefaultFullscreenTriangle");
-    Engine::assets().addAsset(AssetTypes::Geometry, "DefaultTriangle");
-    Engine::assets().addAsset(AssetTypes::Geometry, "DefaultQuad");
-    AssetPtr object   = Engine::assets().addAsset(AssetTypes::Geometry, "assets/caruta.obj");
-    AssetPtr material = Engine::assets().addAsset(AssetTypes::Material, "assets/unlit_textured.material");
+    Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/DefaultCube");
+    Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/DefaultFullscreenTriangle");
+    Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/DefaultTriangle");
+    Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/DefaultQuad");
+    AssetPtr object   = Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/caruta.obj");
+    AssetPtr material = Engine::assets().addAsset(AssetTypes::Material, "assets/materials/unlit_textured.material");
     Engine::assets().loadAssets();
-
-    Engine::ecs().registerComponentSerialization<TransformComponent>();
-    Engine::ecs().registerComponentSerialization<MaterialComponent>();
-    Engine::ecs().registerComponentSerialization<MeshComponent>();
-
 
     std::srand((unsigned int)std::time(nullptr));
 
@@ -119,16 +121,16 @@ void MainWindow::onInit()
     createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
     cameraComponent.setTransform(transform.world());
 
-    for (int i = 0; i < 10000; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
-        MeshComponent&      mesh      = registry.assign<MeshComponent>(entity);
+        MeshComponent&      mesh      = registry.assign<MeshComponent>(entity, object);
         MaterialComponent&  mat       = registry.assign<MaterialComponent>(entity);
 
         mesh.setGeomtry(object);
         mat.setMaterial(material);
-        translate(transform.world(), 30 * hq::randMinus11(), 30 * hq::randMinus11(), 30 * hq::randMinus11());
+        translate(transform.world(), 2 * hq::randMinus11(), 2 * hq::randMinus11(), 2 * hq::randMinus11());
         rotateX(transform.world(), -kPiHalf + i * kDegToRad);
         rotateY(transform.world(), -kPiHalf + i * kDegToRad);
         rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
@@ -161,6 +163,19 @@ void MainWindow::onUpdate(float dt)
     bgfx::setViewTransform(0, cameraComponent.getViewMatrix().data, cameraComponent.getProjectionMatrix().data);
     renderAxes();
     render(dt);
+
+    if (Engine::input().mouseDown())
+    {
+        Ray3 pickRay;
+        Vec2 mousePos = Engine::input().mousePos();
+        cameraComponent.pickRay(Rect(windowSize().width, windowSize().height), mousePos.x, mousePos.y, pickRay);
+        entt::entity selectedEntity = PickingSystem::pick(Engine::ecs().registry(), pickRay);
+        if (selectedEntity != entt::null)
+        {
+            fmt::print("Entity selected: {}\n", selectedEntity);
+        }
+    }
+
     Engine::input().resetInput();
 }
 
@@ -200,6 +215,8 @@ void MainWindow::render(float dt)
 {
     auto view = Engine::ecs().registry().view<TransformComponent, MeshComponent, MaterialComponent>();
 
+    Engine::debugDraw().begin();
+
     for (auto entity : view)
     {
         TransformComponent& transform = view.get<TransformComponent>(entity);
@@ -224,7 +241,11 @@ void MainWindow::render(float dt)
         material.material()->bind();
         bgfx::setState(BGFX_STATE_DEFAULT);
         bgfx::submit(0, material.material()->program());
+
+        Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(0, 255, 0, 255));
     }
+
+    Engine::debugDraw().end();
 }
 
 }  // namespace atlas

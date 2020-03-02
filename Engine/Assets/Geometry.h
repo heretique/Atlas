@@ -22,6 +22,8 @@ public:
     bgfx::VertexBufferHandle vbo() const;
     bgfx::IndexBufferHandle  ibo() const;
 
+    const hq::math::Box3& bounds() const;
+
     // Asset interface
 protected:
     virtual bool loadImpl(std::istream& data) override;

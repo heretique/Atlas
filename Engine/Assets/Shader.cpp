@@ -17,6 +17,7 @@ static std::string kShaderCompiler = "shaderc";
 #elif defined(WIN32) || defined(WIN64)
 static std::string kShaderCompiler = "shaderc.exe";
 #endif
+static std::string kDefaultShaderIncludePath = "assets/shaders";
 
 AssetPtr ShaderAsset::factoryFunc(const std::string& filename, u32 flags)
 {
@@ -67,15 +68,17 @@ bool ShaderAsset::loadImpl(std::istream& data)
 
     if (".sc" == filePath.extension())
     {
-        fs::path compilerPath = fs::current_path().append(kShaderCompiler);
-        fs::path shaderPath   = fs::absolute(filePath);
-        fs::path varyingPath  = shaderPath.parent_path();
+        fs::path compilerPath   = fs::current_path().append(kShaderCompiler);
+        fs::path shaderInclPath = fs::current_path().append(kDefaultShaderIncludePath);
+        fs::path shaderPath     = fs::absolute(filePath);
+        fs::path varyingPath    = shaderPath.parent_path();
         varyingPath.append(kDefaultVarying);
 
         std::stringstream cmdArgs;
 
         cmdArgs << "-f " << shaderPath.string() << " ";
         cmdArgs << "-i " << shaderPath.parent_path().string() << " ";
+        cmdArgs << "-i " << shaderInclPath.string() << " ";
         cmdArgs << "-c ";
         cmdArgs << "--type " << shaderTypeToChar(static_cast<ShaderTypes>(_flags)) << " ";
 
@@ -85,6 +88,7 @@ bool ShaderAsset::loadImpl(std::istream& data)
         bx::ProcessReader shaderProcess;
         if (!bx::open(&shaderProcess, compilerPath.string().c_str(), cmdArgsView, &err))
         {
+            Engine::log().warn("Shader compiler process failed to open with err: {}", err.getMessage().getPtr());
             return false;
         }
 
@@ -100,6 +104,7 @@ bool ShaderAsset::loadImpl(std::istream& data)
         auto ecode = shaderProcess.getExitCode();
         if (0 != ecode)
         {
+            Engine::log().warn("Shader compiler process failed to open with err: {}", shaderProcess.getExitCode());
             return false;
         }
 

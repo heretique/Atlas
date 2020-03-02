@@ -53,10 +53,14 @@ target_sources(atlas PRIVATE
     SDL/vs_ocornut_imgui.bin.h
     Systems/ParticleSystem.cpp
     Systems/ParticleSystem.h
+    Systems/PickingSystem.cpp
+    Systems/PickingSystem.h
     Systems/RenderSystem.cpp
     Systems/RenderSystem.h
     Utils/BgfxUtils.cpp
-    Utils/BgfxUtils.h)
+    Utils/BgfxUtils.h
+    Utils/DebugDraw.cpp
+    Utils/DebugDraw.h)
 
 target_include_directories(atlas PRIVATE .
     ../3rdparty/entt/src
@@ -109,30 +113,21 @@ target_compile_definitions(atlas PRIVATE _USE_MATH_DEFINES)
 
 
 add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultCube
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultFullscreenTriangle
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultTriangle
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/DefaultQuad
-    $<TARGET_FILE_DIR:atlas>/
-    )
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models
+    $<TARGET_FILE_DIR:atlas>/assets/models
 
-add_custom_command(TARGET atlas POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.obj
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Models/caruta.mtl
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/fs_textured_unlit.sc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/varying.def.sc
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/textured_unlit/vs_textured_unlit.sc
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders
+    $<TARGET_FILE_DIR:atlas>/assets/shaders
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/bgfx_compute.sh
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/bgfx_shader.sh
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/common.sh
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Shaders/shaderlib.sh
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Textures
+    $<TARGET_FILE_DIR:atlas>/assets/textures
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Textures/caruta.png
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Materials/unlit_textured.material
-    $<TARGET_FILE_DIR:atlas>/assets
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Assets/Materials
+    $<TARGET_FILE_DIR:atlas>/assets/materials
     )
 
 #add_custom_command(TARGET atlas POST_BUILD

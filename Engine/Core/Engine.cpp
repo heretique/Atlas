@@ -16,6 +16,11 @@
 #include "Managers/ECSManager.h"
 #include "enkiTS/TaskScheduler.h"
 #include "Managers/PluginManager.h"
+#include "Utils/DebugDraw.h"
+#include "Hq/JsonSerializer.h"
+#include "Hq/BinarySerializer.h"
+
+#include <entt/entt.hpp>
 
 #include <bgfx/bgfx.h>
 #include <bx/allocator.h>
@@ -30,8 +35,27 @@ AssetManager*        Engine::_assetManager  = nullptr;
 InputManager*        Engine::_inputManager  = nullptr;
 ECSManager*          Engine::_ecsManager    = nullptr;
 enki::TaskScheduler* Engine::_jobManager    = nullptr;
+DebugDraw*           Engine::_debugDraw     = nullptr;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
+
+
+///////////// Bounds updates //////////////
+void UpdateEntityBoundsFromMesh(entt::registry& registry, entt::entity entity)
+{
+    if(registry.has<TransformComponent>(entity))
+    {
+        TransformComponent& transform = registry.get<TransformComponent>(entity);
+        transform.bounds() = registry.get<MeshComponent>(entity).geometry()->bounds();
+    }
+    else
+    {
+        TransformComponent& transform = registry.assign<TransformComponent>(entity);
+        transform.bounds() = registry.get<MeshComponent>(entity).geometry()->bounds();
+    }
+}
+
+
 
 bx::AllocatorI* Engine::bxAllocator()
 {
@@ -63,10 +87,15 @@ bool Engine::init()
         _inputManager = new InputManager();
     if (_ecsManager == nullptr)
         _ecsManager = new ECSManager();
+    if (_debugDraw == nullptr)
+        _debugDraw = new DebugDraw();
 
     initVertDecl();
     registerDefaultAssetTypes();
+    registerComponentDependencies();
+    registerComponentSerialization();
     jobs().Initialize();
+    debugDraw().initialize();
 
     return true;
 }
@@ -74,6 +103,24 @@ bool Engine::init()
 void Engine::initVertDecl()
 {
     SimpleMeshVertex::init();
+}
+
+void Engine::registerComponentDependencies()
+{
+    ecs().registry().on_construct<MeshComponent>().connect<&UpdateEntityBoundsFromMesh>();
+}
+
+void Engine::registerComponentSerialization()
+{
+    // JsonSerializer
+    ecs().registerComponentSerialization<TransformComponent, hq::JsonSerializer>();
+    ecs().registerComponentSerialization<MaterialComponent, hq::JsonSerializer>();
+    ecs().registerComponentSerialization<MeshComponent, hq::JsonSerializer>();
+
+    // BinarySerializer
+    ecs().registerComponentSerialization<TransformComponent, hq::BinarySerializer>();
+    ecs().registerComponentSerialization<MaterialComponent, hq::BinarySerializer>();
+    ecs().registerComponentSerialization<MeshComponent, hq::BinarySerializer>();
 }
 
 void Engine::registerDefaultAssetTypes()

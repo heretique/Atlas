@@ -25,6 +25,18 @@ float InputManager::mouseVerticalAxis() const
     return _mvAxis;
 }
 
+bool InputManager::mouseDown() const
+{
+    return _registerMouse;
+}
+
+::hq::math::Vec2 InputManager::mousePos() const
+{
+    ::hq::math::Vec2 pos;
+    SDL_GetMouseState((int*)&pos.x,(int*)&pos.y);
+    return pos;
+}
+
 void InputManager::handleInputEvent(const SDL_Event& e)
 {
     _mhAxis = 0.f;

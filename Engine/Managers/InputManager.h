@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Hq/Math/MathTypes.h>
+
 union SDL_Event;
 
 namespace atlas
@@ -14,6 +16,9 @@ public:
     float verticalAxis() const;
     float mouseHorizontalAxis() const;
     float mouseVerticalAxis() const;
+
+    bool mouseDown() const;
+    ::hq::math::Vec2 mousePos() const;
 
     void handleInputEvent(const SDL_Event& e);
     void resetInput();

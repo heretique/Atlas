@@ -32,6 +32,7 @@ class InputManager;
 class AudioManager;
 class PhysicsManager;
 class MainWindow;
+class DebugDraw;
 
 class Engine
 {
@@ -60,6 +61,10 @@ public:
     {
         return *_logger;
     }
+    static DebugDraw& debugDraw()
+    {
+        return *_debugDraw;
+    }
 
     static bx::AllocatorI* bxAllocator();
     static const bgfx::Caps* bgfxCaps();
@@ -68,6 +73,8 @@ public:
 private:
     static bool init();
     static void initVertDecl();
+    static void registerComponentDependencies();
+    static void registerComponentSerialization();
     static void registerDefaultAssetTypes();
     static void release();
 
@@ -78,6 +85,7 @@ private:
     static InputManager*        _inputManager;
     static ECSManager*          _ecsManager;
     static enki::TaskScheduler* _jobManager;
+    static DebugDraw*           _debugDraw;
 
     friend class MainWindow;
 };

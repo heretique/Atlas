@@ -1,0 +1,7 @@
+{
+    "name": "debug_line",
+    "vertexShader": "assets/shaders/debug/vs_debugdraw_lines.sc",
+    "fragmentShader": "assets/shaders/debug/fs_debugdraw_lines.sc",
+    "params": [],
+    "textures": []
+}

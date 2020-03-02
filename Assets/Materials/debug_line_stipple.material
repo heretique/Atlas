@@ -1,0 +1,7 @@
+{
+    "name": "debug_line_stipple",
+    "vertexShader": "assets/shaders/debug/vs_debugdraw_lines_stipple.sc",
+    "fragmentShader": "assets/shaders/debug/fs_debugdraw_lines_stipple.sc",
+    "params": [],
+    "textures": []
+}
