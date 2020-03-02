@@ -31,6 +31,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 #        target_include_directories(bx PUBLIC ../../bx/include/compat/mingw)
     endif()
+#    target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_DEBUG=1)
 endif()
 
 
