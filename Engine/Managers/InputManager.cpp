@@ -32,8 +32,9 @@ bool InputManager::mouseDown() const
 
 ::hq::math::Vec2 InputManager::mousePos() const
 {
-    ::hq::math::Vec2 pos;
-    SDL_GetMouseState((int*)&pos.x,(int*)&pos.y);
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    ::hq::math::Vec2 pos(x, y);
     return pos;
 }
 

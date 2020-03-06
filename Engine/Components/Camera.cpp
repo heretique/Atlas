@@ -143,12 +143,6 @@ const Mat4x4& Camera::getProjectionMatrix() const
     return _projection;
 }
 
-void Camera::setProjectionMatrix(const Mat4x4& Mat4x4)
-{
-    _projection = Mat4x4;
-    updateCamera();
-}
-
 const Mat4x4& Camera::getViewProjectionMatrix() const
 {
     return _viewProjection;
@@ -231,11 +225,11 @@ void Camera::pickRay(const Rect& viewport, float x, float y, Ray3& dst) const
 {
     // Get the world-space position at the near clip plane.
     Vec3 nearPoint;
-    unproject(viewport, x, y, 0.0f, nearPoint);
+    unproject(viewport, x, y, 0.f, nearPoint);
 
     // Get the world-space position at the far clip plane.
     Vec3 farPoint;
-    unproject(viewport, x, y, 1.0f, farPoint);
+    unproject(viewport, x, y, 1.f, farPoint);
 
     // Set the direction of the ray.
     Vec3 direction;
@@ -248,7 +242,7 @@ void Camera::pickRay(const Rect& viewport, float x, float y, Ray3& dst) const
 
 void Camera::updateCamera(const Mat4x4& transform)
 {
-    _view = transform;
+    invert(transform, _view);
     invert(_view, _inverseView);
 
     if (_cameraType == CameraType::ePerspective)

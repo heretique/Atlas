@@ -4,6 +4,9 @@
 #include "Assets/Material.h"
 #include <bgfx/bgfx.h>
 #include <Hq/Math/Box3.h>
+#include <Hq/Math/Vec3.h>
+#include <Hq/Math/Frustum.h>
+#include <Hq/Math/Mat4x4.h>
 
 namespace atlas
 {
@@ -62,6 +65,7 @@ bgfx::VertexLayout DebugLineVertex::vertLayout;
 
 struct DebugDrawImpl
 {
+    bool began = false;
     std::shared_ptr<MaterialAsset> _debugLineMat;
     std::shared_ptr<MaterialAsset> _debugLineStippleMat;
 
@@ -79,11 +83,14 @@ struct DebugDrawImpl
 
     void begin()
     {
+        assert(began == false);
+        began = true;
         vertexBuffer.clear();
         indexBuffer.clear();
     }
     void end()
     {
+        assert(began == true);
         bgfx::TransientVertexBuffer debugVbo;
         bgfx::TransientIndexBuffer  debugIbo;
         if (bgfx::allocTransientBuffers(&debugVbo, DebugLineVertex::vertLayout, vertexBuffer.size(), &debugIbo,
@@ -96,11 +103,34 @@ struct DebugDrawImpl
             bgfx::setState(BGFX_STATE_DEFAULT | BGFX_STATE_PT_LINES);
             bgfx::submit(0, _debugLineMat->program());
         }
+        began = false;
+    }
+
+    void drawBox3(const hq::math::Box3 &box, const uint32_t color)
+    {
+        using namespace hq::math;
+
+        assert(began == true);
+        Vec3 corners[8];
+        getCorners(box, corners);
+        int indexCount = sizeof (sBox3LineIndices) / sizeof (sBox3LineIndices[0]);
+        size_t indexPos = vertexBuffer.size();
+        for (int i = 0;  i < indexCount; ++i)
+        {
+            indexBuffer.emplace_back(indexPos + sBox3LineIndices[i]);
+        }
+
+        for (int i = 0; i < 8; ++i)
+        {
+            vertexBuffer.emplace_back(DebugLineVertex(corners[i], 0.f, color));
+        }
     }
 
     void drawBox3(const hq::math::Box3& box, const hq::math::Mat4x4& m, const uint32_t color)
     {
         using namespace hq::math;
+
+        assert(began == true);
         Vec3 corners[8];
         Box3 transformedBox;
         transform(box, m, transformedBox);
@@ -117,6 +147,79 @@ struct DebugDrawImpl
         {
             vertexBuffer.emplace_back(DebugLineVertex(corners[i], 0.f, color));
         }
+    }
+
+    void drawFrustum(const hq::math::Frustum &frustum, const uint32_t color)
+    {
+        using namespace hq::math;
+
+        assert(began == true);
+        Vec3 corners[8];
+        getCorners(frustum, corners);
+        int indexCount = sizeof (sBox3LineIndices) / sizeof (sBox3LineIndices[0]);
+        size_t indexPos = vertexBuffer.size();
+        for (int i = 0;  i < indexCount; ++i)
+        {
+            indexBuffer.emplace_back(indexPos + sBox3LineIndices[i]);
+        }
+
+        for (int i = 0; i < 8; ++i)
+        {
+            vertexBuffer.emplace_back(DebugLineVertex(corners[i], 0.f, color));
+        }
+    }
+
+    void drawFrustum(const hq::math::Frustum &frustum, const hq::math::Mat4x4 &m, const uint32_t color)
+    {
+        using namespace hq::math;
+
+        assert(began == true);
+        Vec3 corners[8];
+        getCorners(frustum, corners);
+        for (int i = 0; i < 8; ++i)
+        {
+            transformPoint(corners[i], m);
+        }
+
+        int indexCount = sizeof (sBox3LineIndices) / sizeof (sBox3LineIndices[0]);
+        size_t indexPos = vertexBuffer.size();
+        for (int i = 0;  i < indexCount; ++i)
+        {
+            indexBuffer.emplace_back(indexPos + sBox3LineIndices[i]);
+        }
+
+        for (int i = 0; i < 8; ++i)
+        {
+            vertexBuffer.emplace_back(DebugLineVertex(corners[i], 0.f, color));
+        }
+    }
+
+    void drawRay3(const hq::math::Ray3& ray, const float length, const uint32_t color)
+    {
+        using namespace hq::math;
+
+        assert(began == true);
+        size_t indexPos = vertexBuffer.size();
+        indexBuffer.emplace_back(indexPos);
+        indexBuffer.emplace_back(indexPos + 1);
+        vertexBuffer.emplace_back(DebugLineVertex(ray.origin, 0.f, color));
+        vertexBuffer.emplace_back(DebugLineVertex(ray.origin + length * ray.direction, 1.f, color));
+    }
+
+    void drawRay3(const hq::math::Ray3 &ray, const hq::math::Mat4x4 &m, const float length, const uint32_t color)
+    {
+        using namespace hq::math;
+
+        assert(began == true);
+        size_t indexPos = vertexBuffer.size();
+        indexBuffer.emplace_back(indexPos);
+        indexBuffer.emplace_back(indexPos + 1);
+        Vec3 transformedOrigin;
+        Vec3 transformedDir;
+        transformPoint(ray.origin, m, transformedOrigin);
+        transform(ray.direction, m, transformedDir);
+        vertexBuffer.emplace_back(DebugLineVertex(transformedOrigin, 0.f, color));
+        vertexBuffer.emplace_back(DebugLineVertex(transformedOrigin + length * transformedDir, 1.f, color));
     }
 };
 
@@ -142,9 +245,34 @@ void DebugDraw::end()
     _impl->end();
 }
 
+void DebugDraw::drawBox3(const hq::math::Box3 &box, const uint32_t color)
+{
+    _impl->drawBox3(box, color);
+}
+
 void DebugDraw::drawBox3(const hq::math::Box3& box, const hq::math::Mat4x4& transform, const uint32_t color)
 {
     _impl->drawBox3(box, transform, color);
+}
+
+void DebugDraw::drawFrustum(const hq::math::Frustum &frustum, const uint32_t color)
+{
+    _impl->drawFrustum(frustum, color);
+}
+
+void DebugDraw::drawFrustum(const hq::math::Frustum &frustum, const hq::math::Mat4x4 &transform, const uint32_t color)
+{
+    _impl->drawFrustum(frustum, transform, color);
+}
+
+void DebugDraw::drawRay3(const hq::math::Ray3& ray, const float length, const uint32_t color)
+{
+    _impl->drawRay3(ray, length, color);
+}
+
+void DebugDraw::drawRay3(const hq::math::Ray3 &ray, const hq::math::Mat4x4 &transform, const float length, const uint32_t color)
+{
+    _impl->drawRay3(ray, transform, length, color);
 }
 
 }  // atlas namespace

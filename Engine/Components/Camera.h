@@ -168,20 +168,6 @@ public:
     const hq::math::Mat4x4& getProjectionMatrix() const;
 
     /**
-     * Sets a custom projection matrix to be used by the camera.
-     *
-     * Setting a custom projection matrix results in the internally
-     * computed projection matrix being completely overridden until
-     * the resetProjectionMatrix method is called. A custom projection
-     * matrix is normally not necessary, but can be used for special
-     * projection effects, such as setting an oblique view frustum
-     * for near plane clipping.
-     *
-     * @param matrix Custom projection matrix.
-     */
-    void setProjectionMatrix(const hq::math::Mat4x4& matrix);
-
-    /**
      * Resets the camera to use the internally computed projection matrix
      * instead of any previously specified user-defined matrix.
      */
@@ -274,7 +260,7 @@ private:
     float                     _aspectRatio;
     float                     _nearPlane;
     float                     _farPlane;
-    mutable hq::math::Mat4x4  _view;
+    mutable hq::math::Mat4x4  _view{hq::math::Mat4x4::Identity};
     mutable hq::math::Mat4x4  _projection;
     mutable hq::math::Mat4x4  _viewProjection;
     mutable hq::math::Mat4x4  _inverseView;

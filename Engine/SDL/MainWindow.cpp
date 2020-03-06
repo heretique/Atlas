@@ -19,6 +19,7 @@
 #include "Hq/Math/Quat.h"
 #include "Hq/JsonSerializer.h"
 #include "Hq/PackUtils.h"
+#include <bx/math.h>
 
 #include <entt/entity/registry.hpp>
 #include <spdlog/spdlog.h>
@@ -76,7 +77,8 @@ MainWindow::MainWindow(const char* title, int x, int y, int w, int h)
 {
 }
 
-MainWindow::~MainWindow() {
+MainWindow::~MainWindow()
+{
     bgfx::destroy(_axesIbh);
     bgfx::destroy(_axesVbh);
     bgfx::destroy(_axesProgram);
@@ -117,11 +119,12 @@ void MainWindow::onInit()
     Camera&         cameraComponent = registry.assign<Camera>(_camera);
     SDLWindow::Size size            = windowSize();
     cameraComponent.setPerspective(60.f, (float)size.width / size.height, .1f, 1000.f);
-    TransformComponent& transform = registry.assign<TransformComponent>(_camera);
-    createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), transform.world());
-    cameraComponent.setTransform(transform.world());
+    Mat4x4 cameraView {Mat4x4::Identity};
+    createLookAt(Vec3(5, 5, 10), Vec3::Zero, Vec3(0.f, 1.f, 0.f), cameraView);
+    invert(cameraView);
+    cameraComponent.setTransform(cameraView);
 
-    for (int i = 0; i < 2; ++i)
+    for (int i = 0; i < 5000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -130,12 +133,11 @@ void MainWindow::onInit()
 
         mesh.setGeomtry(object);
         mat.setMaterial(material);
-        translate(transform.world(), 2 * hq::randMinus11(), 2 * hq::randMinus11(), 2 * hq::randMinus11());
         rotateX(transform.world(), -kPiHalf + i * kDegToRad);
         rotateY(transform.world(), -kPiHalf + i * kDegToRad);
         rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
+        translate(transform.world(), 30 * hq::randMinus11(), 30 * hq::randMinus11(), 30 * hq::randMinus11());
     }
-
 }
 
 void MainWindow::onUpdate(float dt)
@@ -145,56 +147,56 @@ void MainWindow::onUpdate(float dt)
     Camera& cameraComponent = Engine::ecs().registry().get<Camera>(_camera);
 
     Mat4x4 trans {Mat4x4::Identity};
-    Vec3   forward(0.f, 0.f, 1.f);
-    Vec3   right(1.f, 0.f, 0.f);
-    Vec3   up(0.f, 1.f, 0.f);
-    Vec3   translation;
-    Quat   rotation;
-    //    decompose(cameraComponent.getViewMatrix(), rotation, scale, translation);
-    Quat rotateHoriz = createFromAxisAngle(up, dt * Engine::input().mouseHorizontalAxis());
-    Quat rotateVert  = createFromAxisAngle(right, dt * Engine::input().mouseVerticalAxis());
+
+    Vec3 forward(0.f, 0.f, 1.f);
+    Vec3 right(1.f, 0.f, 0.f);
+    Vec3 up(0.f, 1.f, 0.f);
+    Vec3 translation;
+    Quat rotation;
+
+    //    transform(forward, cameraComponent.getViewMatrix());
+    //    transform(right, cameraComponent.getViewMatrix());
+    //    transform(up, cameraComponent.getViewMatrix());
+
+    Quat rotateHoriz = createFromAxisAngle(-up, dt * Engine::input().mouseHorizontalAxis());
+    Quat rotateVert  = createFromAxisAngle(-right, dt * Engine::input().mouseVerticalAxis());
     rotation         = rotateHoriz * rotateVert;
-    translation      = translation + forward * (5 * dt * Engine::input().verticalAxis());
-    translation      = translation + right * (5 * dt * Engine::input().horizontalAxis());
+    translation      = translation - forward * (5 * dt * Engine::input().verticalAxis());
+    translation      = translation - right * (5 * dt * Engine::input().horizontalAxis());
+
     rotate(trans, rotation);
     translate(trans, translation);
-    mul(trans, cameraComponent.getViewMatrix());
-    cameraComponent.setTransform(trans);
+    Mat4x4 transf;
+    mul(cameraComponent.getInverseViewMatrix(), trans, transf);
+    cameraComponent.setTransform(transf);
     bgfx::setViewTransform(0, cameraComponent.getViewMatrix().data, cameraComponent.getProjectionMatrix().data);
     renderAxes();
     render(dt);
-
-    if (Engine::input().mouseDown())
-    {
-        Ray3 pickRay;
-        Vec2 mousePos = Engine::input().mousePos();
-        cameraComponent.pickRay(Rect(windowSize().width, windowSize().height), mousePos.x, mousePos.y, pickRay);
-        entt::entity selectedEntity = PickingSystem::pick(Engine::ecs().registry(), pickRay);
-        if (selectedEntity != entt::null)
-        {
-            fmt::print("Entity selected: {}\n", selectedEntity);
-        }
-    }
-
-    Engine::input().resetInput();
 }
 
 void MainWindow::onGUI()
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
-    const bgfx::Stats* stats   = Engine::bgfxStats();
-    const double       toMsCpu = 1000.0 / stats->cpuTimerFreq;
-    const double       toMsGpu = 1000.0 / stats->gpuTimerFreq;
-    const double       frameMs = double(stats->cpuTimeFrame) * toMsCpu;
-    ImGui::Text("Frame %0.3f [ms], %0.3f FPS", frameMs, 1000.0 / frameMs);
+    const bgfx::Stats* stats      = Engine::bgfxStats();
+    const double       toMsCpu    = 1000.0 / stats->cpuTimerFreq;
+    const double       toMsGpu    = 1000.0 / stats->gpuTimerFreq;
+    const double       frameMs    = double(stats->cpuTimeFrame) * toMsCpu;
+    static bool        windowOpen = true;
+    if (ImGui::Begin("Info", &windowOpen))
+    {
+        ImGui::Text("Frame %0.3f [ms], %0.3f FPS", frameMs, 1000.0 / frameMs);
 
-    ImGui::Text("Submit CPU %0.3f, GPU %0.3f (L: %d)", double(stats->cpuTimeEnd - stats->cpuTimeBegin) * toMsCpu,
-                double(stats->gpuTimeEnd - stats->gpuTimeBegin) * toMsGpu, stats->maxGpuLatency);
-    ImGui::Separator();
-    ImGui::Text("Horizontal Axis: %0.1f", Engine::input().horizontalAxis());
-    ImGui::Text("Vertical Axis: %0.1f", Engine::input().verticalAxis());
-    ImGui::Text("Mouse Horizontal Axis: %0.1f", Engine::input().mouseHorizontalAxis());
-    ImGui::Text("Mouse Vertical Axis: %0.1f", Engine::input().mouseVerticalAxis());
+        ImGui::Text("Submit CPU %0.3f, GPU %0.3f (L: %d)", double(stats->cpuTimeEnd - stats->cpuTimeBegin) * toMsCpu,
+                    double(stats->gpuTimeEnd - stats->gpuTimeBegin) * toMsGpu, stats->maxGpuLatency);
+        ImGui::Separator();
+        ImGui::Text("Horizontal Axis: %0.1f", Engine::input().horizontalAxis());
+        ImGui::Text("Vertical Axis: %0.1f", Engine::input().verticalAxis());
+        ImGui::Text("Mouse Horizontal Axis: %0.1f", Engine::input().mouseHorizontalAxis());
+        ImGui::Text("Mouse Vertical Axis: %0.1f", Engine::input().mouseVerticalAxis());
+    }
+    ImGui::End();
+
+    Engine::input().resetInput();
 }
 
 void MainWindow::onInputEvent(const SDL_Event& e)
@@ -214,9 +216,6 @@ void MainWindow::renderAxes()
 void MainWindow::render(float dt)
 {
     auto view = Engine::ecs().registry().view<TransformComponent, MeshComponent, MaterialComponent>();
-
-    Engine::debugDraw().begin();
-
     for (auto entity : view)
     {
         TransformComponent& transform = view.get<TransformComponent>(entity);
@@ -241,11 +240,24 @@ void MainWindow::render(float dt)
         material.material()->bind();
         bgfx::setState(BGFX_STATE_DEFAULT);
         bgfx::submit(0, material.material()->program());
-
-        Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(0, 255, 0, 255));
     }
 
-    Engine::debugDraw().end();
+    Ray3    pickRay;
+    Vec2    mousePos        = Engine::input().mousePos();
+    Camera& cameraComponent = Engine::ecs().registry().get<Camera>(_camera);
+    cameraComponent.pickRay(Rect(windowSize().width, windowSize().height), mousePos.x, mousePos.y, pickRay);
+    entt::entity selectedEntity = PickingSystem::pick(Engine::ecs().registry(), pickRay);
+    if (selectedEntity != entt::null)
+    {
+        TransformComponent& transform = Engine::ecs().registry().get<TransformComponent>(selectedEntity);
+        Engine::debugDraw().begin();
+        Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(0, 255, 0, 255));
+        Engine::debugDraw().drawRay3(pickRay, 10, packUint32(0, 0, 255, 255));
+        Engine::debugDraw().end();
+    }
+    //    Engine::debugDraw().begin();
+    //    Engine::debugDraw().drawFrustum(cameraComponent.getFrustum(), hq::packUint32(0, 255, 255, 255));
+    //    Engine::debugDraw().end();
 }
 
 }  // namespace atlas
