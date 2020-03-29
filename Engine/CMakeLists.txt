@@ -51,6 +51,8 @@ target_sources(atlas PRIVATE
     SDL/SDLWindow.cpp
     SDL/SDLWindow.h
     SDL/vs_ocornut_imgui.bin.h
+    Systems/AnimationSystem.cpp
+    Systems/AnimationSystem.h
     Systems/ParticleSystem.cpp
     Systems/ParticleSystem.h
     Systems/PickingSystem.cpp

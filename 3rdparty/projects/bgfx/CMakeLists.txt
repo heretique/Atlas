@@ -23,7 +23,7 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/shader_spirv.cpp
     ../../bgfx/src/shader.cpp
     ../../bgfx/src/topology.cpp
-    ../../bgfx/src/vertexdecl.cpp)
+    ../../bgfx/src/vertexlayout.cpp)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

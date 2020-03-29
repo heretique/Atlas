@@ -16,6 +16,7 @@ source_list
   ../../../bgfx/3rdparty/glslang/SPIRV/InReadableOrder.cpp
   ../../../bgfx/3rdparty/glslang/SPIRV/Logger.cpp
   ../../../bgfx/3rdparty/glslang/SPIRV/Logger.h
+  ../../../bgfx/3rdparty/glslang/SPIRV/NonSemanticDebugPrintf.h
   ../../../bgfx/3rdparty/glslang/SPIRV/SPVRemapper.cpp
   ../../../bgfx/3rdparty/glslang/SPIRV/SPVRemapper.h
   ../../../bgfx/3rdparty/glslang/SPIRV/SpvBuilder.cpp

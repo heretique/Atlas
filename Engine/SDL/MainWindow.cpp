@@ -124,7 +124,7 @@ void MainWindow::onInit()
     invert(cameraView);
     cameraComponent.setTransform(cameraView);
 
-    for (int i = 0; i < 5000; ++i)
+    for (int i = 0; i < 10000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.assign<TransformComponent>(entity);
@@ -153,10 +153,6 @@ void MainWindow::onUpdate(float dt)
     Vec3 up(0.f, 1.f, 0.f);
     Vec3 translation;
     Quat rotation;
-
-    //    transform(forward, cameraComponent.getViewMatrix());
-    //    transform(right, cameraComponent.getViewMatrix());
-    //    transform(up, cameraComponent.getViewMatrix());
 
     Quat rotateHoriz = createFromAxisAngle(-up, dt * Engine::input().mouseHorizontalAxis());
     Quat rotateVert  = createFromAxisAngle(-right, dt * Engine::input().mouseVerticalAxis());

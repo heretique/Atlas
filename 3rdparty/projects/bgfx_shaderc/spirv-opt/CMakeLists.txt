@@ -124,6 +124,8 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/inst_bindless_check_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/inst_buff_addr_check_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/inst_buff_addr_check_pass.h
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/inst_debug_printf_pass.cpp
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/inst_debug_printf_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/instruction.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/instruction.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/instruction_list.cpp

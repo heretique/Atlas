@@ -12,8 +12,8 @@ set(
 source_list
   ../../bgfx/src/shader_spirv.cpp
   ../../bgfx/src/shader_spirv.h
-  ../../bgfx/src/vertexdecl.cpp
-  ../../bgfx/src/vertexdecl.h
+  ../../bgfx/src/vertexlayout.cpp
+  ../../bgfx/src/vertexlayout.h
   ../../bgfx/tools/shaderc/shaderc.cpp
   ../../bgfx/tools/shaderc/include/shaderc/shaderc.h
   ../../bgfx/tools/shaderc/shaderc_private.h
