@@ -8,6 +8,8 @@
 #include <Hq/Math/Frustum.h>
 #include <Hq/Math/Mat4x4.h>
 
+#include <cstring>
+
 namespace atlas
 {
 // mesh vertex declaration

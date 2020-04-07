@@ -6,6 +6,7 @@
 #include "Managers/ECSManager.h"
 #include "Utils/DebugDraw.h"
 #include "Hq/PackUtils.h"
+#include "Hq/Math/Math.h"
 
 #include <entt/entity/registry.hpp>
 #include <Hq/Math/Box3.h>
@@ -24,14 +25,14 @@ entt::entity PickingSystem::pick(entt::registry& registry, const hq::math::Ray3&
     using namespace hq;
     using namespace hq::math;
     entt::entity selectedEntity              = entt::null;
-    float        closestIntersectionDistance = FLT_MAX;
+	float        closestIntersectionDistance = kFloatMax;
     auto         view                        = registry.view<TransformComponent>();
     for (auto entity : view)
     {
         const TransformComponent& component = registry.get<TransformComponent>(entity);
         Box3                      transformedBounds;
         transform(component.bounds(), component.world(), transformedBounds);
-        float intersectionDistance = FLT_MAX;
+		float intersectionDistance = kFloatMax;
         if (intersection(ray, transformedBounds, intersectionDistance))
         {
             if (intersectionDistance < closestIntersectionDistance)

@@ -49,13 +49,12 @@ template<typename Serializer>
 std::unordered_map<ENTT_ID_TYPE, std::function<void(entt::entity, Serializer&)>> ECSManager::_componentSerializationMap = {};
 
 template<typename Serializer>
-void ECSManager::
-serializeEntity(entt::entity entity, Serializer &serializer)
+void ECSManager::serializeEntity(entt::entity entity, Serializer &serializer)
 {
 
     _registry->visit(entity, [&](const auto component) {
         auto it = _componentSerializationMap<Serializer>.find(component);
-        assert(it != _componentSerializationMap.end());
+		assert(it != _componentSerializationMap<Serializer>.end());
         it->second(entity, serializer);
     });
 }
