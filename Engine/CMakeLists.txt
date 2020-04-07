@@ -29,6 +29,13 @@ target_sources(atlas PRIVATE
     Components/ParticleEffectComponent.h
     Components/TransformComponent.cpp
     Components/TransformComponent.h
+    Components/UI/UIBoxConstraints.cpp
+    Components/UI/UIBoxConstraints.h
+    Components/UI/UIBoxFlex.cpp
+    Components/UI/UIBoxFlex.h
+    Components/UI/UINeedsLayout.h
+    Components/UI/UIWidget.cpp
+    Components/UI/UIWidget.h
     Core/Debug.h
     Core/Delegate.h
     Core/Engine.cpp
@@ -51,6 +58,7 @@ target_sources(atlas PRIVATE
     SDL/SDLWindow.cpp
     SDL/SDLWindow.h
     SDL/vs_ocornut_imgui.bin.h
+    Systems/ISystem.h
     Systems/AnimationSystem.cpp
     Systems/AnimationSystem.h
     Systems/ParticleSystem.cpp
@@ -59,13 +67,16 @@ target_sources(atlas PRIVATE
     Systems/PickingSystem.h
     Systems/RenderSystem.cpp
     Systems/RenderSystem.h
+    Systems/UILayoutSystem.cpp
+    Systems/UILayoutSystem.h
+    Systems/UIRenderSystem.cpp
+    Systems/UIRenderSystem.h
     Utils/BgfxUtils.cpp
     Utils/BgfxUtils.h
     Utils/DebugDraw.cpp
     Utils/DebugDraw.h)
 
 target_include_directories(atlas PRIVATE .
-    ../3rdparty/entt/src
     ../3rdparty/spdlog/include)
 
 target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui)

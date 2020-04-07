@@ -1,22 +1,22 @@
 #pragma once
 
+#include "Hq/NonCopyable.h"
+#include "ISystem.h"
+
 namespace atlas
 {
-class TransformComponent;
-class MeshComponent;
-class MaterialComponent;
 
-// class RenderSystem : public entityx::System<RenderSystem>
-//{
-// public:
-//    RenderSystem();
-//    ~RenderSystem();
+class RenderSystem : public hq::NonCopyable, public ISystem
+{
+public:
+    RenderSystem();
+    ~RenderSystem();
 
-//    void update(entityx::EntityManager& entities, entityx::EventManager& events, entityx::TimeDelta dt) override;
+    void render();
 
-// private:
-//    void updateEntity(entityx::Entity entity, const TransformComponent& transform, const MeshComponent& mesh,
-//                      MaterialComponent& material, entityx::TimeDelta dt);
-//};
+    // ISystem interface
+public:
+    void runSystem(entt::registry &registry, float dt) override;
+};
 
-}  // namespace atlas
+} // atlas namespace

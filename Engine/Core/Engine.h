@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <Hq/BasicTypes.h>
 
 namespace spdlog
 {
@@ -29,10 +30,9 @@ class PluginManager;
 class AssetManager;
 class ECSManager;
 class InputManager;
-class AudioManager;
-class PhysicsManager;
 class MainWindow;
 class DebugDraw;
+class SystemsManager;
 
 class Engine
 {
@@ -66,16 +66,21 @@ public:
         return *_debugDraw;
     }
 
-    static bx::AllocatorI* bxAllocator();
-    static const bgfx::Caps* bgfxCaps();
+    static bx::AllocatorI*    bxAllocator();
+    static const bgfx::Caps*  bgfxCaps();
     static const bgfx::Stats* bgfxStats();
 
-private:
-    static bool init();
+    static bool init(u32 viewWidth, u32 viewHeight);
+    static void setViewSize(u32 width, u32 height);
+    static u32 viewWidth();
+    static u32 viewHeight();
+
+private :
     static void initVertDecl();
     static void registerComponentDependencies();
     static void registerComponentSerialization();
     static void registerDefaultAssetTypes();
+    static void registerSystems();
     static void release();
 
 private:
@@ -86,7 +91,7 @@ private:
     static ECSManager*          _ecsManager;
     static enki::TaskScheduler* _jobManager;
     static DebugDraw*           _debugDraw;
-
-    friend class MainWindow;
+    static u32                  _viewWidth;
+    static u32                  _viewHeight;
 };
 }  // namespace atlas

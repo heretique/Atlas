@@ -14,6 +14,10 @@
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ECSManager.h"
+#include "Systems/AnimationSystem.h"
+#include "Systems/ParticleSystem.h"
+#include "Systems/PickingSystem.h"
+#include "Systems/RenderSystem.h"
 #include "enkiTS/TaskScheduler.h"
 #include "Managers/PluginManager.h"
 #include "Utils/DebugDraw.h"
@@ -36,26 +40,25 @@ InputManager*        Engine::_inputManager  = nullptr;
 ECSManager*          Engine::_ecsManager    = nullptr;
 enki::TaskScheduler* Engine::_jobManager    = nullptr;
 DebugDraw*           Engine::_debugDraw     = nullptr;
+u32                  Engine::_viewWidth     = 0;
+u32                  Engine::_viewHeight    = 0;
 
 bgfx::VertexLayout SimpleMeshVertex::vertLayout;
-
 
 ///////////// Bounds updates //////////////
 void UpdateEntityBoundsFromMesh(entt::registry& registry, entt::entity entity)
 {
-    if(registry.has<TransformComponent>(entity))
+    if (registry.has<TransformComponent>(entity))
     {
         TransformComponent& transform = registry.get<TransformComponent>(entity);
-        transform.bounds() = registry.get<MeshComponent>(entity).geometry()->bounds();
+        transform.bounds()            = registry.get<MeshComponent>(entity).geometry()->bounds();
     }
     else
     {
-        TransformComponent& transform = registry.assign<TransformComponent>(entity);
-        transform.bounds() = registry.get<MeshComponent>(entity).geometry()->bounds();
+        TransformComponent& transform = registry.emplace<TransformComponent>(entity);
+        transform.bounds()            = registry.get<MeshComponent>(entity).geometry()->bounds();
     }
 }
-
-
 
 bx::AllocatorI* Engine::bxAllocator()
 {
@@ -73,8 +76,11 @@ const bgfx::Stats* Engine::bgfxStats()
     return bgfx::getStats();
 }
 
-bool Engine::init()
+bool Engine::init(u32 viewWidth, u32 viewHeight)
 {
+    _viewWidth = viewWidth;
+    _viewHeight = viewHeight;
+
     _logger = spdlog::stdout_color_mt("console").get();
 
     if (_jobManager == nullptr)
@@ -94,10 +100,27 @@ bool Engine::init()
     registerDefaultAssetTypes();
     registerComponentDependencies();
     registerComponentSerialization();
+    registerSystems();
     jobs().Initialize();
     debugDraw().initialize();
 
     return true;
+}
+
+void Engine::setViewSize(u32 width, u32 height)
+{
+    _viewWidth = width;
+    _viewHeight = height;
+}
+
+u32 Engine::viewWidth()
+{
+    return _viewWidth;
+}
+
+u32 Engine::viewHeight()
+{
+    return _viewHeight;
 }
 
 void Engine::initVertDecl()
@@ -117,6 +140,7 @@ void Engine::registerComponentSerialization()
     ecs().registerComponentSerialization<MaterialComponent, hq::JsonSerializer>();
     ecs().registerComponentSerialization<MeshComponent, hq::JsonSerializer>();
 
+
     // BinarySerializer
     ecs().registerComponentSerialization<TransformComponent, hq::BinarySerializer>();
     ecs().registerComponentSerialization<MaterialComponent, hq::BinarySerializer>();
@@ -132,6 +156,14 @@ void Engine::registerDefaultAssetTypes()
     assets().registerAssetType(AssetTypes::Material, AssetNames::Material, MaterialAsset::factoryFunc);
     assets().registerAssetType(AssetTypes::ParticleEffect, AssetNames::ParticleEffect,
                                ParticleEffectAsset::factoryFunc);
+}
+
+void Engine::registerSystems()
+{
+    ecs().registerUpdateSystem(std::make_shared<AnimationSystem>());
+    ecs().registerUpdateSystem(std::make_shared<ParticleSystem>());
+    ecs().registerVisualSystem(std::make_shared<RenderSystem>());
+    ecs().registerVisualSystem(std::make_shared<PickingSystem>());
 }
 
 void Engine::release()

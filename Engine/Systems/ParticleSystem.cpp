@@ -28,4 +28,14 @@ void ParticleSystem::update(float dt)
     }
 }
 
+void ParticleSystem::runSystem(entt::registry &registry, float dt)
+{
+
+}
+
+void ParticleSystem::ExecuteRange(enki::TaskSetPartition range_, uint32_t threadnum_)
+{
+
+}
+
 } // atlas namespace

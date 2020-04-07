@@ -29,7 +29,8 @@ public:
 private:
     void                     renderAxes();
     void                     render(float dt);
-    entt::entity             _camera;
+
+private:
     bgfx::VertexBufferHandle _axesVbh;
     bgfx::IndexBufferHandle  _axesIbh;
     bgfx::ProgramHandle      _axesProgram;
