@@ -2,6 +2,7 @@
 
 #include "Assets/Material.h"
 #include "Components/Camera.h"
+#include "Components/Common.h"
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
@@ -19,6 +20,7 @@
 #include "Hq/Math/Quat.h"
 #include "Hq/JsonSerializer.h"
 #include "Hq/PackUtils.h"
+#include "Utils/ImGuiSerializer.h"
 #include <bx/math.h>
 
 #include <entt/entity/registry.hpp>
@@ -27,6 +29,8 @@
 #include "fs_axes.bin.h"
 #include "vs_axes.bin.h"
 #include <imgui/imgui.h>
+
+#include <sstream>
 
 using namespace hq;
 using namespace hq::math;
@@ -114,7 +118,7 @@ void MainWindow::onInit()
     // Create static index buffer.
     _axesIbh = bgfx::createIndexBuffer(bgfx::makeRef(s_axesIndices, sizeof(s_axesIndices)));
 
-    auto& registry                  = Engine::ecs().registry();
+    auto& registry = Engine::ecs().registry();
 
     for (int i = 0; i < 100; ++i)
     {
@@ -166,11 +170,14 @@ void MainWindow::onUpdate(float dt)
 void MainWindow::onGUI()
 {
     //    EASY_FUNCTION(profiler::colors::Amber);
-    const bgfx::Stats* stats      = Engine::bgfxStats();
-    const double       toMsCpu    = 1000.0 / stats->cpuTimerFreq;
-    const double       toMsGpu    = 1000.0 / stats->gpuTimerFreq;
-    const double       frameMs    = double(stats->cpuTimeFrame) * toMsCpu;
-    static bool        windowOpen = true;
+    const bgfx::Stats* stats         = Engine::bgfxStats();
+    const double       toMsCpu       = 1000.0 / stats->cpuTimerFreq;
+    const double       toMsGpu       = 1000.0 / stats->gpuTimerFreq;
+    const double       frameMs       = double(stats->cpuTimeFrame) * toMsCpu;
+    static bool        windowOpen    = true;
+    static bool        inspectorOpen = true;
+    static bool        showDemo      = false;
+
     if (ImGui::Begin("Info", &windowOpen))
     {
         ImGui::Text("Frame %0.3f [ms], %0.3f FPS", frameMs, 1000.0 / frameMs);
@@ -182,6 +189,38 @@ void MainWindow::onGUI()
         ImGui::Text("Vertical Axis: %0.1f", Engine::input().verticalAxis());
         ImGui::Text("Mouse Horizontal Axis: %0.1f", Engine::input().mouseHorizontalAxis());
         ImGui::Text("Mouse Vertical Axis: %0.1f", Engine::input().mouseVerticalAxis());
+        ImGui::Checkbox("Show ImGui Demo", &showDemo);
+        if (showDemo)
+        {
+            ImGui::ShowDemoWindow(&showDemo);
+        }
+    }
+    ImGui::End();
+
+    if (ImGui::Begin("Inspector", &inspectorOpen))
+    {
+        auto view = Engine::ecs().registry().view<Selected>();
+        if (view.empty())
+        {
+            ImGui::Text("Inspector empty");
+        }
+        else
+        {
+            for (auto entity : view)
+            {
+                //                if (!ImGui::CollapsingHeader("Components"))
+                //                    return;
+
+                ImGuiSerializer serializer;
+                Engine::ecs().serializeEntity(entity, serializer);
+                //                std::stringstream ss;
+                //                {
+                //                    JsonSerializer serializer(ss);
+                //                    Engine::ecs().serializeEntity(entity, serializer);
+                //                }
+                //                ImGui::Text(ss.str().c_str());
+            }
+        }
     }
     ImGui::End();
 

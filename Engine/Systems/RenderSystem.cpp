@@ -1,6 +1,9 @@
 #include "Systems/RenderSystem.h"
 #include "entt/entity/registry.hpp"
+#include "Core/Engine.h"
+#include "Utils/DebugDraw.h"
 
+#include "Components/Common.h"
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
@@ -8,6 +11,7 @@
 #include <Hq/Math/Vec3.h>
 #include <Hq/Math/Quat.h>
 #include <Hq/Math/Mat4x4.h>
+#include <Hq/PackUtils.h>
 
 namespace atlas
 {
@@ -57,6 +61,14 @@ void RenderSystem::runSystem(entt::registry &registry, float dt)
         material.material()->bind();
         bgfx::setState(BGFX_STATE_DEFAULT);
         bgfx::submit(0, material.material()->program());
+    }
+    auto selectedView = registry.view<Selected>();
+    for (auto entity: selectedView)
+    {
+        TransformComponent& transform =view.get<TransformComponent>(entity);
+        Engine::debugDraw().begin();
+        Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(255, 255, 0, 255));
+        Engine::debugDraw().end();
     }
 }
 

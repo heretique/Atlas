@@ -380,6 +380,7 @@ void SDLWindow::handleInputEvent(const SDL_Event& e)
             io.MousePos = ImVec2(e.motion.x, e.motion.y);
             break;
         case SDL_MOUSEWHEEL:
+            io.MouseWheel = e.wheel.y;
             break;
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
@@ -460,7 +461,9 @@ bool SDLWindow::imguiInit()
     imguiPushCtx();
     ImGuiIO& io = ImGui::GetIO();
     imguiPopCtx();
-    io.ImeWindowHandle   = nativeHandle();
+//    io.ImeWindowHandle   = nativeHandle();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.IniFilename = "imgui.ini";
     io.RenderDrawListsFn = nullptr;
 
     io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;  // Keyboard mapping. ImGui will use those

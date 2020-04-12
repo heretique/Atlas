@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Common.h"
 #include "Hq/Math/MathTypes.h"
 
 namespace atlas
 {
-class TransformComponent
+class TransformComponent : public Component
 {
 public:
     const hq::math::Mat4x4& world() const;

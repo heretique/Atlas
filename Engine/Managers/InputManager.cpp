@@ -30,6 +30,13 @@ bool InputManager::mouseDown() const
     return _registerMouse;
 }
 
+bool InputManager::mouseClick() const
+{
+    bool clicked = _clicked;
+    _clicked = false;
+    return clicked;
+}
+
 ::hq::math::Vec2 InputManager::mousePos() const
 {
     int x, y;
@@ -42,6 +49,8 @@ void InputManager::handleInputEvent(const SDL_Event& e)
 {
     _mhAxis = 0.f;
     _mvAxis = 0.f;
+
+    _clicked = false;
 
     switch (e.type)
     {
@@ -65,6 +74,7 @@ void InputManager::handleInputEvent(const SDL_Event& e)
             if (e.button.button == SDL_BUTTON_RIGHT)
             {
                 _registerMouse = false;
+                _clicked = true;
             }
             break;
         case SDL_KEYDOWN:

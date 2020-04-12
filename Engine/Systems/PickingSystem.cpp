@@ -1,6 +1,7 @@
 #include "PickingSystem.h"
 #include "Components/TransformComponent.h"
 #include "Components/Camera.h"
+#include "Components/Common.h"
 #include "Core/Engine.h"
 #include "Managers/InputManager.h"
 #include "Managers/ECSManager.h"
@@ -16,7 +17,8 @@
 namespace atlas
 {
 PickingSystem::PickingSystem()
-    : _pickedEntity(entt::null)
+    : _pickedEntity(entt::null),
+      _selectedEntity(entt::null)
 {
 }
 
@@ -62,8 +64,16 @@ void PickingSystem::runSystem(entt::registry& registry, float dt)
         TransformComponent& transform = Engine::ecs().registry().get<TransformComponent>(_pickedEntity);
         Engine::debugDraw().begin();
         Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(0, 255, 0, 255));
-        Engine::debugDraw().drawRay3(pickRay, 10, packUint32(0, 0, 255, 255));
         Engine::debugDraw().end();
+        if (Engine::input().mouseClick())
+        {
+            if (_selectedEntity != entt::null)
+            {
+                registry.remove_if_exists<Selected>(_selectedEntity);
+            }
+            _selectedEntity = _pickedEntity;
+            registry.emplace<Selected>(_selectedEntity);
+        }
     }
 }
 

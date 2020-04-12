@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Common.h"
 #include "Assets/Geometry.h"
 #include "Assets/Types.h"
 
 namespace atlas
 {
-class MeshComponent
+class MeshComponent : public Component
 {
 public:
     MeshComponent() {}

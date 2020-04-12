@@ -17,18 +17,20 @@ public:
     float mouseHorizontalAxis() const;
     float mouseVerticalAxis() const;
 
-    bool mouseDown() const;
+    bool             mouseDown() const;
+    bool             mouseClick() const;
     ::hq::math::Vec2 mousePos() const;
 
     void handleInputEvent(const SDL_Event& e);
     void resetInput();
 
 private:
-    bool  _registerMouse {false};
-    float _hAxis {0.f};
-    float _vAxis {0.f};
-    float _mhAxis {0.f};
-    float _mvAxis {0.f};
+    bool         _registerMouse {false};
+    mutable bool _clicked {false};
+    float        _hAxis {0.f};
+    float        _vAxis {0.f};
+    float        _mhAxis {0.f};
+    float        _mvAxis {0.f};
 };
 
 }  // atlas

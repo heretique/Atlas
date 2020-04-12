@@ -6,6 +6,7 @@ add_library(atlas::imgui ALIAS imgui)
 target_sources(imgui PRIVATE
     ../../imgui/imgui_draw.cpp
     ../../imgui/imgui.cpp
+    ../../imgui/imgui_demo.cpp
     ../../imgui/imgui_widgets.cpp)
 
 target_include_directories(imgui PUBLIC

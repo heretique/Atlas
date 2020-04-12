@@ -36,7 +36,7 @@ void MaterialAsset::write(const std::string& filename)
 {
     std::ofstream             ofs(filename, std::ios::out | std::ios::binary);
     hq::JsonSerializer serializer(ofs);
-    serializer(_materialInfo);
+//    serializer(_materialInfo);
 }
 
 void MaterialAsset::bind() const

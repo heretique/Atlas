@@ -20,6 +20,7 @@ public:
 
 private:
     entt::entity _pickedEntity;
+    entt::entity _selectedEntity;
 };
 
 } // atlas namespace

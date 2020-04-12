@@ -22,6 +22,7 @@ target_sources(atlas PRIVATE
     Assets/Types.cpp
     Components/Camera.cpp
     Components/Camera.h
+    Components/Common.h
     Components/LightComponent.h
     Components/MaterialComponent.cpp
     Components/MaterialComponent.h
@@ -63,7 +64,10 @@ target_sources(atlas PRIVATE
     Utils/BgfxUtils.cpp
     Utils/BgfxUtils.h
     Utils/DebugDraw.cpp
-    Utils/DebugDraw.h)
+    Utils/DebugDraw.h
+    Utils/ImGuiSerializer.cpp
+    Utils/ImGuiSerializer.h
+    )
 
 target_include_directories(atlas PRIVATE .
     ../3rdparty/spdlog/include)

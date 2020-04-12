@@ -7,6 +7,7 @@
 #include "Assets/Texture.h"
 #include "Assets/ParticleEffect.h"
 #include "Components/Camera.h"
+#include "Components/Common.h"
 #include "Components/MaterialComponent.h"
 #include "Components/MeshComponent.h"
 #include "Components/TransformComponent.h"
@@ -21,6 +22,7 @@
 #include "enkiTS/TaskScheduler.h"
 #include "Managers/PluginManager.h"
 #include "Utils/DebugDraw.h"
+#include "Utils/ImGuiSerializer.h"
 #include "Hq/JsonSerializer.h"
 #include "Hq/BinarySerializer.h"
 
@@ -136,15 +138,24 @@ void Engine::registerComponentDependencies()
 void Engine::registerComponentSerialization()
 {
     // JsonSerializer
-    ecs().registerComponentSerialization<TransformComponent, hq::JsonSerializer>();
-    ecs().registerComponentSerialization<MaterialComponent, hq::JsonSerializer>();
-    ecs().registerComponentSerialization<MeshComponent, hq::JsonSerializer>();
+    ecs().registerComponentSerialization<TransformComponent, hq::JsonSerializer, hq::JsonDeserializer>();
+    ecs().registerComponentSerialization<MaterialComponent, hq::JsonSerializer, hq::JsonDeserializer>();
+    ecs().registerComponentSerialization<MeshComponent, hq::JsonSerializer, hq::JsonDeserializer>();
+//    ecs().registerComponentSerialization<Selected, hq::JsonSerializer, hq::JsonDeserializer>();
 
 
     // BinarySerializer
-    ecs().registerComponentSerialization<TransformComponent, hq::BinarySerializer>();
-    ecs().registerComponentSerialization<MaterialComponent, hq::BinarySerializer>();
-    ecs().registerComponentSerialization<MeshComponent, hq::BinarySerializer>();
+    ecs().registerComponentSerialization<TransformComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
+    ecs().registerComponentSerialization<MaterialComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
+    ecs().registerComponentSerialization<MeshComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
+//    ecs().registerComponentSerialization<Selected, hq::BinarySerializer, hq::BinaryDeserializer>();
+
+
+    // ImGuiSerializer
+    ecs().registerComponentSerialization<TransformComponent, ImGuiSerializer, ImGuiDeserializer>();
+    ecs().registerComponentSerialization<MaterialComponent, ImGuiSerializer, ImGuiDeserializer>();
+    ecs().registerComponentSerialization<MeshComponent, ImGuiSerializer, ImGuiDeserializer>();
+//    ecs().registerComponentSerialization<Selected, ImGuiSerializer, ImGuiDeserializer>();
 }
 
 void Engine::registerDefaultAssetTypes()
@@ -162,8 +173,9 @@ void Engine::registerSystems()
 {
     ecs().registerUpdateSystem(std::make_shared<AnimationSystem>());
     ecs().registerUpdateSystem(std::make_shared<ParticleSystem>());
+    ecs().registerUpdateSystem(std::make_shared<PickingSystem>());
+
     ecs().registerVisualSystem(std::make_shared<RenderSystem>());
-    ecs().registerVisualSystem(std::make_shared<PickingSystem>());
 }
 
 void Engine::release()
