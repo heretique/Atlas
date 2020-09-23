@@ -120,7 +120,7 @@ void MainWindow::onInit()
 
     auto& registry = Engine::ecs().registry();
 
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < 10000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.emplace<TransformComponent>(entity);
@@ -165,6 +165,7 @@ void MainWindow::onUpdate(float dt)
     Engine::ecs().runUpdateSystems(Engine::ecs().registry(), dt);
     renderAxes();
     render(dt);
+    onGUI();
 }
 
 void MainWindow::onGUI()

@@ -4,6 +4,7 @@
 #include "entt/core/type_info.hpp"
 #include "entt/entity/registry.hpp"
 #include "Systems/ISystem.h"
+#include "Utils/TypeTraits.h"
 
 #include <memory>
 #include <unordered_map>
@@ -28,6 +29,9 @@ public:
     template <typename Component, typename Serializer, typename Deserializer>
     void registerComponentSerialization();
 
+    template <typename Component>
+    void registerComponentName(const char* name);
+
     void registerUpdateSystem(std::shared_ptr<ISystem> system);
     void registerVisualSystem(std::shared_ptr<ISystem> system);
     void runUpdateSystems(entt::registry& registry, float dt);
@@ -41,6 +45,11 @@ private:
     std::vector<std::shared_ptr<ISystem> > _visualSystems;
 
     entt::entity _mainCamera;
+};
+
+struct ComponentNames
+{
+    static std::unordered_map<ENTT_ID_TYPE, const char*> value;
 };
 
 template <typename Serializer>
@@ -100,6 +109,12 @@ void ECSManager::registerComponentSerialization()
         deserializer(component);
         _registry->emplace<Component>(entity);
     };
+}
+
+template<typename Component>
+void ECSManager::registerComponentName(const char *name)
+{
+    ComponentNames::value[entt::type_info<Component>::id()] = name;
 }
 
 }  // atlas namespace

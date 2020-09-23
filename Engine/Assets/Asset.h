@@ -13,7 +13,7 @@ namespace atlas
 class Asset
 {
 public:
-    virtual ~Asset();
+    virtual ~Asset() = default;
 
     hq::StringHash     hash() const;
     AssetType          type() const;

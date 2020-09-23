@@ -72,6 +72,8 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/dead_insert_elim_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/dead_variable_elimination.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/dead_variable_elimination.h
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/debug_info_manager.cpp
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/debug_info_manager.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/decompose_initialized_variables_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/decompose_initialized_variables_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/decoration_manager.cpp
@@ -292,8 +294,8 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_selection_reduction_opportunity.h
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_selection_reduction_opportunity_finder.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_selection_reduction_opportunity_finder.h
-    ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_unreferenced_instruction_reduction_opportunity_finder.cpp
-    ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_unreferenced_instruction_reduction_opportunity_finder.h
+    ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_unused_instruction_reduction_opportunity_finder.cpp
+    ../../../bgfx/3rdparty/spirv-tools/source/reduce/remove_unused_instruction_reduction_opportunity_finder.h
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/simple_conditional_branch_to_branch_opportunity_finder.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/simple_conditional_branch_to_branch_opportunity_finder.h
     ../../../bgfx/3rdparty/spirv-tools/source/reduce/simple_conditional_branch_to_branch_reduction_opportunity.cpp

@@ -181,7 +181,7 @@ static ImGuiBgfx s_imguiBgfx;
 
 struct BGFXCallbacss : public bgfx::CallbackI
 {
-    BGFXCallbacss() {}
+    BGFXCallbacss() { }
 
     // CallbackI interface
 public:
@@ -194,11 +194,11 @@ public:
     {
         Engine::log().info(format(_format, _argList));
     }
-    virtual void profilerBegin(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override {}
+    virtual void profilerBegin(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override { }
     virtual void profilerBeginLiteral(const char* _name, uint32_t _abgr, const char* _filePath, uint16_t _line) override
     {
     }
-    virtual void     profilerEnd() override {}
+    virtual void     profilerEnd() override { }
     virtual uint32_t cacheReadSize(uint64_t _id) override
     {
         return 0;
@@ -207,7 +207,7 @@ public:
     {
         return false;
     }
-    virtual void cacheWrite(uint64_t _id, const void* _data, uint32_t _size) override {}
+    virtual void cacheWrite(uint64_t _id, const void* _data, uint32_t _size) override { }
     virtual void screenShot(const char* _filePath, uint32_t _width, uint32_t _height, uint32_t _pitch,
                             const void* _data, uint32_t _size, bool _yflip) override
     {
@@ -216,8 +216,8 @@ public:
                               bool _yflip) override
     {
     }
-    virtual void captureEnd() override {}
-    virtual void captureFrame(const void* _data, uint32_t _size) override {}
+    virtual void captureEnd() override { }
+    virtual void captureFrame(const void* _data, uint32_t _size) override { }
 
 private:
     std::string format(const char* const format, ...)
@@ -316,7 +316,7 @@ bool SDLWindow::isMain() const
     return _isDefault;
 }
 
-void SDLWindow::onInit() {}
+void SDLWindow::onInit() { }
 
 void SDLWindow::handleEvent(const SDL_Event& e)
 {
@@ -418,13 +418,11 @@ void SDLWindow::onUpdate(float /*dt*/)
     bgfx::dbgTextPrintf(0, 5, 0x2f, "SDLWindow::update");
 }
 
-void SDLWindow::onGUI() {}
+void SDLWindow::onEvent(const SDL_Event& e) { }
 
-void SDLWindow::onEvent(const SDL_Event& e) {}
+void SDLWindow::onWindowEvent(const SDL_WindowEvent& e) { }
 
-void SDLWindow::onWindowEvent(const SDL_WindowEvent& e) {}
-
-void SDLWindow::onInputEvent(const SDL_Event& e) {}
+void SDLWindow::onInputEvent(const SDL_Event& e) { }
 
 SDLWindow::Size SDLWindow::windowSize() const
 {
@@ -438,13 +436,13 @@ void SDLWindow::doUpdate(float dt)
     bgfx::setViewRect(_viewId, 0, 0, uint16_t(_width), uint16_t(_height));
     bgfx::touch(_viewId);
 
-    // render content
-    onUpdate(dt);
-
     // GUI
     imguiPushCtx();
     imguiNewFrame();
-    onGUI();
+
+    // render content
+    onUpdate(dt);
+
     imguiRender();
     imguiPopCtx();
 }
@@ -461,9 +459,9 @@ bool SDLWindow::imguiInit()
     imguiPushCtx();
     ImGuiIO& io = ImGui::GetIO();
     imguiPopCtx();
-//    io.ImeWindowHandle   = nativeHandle();
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.IniFilename = "imgui.ini";
+    //    io.ImeWindowHandle   = nativeHandle();
+    //    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.IniFilename       = "imgui.ini";
     io.RenderDrawListsFn = nullptr;
 
     io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;  // Keyboard mapping. ImGui will use those
@@ -562,7 +560,7 @@ bool SDLWindow::bgfxInit(uint32_t w, uint32_t h)
     bgfx::Init initParams;
 
     bgfx::PlatformData& pd = initParams.platformData;
-    SDL_SysWMinfo      wmi;
+    SDL_SysWMinfo       wmi;
     SDL_VERSION(&wmi.version);
     //  if (!SDL_GetWindowWMInfo(_window, &wmi))
     //    return false;

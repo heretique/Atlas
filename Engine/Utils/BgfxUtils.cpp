@@ -1,5 +1,7 @@
 #include "BgfxUtils.h"
 
+#include <iterator>
+
 namespace atlas
 {
 int32_t atlas::MemoryWriter::write(const void* data, int32_t size, bx::Error* err)

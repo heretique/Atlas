@@ -6,6 +6,9 @@
 
 namespace atlas
 {
+
+std::unordered_map<ENTT_ID_TYPE, const char*> ComponentNames::value = {};
+
 ECSManager::ECSManager()
     : _registry(new entt::registry())
 {

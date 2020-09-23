@@ -14,11 +14,6 @@ ParticleEffectAsset::ParticleEffectAsset(const std::string &filename, u32 flags)
 
 }
 
-ParticleEffectAsset::~ParticleEffectAsset()
-{
-
-}
-
 bool ParticleEffectAsset::loadImpl(std::istream &data)
 {
     return  false;

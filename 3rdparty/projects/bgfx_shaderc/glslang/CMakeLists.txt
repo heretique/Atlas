@@ -33,6 +33,22 @@ source_list
   ../../../bgfx/3rdparty/glslang/SPIRV/spvIR.h
   ../../../bgfx/3rdparty/glslang/glslang/GenericCodeGen/CodeGen.cpp
   ../../../bgfx/3rdparty/glslang/glslang/GenericCodeGen/Link.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslAttributes.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslAttributes.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslGrammar.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslGrammar.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslOpMap.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslOpMap.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslParseHelper.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslParseHelper.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslParseables.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslParseables.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslScanContext.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslScanContext.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslTokenStream.cpp
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslTokenStream.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/hlslTokens.h
+  ../../../bgfx/3rdparty/glslang/glslang/HLSL/pch.h
   ../../../bgfx/3rdparty/glslang/glslang/Include/BaseTypes.h
   ../../../bgfx/3rdparty/glslang/glslang/Include/Common.h
   ../../../bgfx/3rdparty/glslang/glslang/Include/ConstantUnion.h
@@ -44,7 +60,6 @@ source_list
   ../../../bgfx/3rdparty/glslang/glslang/Include/Types.h
   ../../../bgfx/3rdparty/glslang/glslang/Include/arrays.h
   ../../../bgfx/3rdparty/glslang/glslang/Include/intermediate.h
-  ../../../bgfx/3rdparty/glslang/glslang/Include/revision.h
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/Constant.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/InfoSink.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/Initialize.cpp
@@ -79,7 +94,6 @@ source_list
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/localintermediate.h
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/parseConst.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/parseVersions.h
-  ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/pch.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/pch.h
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/Pp.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/preprocessor/PpAtom.cpp
@@ -95,23 +109,6 @@ source_list
   ../../../bgfx/3rdparty/glslang/glslang/OSDependent/Web/glslang.js.cpp
   ../../../bgfx/3rdparty/glslang/glslang/OSDependent/osinclude.h
   ../../../bgfx/3rdparty/glslang/glslang/Public/ShaderLang.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslAttributes.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslAttributes.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslGrammar.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslGrammar.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslOpMap.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslOpMap.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslParseHelper.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslParseHelper.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslParseables.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslParseables.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslScanContext.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslScanContext.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslTokenStream.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslTokenStream.h
-  ../../../bgfx/3rdparty/glslang/hlsl/hlslTokens.h
-  ../../../bgfx/3rdparty/glslang/hlsl/pch.cpp
-  ../../../bgfx/3rdparty/glslang/hlsl/pch.h
 )
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -126,6 +123,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         )
 endif()
 
+include_directories(../../../bgfx/3rdparty)
 include_directories(../../../bgfx/3rdparty/glslang)
 include_directories(../../../bgfx/3rdparty/spirv-tools/include)
 include_directories(../../../bgfx/3rdparty/spirv-tools/source)

@@ -18,6 +18,7 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/renderer_noop.cpp
     ../../bgfx/src/renderer_nvn.cpp
     ../../bgfx/src/renderer_vk.cpp
+    ../../bgfx/src/renderer_webgpu.cpp
     ../../bgfx/src/shader_dx9bc.cpp
     ../../bgfx/src/shader_dxbc.cpp
     ../../bgfx/src/shader_spirv.cpp

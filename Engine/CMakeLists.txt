@@ -67,6 +67,7 @@ target_sources(atlas PRIVATE
     Utils/DebugDraw.h
     Utils/ImGuiSerializer.cpp
     Utils/ImGuiSerializer.h
+    Utils/TypeTraits.h
     )
 
 target_include_directories(atlas PRIVATE .

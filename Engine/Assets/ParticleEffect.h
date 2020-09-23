@@ -67,7 +67,7 @@ public:
     static AssetPtr factoryFunc(const std::string& filename, u32 flags);
 
     ParticleEffectAsset(const std::string& filename, u32 flags);
-    ~ParticleEffectAsset() override;
+    ~ParticleEffectAsset() override = default;
     // Asset interface
 protected:
     bool loadImpl(std::istream &data) override;

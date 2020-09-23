@@ -26,7 +26,7 @@ public:
 
     // Asset interface
 protected:
-    virtual bool loadImpl(std::istream& data) override;
+    virtual bool loadImpl(std::istream& is) override;
     virtual bool isGPUResource() override;
     virtual bool uploadGPUImpl() override;
 
