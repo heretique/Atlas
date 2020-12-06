@@ -10,6 +10,9 @@
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
+[submodule "3rdparty/rttr"]
+	path = 3rdparty/rttr
+	url = https://github.com/rttrorg/rttr.git
 [submodule "3rdparty/easy_profiler"]
 	path = 3rdparty/easy_profiler
 	url = https://github.com/yse/easy_profiler.git
@@ -19,6 +22,3 @@
 [submodule "hq"]
 	path = hq
 	url = https://github.com/heretique/hq.git
-[submodule "3rdparty/rttr"]
-	path = 3rdparty/rttr
-	url = https://github.com/rttrorg/rttr.git
