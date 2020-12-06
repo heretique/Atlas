@@ -189,8 +189,6 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/pch_source_opt.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/private_to_local_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/private_to_local_pass.h
-    ../../../bgfx/3rdparty/spirv-tools/source/opt/process_lines_pass.cpp
-    ../../../bgfx/3rdparty/spirv-tools/source/opt/process_lines_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/propagator.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/propagator.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/reduce_load_size.cpp

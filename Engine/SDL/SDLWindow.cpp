@@ -461,8 +461,7 @@ bool SDLWindow::imguiInit()
     imguiPopCtx();
     //    io.ImeWindowHandle   = nativeHandle();
     //    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.IniFilename       = "imgui.ini";
-    io.RenderDrawListsFn = nullptr;
+    io.IniFilename = "imgui.ini";
 
     io.KeyMap[ImGuiKey_Tab] = SDLK_TAB;  // Keyboard mapping. ImGui will use those
                                          // indices to peek into the io.KeyDown[]
