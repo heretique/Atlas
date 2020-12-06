@@ -2,8 +2,11 @@
 
 namespace atlas
 {
-class DirectionalLight
+class DirectionalLight: public Component
 {
+    RTTR_ENABLE(Component)
+public:
+
 };
 
 }  // namespace atlas

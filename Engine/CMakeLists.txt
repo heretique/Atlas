@@ -43,6 +43,9 @@ target_sources(atlas PRIVATE
     Managers/InputManager.h
     Managers/PluginManager.cpp
     Managers/PluginManager.h
+    Managers/UIManager.cpp
+    Managers/UIManager.h
+    Reflect/ReflectHq.cpp
     SDL/fs_ocornut_imgui.bin.h
     SDL/Main.cpp
     SDL/MainWindow.cpp
@@ -61,6 +64,12 @@ target_sources(atlas PRIVATE
     Systems/PickingSystem.h
     Systems/RenderSystem.cpp
     Systems/RenderSystem.h
+    UI/InfoWindow.cpp
+    UI/InfoWindow.h
+    UI/InspectorWindow.cpp
+    UI/Inspectorwindow.h
+    UI/UIWindow.cpp
+    UI/UIWindow.h
     Utils/BgfxUtils.cpp
     Utils/BgfxUtils.h
     Utils/DebugDraw.cpp
@@ -73,7 +82,7 @@ target_sources(atlas PRIVATE
 target_include_directories(atlas PRIVATE .
     ../3rdparty/spdlog/include)
 
-target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui)
+target_link_libraries(atlas hq bx bimg bgfx atlas::fmt imgui RTTR::Core_Lib)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)

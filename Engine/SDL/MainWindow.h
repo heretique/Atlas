@@ -23,7 +23,6 @@ public:
 public:
     void onInit() override;
     void onUpdate(float dt) override;
-    void onGUI();
     void onInputEvent(const SDL_Event& e) override;
 
 private:

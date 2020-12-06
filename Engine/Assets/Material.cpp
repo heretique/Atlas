@@ -34,9 +34,9 @@ void MaterialAsset::setMaterialInfo(const MaterialInfo& info)
 
 void MaterialAsset::write(const std::string& filename)
 {
-    std::ofstream             ofs(filename, std::ios::out | std::ios::binary);
+    std::ofstream      ofs(filename, std::ios::out | std::ios::binary);
     hq::JsonSerializer serializer(ofs);
-//    serializer(_materialInfo);
+    //    serializer(_materialInfo);
 }
 
 void MaterialAsset::bind() const
@@ -51,8 +51,7 @@ void MaterialAsset::bind() const
     for (auto& samplerPair : _samplers)
     {
         const MaterialSampler& materialSampler = samplerPair.second;
-        bgfx::setTexture(textureUnit, materialSampler.sampler,
-                         std::static_pointer_cast<TextureAsset>(materialSampler.textureHandle)->bgfxHandle());
+        bgfx::setTexture(textureUnit, materialSampler.sampler, materialSampler.textureHandle->bgfxHandle());
         ++textureUnit;
     }
 }
@@ -101,7 +100,7 @@ bool MaterialAsset::loadImpl(std::istream& data)
         }
 
         bgfx::UniformHandle samplerHandle = bgfx::createUniform(pair.first.c_str(), bgfx::UniformType::Sampler);
-        MaterialSampler     sampler       = {samplerHandle, textureHandle};
+        MaterialSampler     sampler       = {samplerHandle, std::dynamic_pointer_cast<TextureAsset>(textureHandle)};
         _samplers.insert(std::make_pair(pair.first, sampler));
     }
 

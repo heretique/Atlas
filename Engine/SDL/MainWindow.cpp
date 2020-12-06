@@ -11,6 +11,7 @@
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ECSManager.h"
+#include "Managers/UIManager.h"
 #include "Systems/PickingSystem.h"
 #include "Hq/Math/Math.h"
 #include "Hq/JobManager.h"
@@ -21,6 +22,10 @@
 #include "Hq/JsonSerializer.h"
 #include "Hq/PackUtils.h"
 #include "Utils/ImGuiSerializer.h"
+#include "UI/InfoWindow.h"
+#include "UI/InspectorWindow.h"
+#include "rttr/property.h"
+
 #include <bx/math.h>
 
 #include <entt/entity/registry.hpp>
@@ -34,6 +39,7 @@
 
 using namespace hq;
 using namespace hq::math;
+namespace ui = ImGui;
 
 namespace atlas
 {
@@ -103,6 +109,9 @@ void MainWindow::onInit()
     AssetPtr object   = Engine::assets().addAsset(AssetTypes::Geometry, "assets/models/caruta.obj");
     AssetPtr material = Engine::assets().addAsset(AssetTypes::Material, "assets/materials/unlit_textured.material");
     Engine::assets().loadAssets();
+    Engine::ui().addWindow(new InfoWindow("Info", 0));
+    Engine::ui().addWindow(new InspectorWindow("Inspector", 0));
+
 
     std::srand((unsigned int)std::time(nullptr));
 
@@ -120,19 +129,18 @@ void MainWindow::onInit()
 
     auto& registry = Engine::ecs().registry();
 
-    for (int i = 0; i < 10000; ++i)
+    for (int i = 0; i < 1000; ++i)
     {
         auto                entity    = registry.create();
         TransformComponent& transform = registry.emplace<TransformComponent>(entity);
-        MeshComponent&      mesh      = registry.emplace<MeshComponent>(entity, object);
-        MaterialComponent&  mat       = registry.emplace<MaterialComponent>(entity);
+        MeshComponent& mesh = registry.emplace<MeshComponent>(entity, std::dynamic_pointer_cast<GeometryAsset>(object));
+        MaterialComponent& mat = registry.emplace<MaterialComponent>(entity);
 
-        mesh.setGeomtry(object);
-        mat.setMaterial(material);
-        rotateX(transform.world(), -kPiHalf + i * kDegToRad);
-        rotateY(transform.world(), -kPiHalf + i * kDegToRad);
-        rotateZ(transform.world(), -kPiHalf + i * kDegToRad);
-        translate(transform.world(), 30 * hq::randMinus11(), 30 * hq::randMinus11(), 30 * hq::randMinus11());
+        mat.material = std::dynamic_pointer_cast<MaterialAsset>(material);
+        rotateX(transform.world, -kPiHalf + i * kDegToRad);
+        rotateY(transform.world, -kPiHalf + i * kDegToRad);
+        rotateZ(transform.world, -kPiHalf + i * kDegToRad);
+        translate(transform.world, 30 * hq::randMinus11(), 30 * hq::randMinus11(), 30 * hq::randMinus11());
     }
 }
 
@@ -165,66 +173,7 @@ void MainWindow::onUpdate(float dt)
     Engine::ecs().runUpdateSystems(Engine::ecs().registry(), dt);
     renderAxes();
     render(dt);
-    onGUI();
-}
-
-void MainWindow::onGUI()
-{
-    //    EASY_FUNCTION(profiler::colors::Amber);
-    const bgfx::Stats* stats         = Engine::bgfxStats();
-    const double       toMsCpu       = 1000.0 / stats->cpuTimerFreq;
-    const double       toMsGpu       = 1000.0 / stats->gpuTimerFreq;
-    const double       frameMs       = double(stats->cpuTimeFrame) * toMsCpu;
-    static bool        windowOpen    = true;
-    static bool        inspectorOpen = true;
-    static bool        showDemo      = false;
-
-    if (ImGui::Begin("Info", &windowOpen))
-    {
-        ImGui::Text("Frame %0.3f [ms], %0.3f FPS", frameMs, 1000.0 / frameMs);
-
-        ImGui::Text("Submit CPU %0.3f, GPU %0.3f (L: %d)", double(stats->cpuTimeEnd - stats->cpuTimeBegin) * toMsCpu,
-                    double(stats->gpuTimeEnd - stats->gpuTimeBegin) * toMsGpu, stats->maxGpuLatency);
-        ImGui::Separator();
-        ImGui::Text("Horizontal Axis: %0.1f", Engine::input().horizontalAxis());
-        ImGui::Text("Vertical Axis: %0.1f", Engine::input().verticalAxis());
-        ImGui::Text("Mouse Horizontal Axis: %0.1f", Engine::input().mouseHorizontalAxis());
-        ImGui::Text("Mouse Vertical Axis: %0.1f", Engine::input().mouseVerticalAxis());
-        ImGui::Checkbox("Show ImGui Demo", &showDemo);
-        if (showDemo)
-        {
-            ImGui::ShowDemoWindow(&showDemo);
-        }
-    }
-    ImGui::End();
-
-    if (ImGui::Begin("Inspector", &inspectorOpen))
-    {
-        auto view = Engine::ecs().registry().view<Selected>();
-        if (view.empty())
-        {
-            ImGui::Text("Inspector empty");
-        }
-        else
-        {
-            for (auto entity : view)
-            {
-                //                if (!ImGui::CollapsingHeader("Components"))
-                //                    return;
-
-                ImGuiSerializer serializer;
-                Engine::ecs().serializeEntity(entity, serializer);
-                //                std::stringstream ss;
-                //                {
-                //                    JsonSerializer serializer(ss);
-                //                    Engine::ecs().serializeEntity(entity, serializer);
-                //                }
-                //                ImGui::Text(ss.str().c_str());
-            }
-        }
-    }
-    ImGui::End();
-
+    Engine::ui().update(dt);
     Engine::input().resetInput();
 }
 

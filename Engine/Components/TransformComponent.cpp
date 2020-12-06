@@ -1,36 +1,19 @@
 #include "TransformComponent.h"
 #include "Core/Engine.h"
 
+#include <rttr/registration>
+
 namespace atlas
 {
-const hq::math::Mat4x4& TransformComponent::world() const
-{
-    return _worldTransform;
-}
+using namespace rttr;
 
-hq::math::Mat4x4& TransformComponent::world()
+RTTR_REGISTRATION
 {
-    return _worldTransform;
-}
-
-const hq::math::Mat4x4& TransformComponent::local() const
-{
-    return _localTransform;
-}
-
-hq::math::Mat4x4& TransformComponent::local()
-{
-    return _localTransform;
-}
-
-const hq::math::Box3 &TransformComponent::bounds() const
-{
-    return _bbox;
-}
-
-hq::math::Box3 &TransformComponent::bounds()
-{
-    return _bbox;
+    registration::class_<TransformComponent>("TransformComponent")
+        .constructor<>()
+        .property("world", &TransformComponent::world)
+        .property("local", &TransformComponent::local)
+        .property_readonly("bbox", &TransformComponent::bbox);
 }
 
 }  // atlas namespace

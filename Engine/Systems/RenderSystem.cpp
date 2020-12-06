@@ -15,23 +15,13 @@
 
 namespace atlas
 {
+RenderSystem::RenderSystem() { }
 
-RenderSystem::RenderSystem()
-{
+RenderSystem::~RenderSystem() { }
 
-}
+void RenderSystem::render() { }
 
-RenderSystem::~RenderSystem()
-{
-
-}
-
-void RenderSystem::render()
-{
-
-}
-
-void RenderSystem::runSystem(entt::registry &registry, float dt)
+void RenderSystem::runSystem(entt::registry& registry, float dt)
 {
     using namespace hq;
     using namespace hq::math;
@@ -53,21 +43,21 @@ void RenderSystem::runSystem(entt::registry &registry, float dt)
 
         Mat4x4 rot;
         createRotation(rotZ * rotY * rotX, rot);
-        mul(transform.world(), rot);
+        mul(transform.world, rot);
 
-        bgfx::setTransform(transform.world().data);
-        bgfx::setVertexBuffer(0, mesh.geometry()->vbo());
-        bgfx::setIndexBuffer(mesh.geometry()->ibo());
-        material.material()->bind();
+        bgfx::setTransform(transform.world.data);
+        bgfx::setVertexBuffer(0, mesh.geometry->vbo());
+        bgfx::setIndexBuffer(mesh.geometry->ibo());
+        material.material->bind();
         bgfx::setState(BGFX_STATE_DEFAULT);
-        bgfx::submit(0, material.material()->program());
+        bgfx::submit(0, material.material->program());
     }
     auto selectedView = registry.view<Selected>();
-    for (auto entity: selectedView)
+    for (auto entity : selectedView)
     {
-        TransformComponent& transform =view.get<TransformComponent>(entity);
+        TransformComponent& transform = view.get<TransformComponent>(entity);
         Engine::debugDraw().begin();
-        Engine::debugDraw().drawBox3(transform.bounds(), transform.world(), hq::packUint32(255, 255, 0, 255));
+        Engine::debugDraw().drawBox3(transform.bbox, transform.world, hq::packUint32(255, 255, 0, 255));
         Engine::debugDraw().end();
     }
 }

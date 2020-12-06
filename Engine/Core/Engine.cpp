@@ -15,6 +15,7 @@
 #include "Managers/AssetManager.h"
 #include "Managers/InputManager.h"
 #include "Managers/ECSManager.h"
+#include "Managers/UIManager.h"
 #include "Systems/AnimationSystem.h"
 #include "Systems/ParticleSystem.h"
 #include "Systems/PickingSystem.h"
@@ -40,6 +41,7 @@ PluginManager*       Engine::_pluginManager = nullptr;
 AssetManager*        Engine::_assetManager  = nullptr;
 InputManager*        Engine::_inputManager  = nullptr;
 ECSManager*          Engine::_ecsManager    = nullptr;
+UIManager*           Engine::_uiManager     = nullptr;
 enki::TaskScheduler* Engine::_jobManager    = nullptr;
 DebugDraw*           Engine::_debugDraw     = nullptr;
 u32                  Engine::_viewWidth     = 0;
@@ -53,12 +55,12 @@ void UpdateEntityBoundsFromMesh(entt::registry& registry, entt::entity entity)
     if (registry.has<TransformComponent>(entity))
     {
         TransformComponent& transform = registry.get<TransformComponent>(entity);
-        transform.bounds()            = registry.get<MeshComponent>(entity).geometry()->bounds();
+        transform.bbox                = registry.get<MeshComponent>(entity).geometry->bounds();
     }
     else
     {
         TransformComponent& transform = registry.emplace<TransformComponent>(entity);
-        transform.bounds()            = registry.get<MeshComponent>(entity).geometry()->bounds();
+        transform.bbox                = registry.get<MeshComponent>(entity).geometry->bounds();
     }
 }
 
@@ -80,7 +82,7 @@ const bgfx::Stats* Engine::bgfxStats()
 
 bool Engine::init(u32 viewWidth, u32 viewHeight)
 {
-    _viewWidth = viewWidth;
+    _viewWidth  = viewWidth;
     _viewHeight = viewHeight;
 
     _logger = spdlog::stdout_color_mt("console").get();
@@ -97,11 +99,12 @@ bool Engine::init(u32 viewWidth, u32 viewHeight)
         _ecsManager = new ECSManager();
     if (_debugDraw == nullptr)
         _debugDraw = new DebugDraw();
+    if (_uiManager == nullptr)
+        _uiManager = new UIManager();
 
     initVertDecl();
     registerDefaultAssetTypes();
     registerComponentDependencies();
-    registerComponentSerialization();
     registerSystems();
     jobs().Initialize();
     debugDraw().initialize();
@@ -111,7 +114,7 @@ bool Engine::init(u32 viewWidth, u32 viewHeight)
 
 void Engine::setViewSize(u32 width, u32 height)
 {
-    _viewWidth = width;
+    _viewWidth  = width;
     _viewHeight = height;
 }
 
@@ -135,29 +138,6 @@ void Engine::registerComponentDependencies()
     ecs().registry().on_construct<MeshComponent>().connect<&UpdateEntityBoundsFromMesh>();
 }
 
-void Engine::registerComponentSerialization()
-{
-    // JsonSerializer
-    ecs().registerComponentSerialization<TransformComponent, hq::JsonSerializer, hq::JsonDeserializer>();
-    ecs().registerComponentSerialization<MaterialComponent, hq::JsonSerializer, hq::JsonDeserializer>();
-    ecs().registerComponentSerialization<MeshComponent, hq::JsonSerializer, hq::JsonDeserializer>();
-//    ecs().registerComponentSerialization<Selected, hq::JsonSerializer, hq::JsonDeserializer>();
-
-
-    // BinarySerializer
-    ecs().registerComponentSerialization<TransformComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
-    ecs().registerComponentSerialization<MaterialComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
-    ecs().registerComponentSerialization<MeshComponent, hq::BinarySerializer, hq::BinaryDeserializer>();
-//    ecs().registerComponentSerialization<Selected, hq::BinarySerializer, hq::BinaryDeserializer>();
-
-
-    // ImGuiSerializer
-    ecs().registerComponentSerialization<TransformComponent, ImGuiSerializer, ImGuiDeserializer>();
-    ecs().registerComponentSerialization<MaterialComponent, ImGuiSerializer, ImGuiDeserializer>();
-    ecs().registerComponentSerialization<MeshComponent, ImGuiSerializer, ImGuiDeserializer>();
-//    ecs().registerComponentSerialization<Selected, ImGuiSerializer, ImGuiDeserializer>();
-}
-
 void Engine::registerDefaultAssetTypes()
 {
     assets().registerAssetType(AssetTypes::Geometry, AssetNames::Geometry, GeometryAsset::factoryFunc);
@@ -171,16 +151,19 @@ void Engine::registerDefaultAssetTypes()
 
 void Engine::registerSystems()
 {
-    ecs().registerUpdateSystem(std::make_shared<AnimationSystem>());
-    ecs().registerUpdateSystem(std::make_shared<ParticleSystem>());
-    ecs().registerUpdateSystem(std::make_shared<PickingSystem>());
+    ecs().registerUpdateSystem(std::move(std::make_unique<AnimationSystem>()));
+    ecs().registerUpdateSystem(std::move(std::make_unique<ParticleSystem>()));
+    ecs().registerUpdateSystem(std::move(std::make_unique<PickingSystem>()));
 
-    ecs().registerVisualSystem(std::make_shared<RenderSystem>());
+    ecs().registerVisualSystem(std::move(std::make_unique<RenderSystem>()));
 }
 
 void Engine::release()
 {
     jobs().WaitforAllAndShutdown();
+
+    delete _uiManager;
+    _uiManager = nullptr;
 
     delete _ecsManager;
     _ecsManager = nullptr;

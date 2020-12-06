@@ -23,7 +23,7 @@ struct ImGuiSerializer
     template <typename Serializable>
     inline void operator()(Serializable& serializable)
     {
-        std::string s = std::to_string(entt::type_info<Serializable>::id());
+        std::string s(entt::type_id<Serializable>().name());
         if constexpr (std::is_convertible_v<Serializable*, Component*>)
         {
             if (ImGui::CollapsingHeader(s.c_str()))

@@ -1,7 +1,7 @@
 {
     "name": "unlit_textured",
     "vertexShader": "assets/shaders/textured_unlit/vs_textured_unlit.sc",
-    "fragmentShader": "assets//shaders/textured_unlit/fs_textured_unlit.sc",
+    "fragmentShader": "assets/shaders/textured_unlit/fs_textured_unlit.sc",
     "params": [
         {
             "key": "u_time",

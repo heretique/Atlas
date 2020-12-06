@@ -32,7 +32,7 @@ class ECSManager;
 class InputManager;
 class MainWindow;
 class DebugDraw;
-class SystemsManager;
+class UIManager;
 
 class Engine
 {
@@ -65,6 +65,11 @@ public:
     {
         return *_debugDraw;
     }
+    static UIManager& ui()
+    {
+        return *_uiManager;
+    }
+
 
     static bx::AllocatorI*    bxAllocator();
     static const bgfx::Caps*  bgfxCaps();
@@ -78,7 +83,6 @@ public:
 private :
     static void initVertDecl();
     static void registerComponentDependencies();
-    static void registerComponentSerialization();
     static void registerDefaultAssetTypes();
     static void registerSystems();
     static void release();
@@ -90,6 +94,7 @@ private:
     static InputManager*        _inputManager;
     static ECSManager*          _ecsManager;
     static enki::TaskScheduler* _jobManager;
+    static UIManager*           _uiManager;
     static DebugDraw*           _debugDraw;
     static u32                  _viewWidth;
     static u32                  _viewHeight;

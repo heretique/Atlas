@@ -8,25 +8,15 @@ namespace atlas
 {
 class MeshComponent : public Component
 {
+    RTTR_ENABLE(Component)
 public:
-    MeshComponent() {}
-    MeshComponent(AssetPtr mesh) : _mesh(mesh) {}
-    std::shared_ptr<GeometryAsset> geometry()
-    {
-        return std::static_pointer_cast<GeometryAsset>(_mesh);
-    }
+    std::shared_ptr<GeometryAsset> geometry;
 
-    void setGeomtry(AssetPtr geometryAsset)
-    {
-        _mesh = geometryAsset;
-    }
-
-    template <class Serializer>
-    void Serialize(Serializer& serializer)
+    MeshComponent() { }
+    MeshComponent(std::shared_ptr<GeometryAsset> geometry)
+        : geometry(geometry)
     {
     }
-private:
-    AssetPtr _mesh;
 };
 
 }  // namespace Atlas

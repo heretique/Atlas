@@ -13,16 +13,24 @@
 
 namespace atlas
 {
+
+class Component;
+
+class ECSRegistry : public entt::registry
+{
+public:
+    Component* getByType(entt::entity entity, entt::type_info typeInfo);
+};
+
 class ECSManager
 {
 public:
     ECSManager();
     ~ECSManager();
 
-    entt::registry& registry();
+    ECSRegistry& registry();
 
-    template <typename Serializer>
-    void serializeEntity(entt::entity entity, Serializer& serializer);
+    void serializeEntity(entt::entity entity);
     template <typename Serializer>
     void deserializeEntity(entt::entity entity, Serializer& serializer);
 
@@ -32,17 +40,17 @@ public:
     template <typename Component>
     void registerComponentName(const char* name);
 
-    void registerUpdateSystem(std::shared_ptr<ISystem> system);
-    void registerVisualSystem(std::shared_ptr<ISystem> system);
+    void registerUpdateSystem(std::unique_ptr<ISystem> system);
+    void registerVisualSystem(std::unique_ptr<ISystem> system);
     void runUpdateSystems(entt::registry& registry, float dt);
     void runVisualSystems(entt::registry& registry, float dt);
 
     entt::entity mainCamera() const;
 
 private:
-    std::unique_ptr<entt::registry>        _registry;
-    std::vector<std::shared_ptr<ISystem> > _updateSystems;
-    std::vector<std::shared_ptr<ISystem> > _visualSystems;
+    std::unique_ptr<ECSRegistry>        _registry;
+    std::vector<std::unique_ptr<ISystem> > _updateSystems;
+    std::vector<std::unique_ptr<ISystem> > _visualSystems;
 
     entt::entity _mainCamera;
 };
@@ -72,47 +80,35 @@ template <typename Serializer>
 std::unordered_map<ENTT_ID_TYPE, std::function<void(entt::entity, Serializer&)> >
     ComponentDeserializationMap<Serializer>::value = {};
 
-
-template <typename Serializer>
-void ECSManager::serializeEntity(entt::entity entity, Serializer& serializer)
-{
-    _registry->visit(entity, [&](const auto component) {
-        auto it = ComponentSerializationMap<Serializer>::value.find(component);
-//        assert(it != ComponentSerializationMap<Serializer>::value.end() && "Component not registered for serializarion");
-        if (it != ComponentSerializationMap<Serializer>::value.end())
-            it->second(entity, serializer);
-    });
-}
-
 template <typename Serializer>
 void ECSManager::deserializeEntity(entt::entity entity, Serializer& serializer)
 {
-//    _registry->visit(entity, [&](const auto component) {
-//        auto it = ComponentSerializationMap<Serializer>::value.find(component);
-//        assert(it != ComponentSerializationMap<Serializer>::value.end());
-//        it->second(entity, serializer);
-//    });
+    //    _registry->visit(entity, [&](const auto component) {
+    //        auto it = ComponentSerializationMap<Serializer>::value.find(component);
+    //        assert(it != ComponentSerializationMap<Serializer>::value.end());
+    //        it->second(entity, serializer);
+    //    });
 }
 
 template <typename Component, typename Serializer, typename Deserializer>
 void ECSManager::registerComponentSerialization()
 {
-    ComponentSerializationMap<Serializer>::value[entt::type_info<Component>::id()] = [&](entt::entity entity,
-                                                                                   Serializer&  serializer) {
+    ComponentSerializationMap<Serializer>::value[entt::type_id<Component>().hash()] = [&](entt::entity entity,
+                                                                                         Serializer&  serializer) {
         auto& component = _registry->get<Component>(entity);
         serializer(component);
     };
 
-    ComponentDeserializationMap<Deserializer>::value[entt::type_info<Component>::id()] = [&](entt::entity entity,
-                                                                                   Deserializer&  deserializer) {
-        Component component;
-        deserializer(component);
-        _registry->emplace<Component>(entity);
-    };
+    ComponentDeserializationMap<Deserializer>::value[entt::type_id<Component>().hash()] =
+        [&](entt::entity entity, Deserializer& deserializer) {
+            Component component;
+            deserializer(component);
+            _registry->emplace<Component>(entity);
+        };
 }
 
-template<typename Component>
-void ECSManager::registerComponentName(const char *name)
+template <typename Component>
+void ECSManager::registerComponentName(const char* name)
 {
     ComponentNames::value[entt::type_info<Component>::id()] = name;
 }

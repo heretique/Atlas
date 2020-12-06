@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Common.h"
 #include "Assets/ParticleEffect.h"
 #include "Hq/Math/MathTypes.h"
 
@@ -19,9 +20,10 @@ struct Particle
 
 };
 
-class ParticleEffectComponent
+class ParticleEffectComponent : public Component
 {
 friend class ParticleSystem;
+    RTTR_ENABLE(Component)
 public:
     ParticleEffectInfo _effectInfo;
 

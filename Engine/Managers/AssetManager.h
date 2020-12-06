@@ -64,6 +64,6 @@ template <typename T>
 typename std::shared_ptr<typename std::enable_if<std::is_base_of<Asset, T>::value, T>::type> AssetManager::getAsset(
     hq::StringHash hash) const
 {
-    return std::static_pointer_cast<T>(getAsset(hash));
+    return std::dynamic_pointer_cast<T>(getAsset(hash));
 }
 }  // atlas

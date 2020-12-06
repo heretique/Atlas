@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Asset.h"
+#include "Texture.h"
 #include "Hq/BasicTypes.h"
 #include <vector>
 #include <bgfx/bgfx.h>
@@ -53,8 +54,8 @@ struct MaterialUniform
 
 struct MaterialSampler
 {
-    bgfx::UniformHandle sampler;
-    AssetPtr            textureHandle;
+    bgfx::UniformHandle           sampler;
+    std::shared_ptr<TextureAsset> textureHandle;
 };
 
 class MaterialAsset : public Asset

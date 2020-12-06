@@ -9,18 +9,9 @@ namespace atlas
 class MaterialAsset;
 class MaterialComponent : public Component
 {
+    RTTR_ENABLE(Component)
 public:
-    void setMaterial(AssetPtr material);
-    void                           clearMaterial();
-    std::shared_ptr<MaterialAsset> material();
-
-    template <class Serializer>
-    void Serialize(Serializer& serializer)
-    {
-    }
-
-private:
-    AssetPtr _material;
+    std::shared_ptr<MaterialAsset> material;
 };
 
 }  // namespace Atlas

@@ -22,6 +22,7 @@ add_subdirectory(3rdparty/projects/bgfx_shaderc)
 #add_subdirectory(3rdparty/projects/easy_profiler)
 add_subdirectory(3rdparty/projects/fmt)
 add_subdirectory(3rdparty/projects/imgui)
+add_subdirectory(3rdparty/rttr)
 add_subdirectory(Engine)
 add_subdirectory(Tests)
 
