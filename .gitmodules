@@ -19,3 +19,6 @@
 [submodule "hq"]
 	path = hq
 	url = https://github.com/heretique/hq.git
+[submodule "3rdparty/rttr"]
+	path = 3rdparty/rttr
+	url = https://github.com/rttrorg/rttr.git
