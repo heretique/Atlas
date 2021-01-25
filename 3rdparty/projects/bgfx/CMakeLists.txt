@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 
 add_library(bgfx STATIC "")
-add_library(atlas::bgfx ALIAS bgfx)
+add_library(Atlas::BGFX ALIAS bgfx)
 
 target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/debug_renderdoc.cpp
@@ -54,5 +54,7 @@ target_include_directories(bgfx PUBLIC
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_compile_definitions(bgfx PRIVATE BGFX_CONFIG_DEBUG=1 BGFX_CONFIG_RENDERER_OPENGLES=31)
 endif()
+
+#target_compile_definitions(bgfx PRIVATE BGFX_SHARED_LIB_BUILD=1)
 
 target_link_libraries(bgfx bx bimg)

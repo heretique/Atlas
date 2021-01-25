@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 
 project(bgfx_shaderc)
 
@@ -76,6 +76,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries(shaderc Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} EGL GLESv2 ${X11_LIBRARIES})
 endif()
 
-add_custom_command(TARGET shaderc
-                   POST_BUILD
-                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:shaderc> $<TARGET_FILE_DIR:shaderc>/../../../Engine)
+#add_custom_command(TARGET shaderc
+#                   POST_BUILD
+#                   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:shaderc> $<TARGET_FILE_DIR:shaderc>/../../../Engine)

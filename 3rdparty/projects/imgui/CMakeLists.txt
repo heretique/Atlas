@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 
 add_library(imgui STATIC "")
-add_library(atlas::imgui ALIAS imgui)
+add_library(Atlas::ImGui ALIAS imgui)
 
 target_sources(imgui PRIVATE
     ../../imgui/imgui_draw.cpp

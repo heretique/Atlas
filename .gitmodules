@@ -19,6 +19,6 @@
 [submodule "3rdparty/spdlog"]
 	path = 3rdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
-[submodule "hq"]
-	path = hq
+[submodule "3rdparty/hq"]
+	path = 3rdparty/hq
 	url = https://github.com/heretique/hq.git

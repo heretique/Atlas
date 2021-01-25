@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 
 add_library(bx STATIC "")
 add_library(atlas::bx ALIAS bx)
