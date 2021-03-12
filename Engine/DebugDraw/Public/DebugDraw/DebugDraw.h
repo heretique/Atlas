@@ -7,6 +7,8 @@ namespace atlas
 {
 class DebugDraw
 {
+    friend class Engine;
+
 public:
     static void initialize();
 
@@ -20,6 +22,9 @@ public:
     static void drawRay3(const hq::math::Ray3& ray, const float length, const uint32_t color);
     static void drawRay3(const hq::math::Ray3& ray, const hq::math::Mat4x4& transform, const float length,
                          const uint32_t color);
+
+private:
+    static void release();
 };
 
 }  // atlas namespace

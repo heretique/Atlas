@@ -127,5 +127,10 @@ void Engine::release()
 
     delete _jobManager;
     _jobManager = nullptr;
+
+    DebugDraw::release();
+    ui().release();
+    ecs().registry().clear();
+    assets().release();
 }
 }  // namespace Atlas

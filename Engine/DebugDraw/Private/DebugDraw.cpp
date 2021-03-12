@@ -70,6 +70,13 @@ struct DebugDrawImpl
         AssetManager::instance().loadAssets();
     }
 
+    void release() {
+        _debugLineMat.reset();
+        _debugLineStippleMat.reset();
+        began = true;
+    }
+
+
     void begin()
     {
         assert(began == false);
@@ -258,6 +265,10 @@ void DebugDraw::drawRay3(const hq::math::Ray3& ray, const hq::math::Mat4x4& tran
                          const uint32_t color)
 {
     _sImpl.drawRay3(ray, transform, length, color);
+}
+
+void DebugDraw::release() { 
+    _sImpl.release();
 }
 
 }  // atlas namespace

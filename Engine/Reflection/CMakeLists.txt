@@ -1,8 +1,7 @@
-add_library(Reflection INTERFACE
-    PUBLIC
+add_library(Reflection INTERFACE)
+target_sources(Reflection INTERFACE
         Public/Reflection/Reflection.h
-        Public/Reflection/Registration.h
-    )
+        Public/Reflection/Registration.h)
 add_library(Atlas::Reflection ALIAS Reflection)
 
 target_include_directories(Reflection

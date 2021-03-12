@@ -4,7 +4,7 @@
 namespace atlas
 {
 
-spdlog::logger &Logger::log()
+spdlog::logger& Logger::log()
 {
     static spdlog::logger* _instance = spdlog::stdout_color_mt("console").get();
     return *_instance;

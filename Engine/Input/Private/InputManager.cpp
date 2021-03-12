@@ -31,16 +31,14 @@ float InputManager::mouseVerticalAxis() const
     return _mvAxis;
 }
 
-bool InputManager::mouseDown() const
+bool InputManager::mouseDown(MouseButtonFlags flags) const
 {
-    return _registerMouse;
+    return _down.has(flags);
 }
 
-bool InputManager::mouseClick() const
+bool InputManager::mouseClick(MouseButtonFlags flags) const
 {
-    bool clicked = _clicked;
-    _clicked     = false;
-    return clicked;
+    return _clicked.has(flags);
 }
 
 ::hq::math::Vec2 InputManager::mousePos() const
@@ -75,13 +73,15 @@ void InputManager::handleInputEvent(const SDL_Event& e)
             {
                 _registerMouse = true;
             }
+            _down |= SDL_BUTTON(e.button.button);
             break;
         case SDL_MOUSEBUTTONUP:
             if (e.button.button == SDL_BUTTON_RIGHT)
             {
                 _registerMouse = false;
-                _clicked       = true;
             }
+            _clicked |= _down & SDL_BUTTON(e.button.button);
+            _down &= ~SDL_BUTTON(e.button.button);
             break;
         case SDL_KEYDOWN:
         {

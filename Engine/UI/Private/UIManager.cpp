@@ -11,6 +11,7 @@ UIManager::~UIManager() { }
 UIManager& UIManager::instance()
 {
     static UIManager _instance;
+    assert(!_instance._released);
     return _instance;
 }
 
@@ -40,6 +41,11 @@ void UIManager::update(float deltaTime)
         _windows.erase(id);
     }
     _closedWindows.clear();
+}
+
+void UIManager::release() { 
+    _windows.clear();
+    _released = true;
 }
 
 }  // atlas

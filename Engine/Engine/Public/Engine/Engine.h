@@ -56,12 +56,13 @@ public:
     static u32  viewWidth();
     static u32  viewHeight();
 
+    static void release();
+
 private:
     static void initVertDecl();
     static void registerComponentDependencies();
     static void registerDefaultAssetTypes();
     static void registerSystems();
-    static void release();
 
 private:
     static enki::TaskScheduler* _jobManager;

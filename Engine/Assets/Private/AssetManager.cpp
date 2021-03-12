@@ -13,13 +13,14 @@ namespace atlas
 // AssetManager
 //
 
-AssetManager::AssetManager() {}
+AssetManager::AssetManager() { }
 
-AssetManager::~AssetManager() {}
+AssetManager::~AssetManager() { }
 
-AssetManager &AssetManager::instance()
+AssetManager& AssetManager::instance()
 {
     static AssetManager _instance;
+    assert(!_instance._released);
     return _instance;
 }
 
@@ -77,13 +78,14 @@ AssetPtr AssetManager::addAsset(AssetType type, const std::string& filename, u32
 
 void AssetManager::removeAsset(AssetPtr asset)
 {
-    if (asset != nullptr)
+    if (asset)
     {
         auto it = _hashedAssets.find(asset->hash());
         if (it != _hashedAssets.end())
             _hashedAssets.erase(it);
 
         _assets.erase(std::remove(_assets.begin(), _assets.end(), asset), _assets.end());
+        asset.reset();
     }
 }
 
@@ -136,7 +138,7 @@ void AssetManager::loadAssets()
     // elements are added during loop
     AssetStorage assetsToLoad;
     _loadingCount = 0;
-    for(auto asset: _assets)
+    for (auto asset : _assets)
     {
         if (!asset->isLoaded())
         {
@@ -145,14 +147,14 @@ void AssetManager::loadAssets()
         }
     }
 
-    for (auto asset: assetsToLoad)
+    for (auto asset : assetsToLoad)
     {
         loadAsset(asset);
         ++_loadedCount;
         LoadingProgress.fire(_loadedCount / (float)_loadingCount * 100.f);
     }
 
-    _loadedCount = 0;
+    _loadedCount  = 0;
     _loadingCount = 0;
 }
 
@@ -249,4 +251,12 @@ const std::string AssetManager::assetName(AssetType type)
 
     return "";
 }
+
+void AssetManager::release()
+{
+    _assets.clear();
+    _hashedAssets.clear();
+    _released = true;
+}
+
 }  // atlas

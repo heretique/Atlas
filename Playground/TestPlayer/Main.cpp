@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 
     try
     {
-        SDLApp& app = SDLApp::get();
+        SDLApp app = SDLApp();
         if (0 < app.init(SDL_INIT_VIDEO))
         {
             const char* err = SDL_GetError();
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 
         //    profiler::startListen();
 
-        return SDLApp::get().exec();
+        return app.exec();
     }
     catch (std::logic_error& e)
     {

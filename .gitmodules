@@ -22,3 +22,6 @@
 [submodule "3rdparty/hq"]
 	path = 3rdparty/hq
 	url = https://github.com/heretique/hq.git
+[submodule "3rdparty/psmove"]
+	path = 3rdparty/psmove
+	url = https://github.com/heretique/psmove.git

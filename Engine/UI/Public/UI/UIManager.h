@@ -10,8 +10,8 @@ class UIWindow;
 
 class UIManager
 {
+    friend class Engine;
 public:
-    UIManager();
     ~UIManager();
 
     static UIManager& instance();
@@ -22,9 +22,14 @@ public:
     void update(float deltaTime);
     void setStyle();
 
+
 private:
+    UIManager();
+    void release();
+
     std::unordered_map<hq::StringHash, std::unique_ptr<UIWindow> > _windows;
     std::vector<hq::StringHash>                                    _closedWindows;
+    bool                                                           _released {false};
 };
 
 }  // atlas

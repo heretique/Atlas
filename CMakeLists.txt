@@ -37,6 +37,7 @@ option(ATLAS_BUILD_PLAYGROUND "Enable this to build playground projects" ON)
 #endif()
 
 add_subdirectory(3rdparty/hq)
+add_subdirectory(3rdparty/psmove)
 add_subdirectory(3rdparty/projects/bx)
 add_subdirectory(3rdparty/projects/bimg)
 add_subdirectory(3rdparty/projects/bgfx)

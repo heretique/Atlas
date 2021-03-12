@@ -14,8 +14,10 @@ namespace atlas
 {
 class AssetManager : hq::NonCopyable
 {
+    friend class Engine;
+
 public:
-    AssetManager();
+
     ~AssetManager();
 
     static AssetManager& instance();
@@ -38,6 +40,7 @@ public:
     int                unusedAssets();
     const std::string  assetName(AssetType type);
 
+
 public:  // signals
     sigs::signal<void(int)> LoadingProgress;
     sigs::signal<void()>    LoadingDone;
@@ -46,6 +49,9 @@ protected:
     AssetPtr getAsset(hq::StringHash hash) const;
 
 private:
+    AssetManager();
+    void release();
+
     using AssetsByHash = std::unordered_map<hq::StringHash, AssetPtr, hq::StringHash::Hasher>;
     struct AssetRegistryEntry
     {
@@ -60,6 +66,7 @@ private:
     std::mutex _loadingMutex;
     uint       _loadingCount;
     uint       _loadedCount;
+    bool       _released {false};
 };
 
 template <typename T>

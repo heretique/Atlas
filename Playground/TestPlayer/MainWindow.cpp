@@ -95,6 +95,7 @@ MainWindow::~MainWindow()
     bgfx_destroy_index_buffer(_axesIbh);
     bgfx_destroy_vertex_buffer(_axesVbh);
     bgfx_destroy_program(_axesProgram);
+    Engine::release();
 }
 
 void MainWindow::onInit()

@@ -80,10 +80,10 @@ void PickingSystem::runSystem(entt::registry& registry, float dt)
     if (_pickedEntity != entt::null)
     {
         TransformComponent& transform = ECSManager::instance().registry().get<TransformComponent>(_pickedEntity);
-        DebugDraw::begin();
-        DebugDraw::drawBox3(transform.bbox, transform.world, hq::packUint32(0, 255, 0, 255));
-        DebugDraw::end();
-        if (Engine::input().mouseClick())
+        //DebugDraw::begin();
+        //DebugDraw::drawBox3(transform.bbox, transform.world, hq::packUint32(0, 255, 0, 255));
+        //DebugDraw::end();
+        if (Engine::input().mouseClick(InputManager::EMouseButtons::Left))
         {
             if (_selectedEntity != entt::null)
             {
