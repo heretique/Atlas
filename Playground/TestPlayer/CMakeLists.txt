@@ -8,7 +8,7 @@ target_include_directories(TestPlayer PRIVATE .
 
 
 
-target_link_libraries(TestPlayer Atlas::Core Atlas::SDL Atlas::Engine Atlas::Fmt RTTR::Core_Lib)
+target_link_libraries(TestPlayer Atlas::Core Atlas::SDL Atlas::Engine RTTR::Core_Lib)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     if (MSVC)

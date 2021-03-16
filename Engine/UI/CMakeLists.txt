@@ -25,4 +25,4 @@ target_include_directories(UI
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(UI Atlas::Core Atlas::Input Atlas::Ecs Atlas::ImGui Atlas::Engine)
+target_link_libraries(UI Atlas::Core Atlas::Input Atlas::Ecs Atlas::Engine)

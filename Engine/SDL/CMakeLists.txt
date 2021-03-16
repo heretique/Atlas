@@ -17,7 +17,7 @@ target_include_directories(SDL
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(SDL Atlas::Core Atlas::ImGui)
+target_link_libraries(SDL Atlas::Core)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     add_library(sdl2 STATIC IMPORTED)

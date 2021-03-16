@@ -4,15 +4,9 @@
 [submodule "3rdparty/bx"]
 	path = 3rdparty/bx
 	url = https://github.com/bkaradzic/bx.git
-[submodule "3rdparty/imgui"]
-	path = 3rdparty/imgui
-	url = https://github.com/ocornut/imgui.git
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
-[submodule "3rdparty/rttr"]
-	path = 3rdparty/rttr
-	url = https://github.com/heretique/rttr.git
 [submodule "3rdparty/easy_profiler"]
 	path = 3rdparty/easy_profiler
 	url = https://github.com/yse/easy_profiler.git

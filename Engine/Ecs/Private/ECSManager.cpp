@@ -60,7 +60,7 @@ void ECSManager::serializeEntity(entt::entity entity)
         if (comp)
         {
             rttr::type compType     = rttr::type::get(comp);
-            rttr::type compTrueType = rttr::type::get_derived_type((void*)comp, compType);
+            //rttr::type compTrueType = rttr::type::get_derived_type((void*)comp, compType);
             compType.get_name();
         }
     });
