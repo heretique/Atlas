@@ -36,7 +36,7 @@ u32                  Engine::_viewHeight = 0;
 ///////////// Bounds updates //////////////
 void UpdateEntityBoundsFromMesh(entt::registry& registry, entt::entity entity)
 {
-    if (registry.has<TransformComponent>(entity))
+    if (registry.all_of<TransformComponent>(entity))
     {
         TransformComponent& transform = registry.get<TransformComponent>(entity);
         transform.bbox                = registry.get<MeshComponent>(entity).geometry->bounds();
