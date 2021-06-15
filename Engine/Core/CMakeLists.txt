@@ -21,7 +21,6 @@ target_include_directories(Core
         $<INSTALL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Public>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Public>
         ../../3rdparty
-        ../../3rdparty/spdlog/include
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private
     )

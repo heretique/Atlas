@@ -7,10 +7,9 @@
 
 namespace atlas
 {
-std::unordered_map<ENTT_ID_TYPE, const char*> ComponentNames::value = {};
 
 ECSManager::ECSManager()
-    : _registry(new ECSRegistry())
+    : _registry(new entt::registry())
 {
 }
 
@@ -22,7 +21,7 @@ ECSManager& ECSManager::instance()
     return _instance;
 }
 
-ECSRegistry& ECSManager::registry()
+entt::registry& ECSManager::registry()
 {
     return *_registry;
 }
@@ -51,27 +50,6 @@ void ECSManager::runVisualSystems(entt::registry& registry, float dt)
     {
         system->runSystem(registry, dt);
     }
-}
-
-void ECSManager::serializeEntity(entt::entity entity)
-{
-    _registry->visit(entity, [&](const auto typeInfo) {
-        Component* comp = _registry->getByType(entity, typeInfo);
-        if (comp)
-        {
-            rttr::type compType     = rttr::type::get(comp);
-            //rttr::type compTrueType = rttr::type::get_derived_type((void*)comp, compType);
-            compType.get_name();
-        }
-    });
-}
-
-atlas::Component* ECSRegistry::getByType(entt::entity entity, entt::type_info typeInfo)
-{
-    if (typeInfo.seq() > pools.size())
-        return nullptr;
-    auto& pool = *pools[typeInfo.seq()].pool;
-    return static_cast<atlas::Component*>(pool.getPtr(entity));
 }
 
 }  // atlas namespace

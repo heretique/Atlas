@@ -7,12 +7,6 @@
 [submodule "3rdparty/bimg"]
 	path = 3rdparty/bimg
 	url = https://github.com/bkaradzic/bimg.git
-[submodule "3rdparty/easy_profiler"]
-	path = 3rdparty/easy_profiler
-	url = https://github.com/yse/easy_profiler.git
-[submodule "3rdparty/spdlog"]
-	path = 3rdparty/spdlog
-	url = https://github.com/gabime/spdlog.git
 [submodule "3rdparty/hq"]
 	path = 3rdparty/hq
 	url = https://github.com/heretique/hq.git

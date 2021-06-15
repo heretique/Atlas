@@ -15,4 +15,4 @@ target_include_directories(Ecs
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(Ecs Atlas::Core Atlas::Camera Atlas::Utils)
+target_link_libraries(Ecs Atlas::Core Atlas::Camera Atlas::Utils EnTT::EnTT)

@@ -17,13 +17,5 @@ target_include_directories(SDL
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(SDL Atlas::Core)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    add_library(sdl2 STATIC IMPORTED)
-    set_target_properties(sdl2 PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/sdl/include)
-    set_target_properties(sdl2 PROPERTIES
-        IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/../../3rdparty/sdl/win/msvc/x64/SDL2.lib)
-    target_link_libraries(SDL sdl2)
-endif()
+find_package (SDL2 CONFIG REQUIRED)
+target_link_libraries(SDL Atlas::Core SDL2::SDL2)

@@ -166,6 +166,7 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/loop_unswitch_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/loop_utils.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/loop_utils.h
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/interp_fixup_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/mem_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/mem_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/merge_return_pass.cpp

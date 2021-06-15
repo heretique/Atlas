@@ -32,7 +32,7 @@
 
 #include "fs_axes.bin.h"
 #include "vs_axes.bin.h"
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 #include <sstream>
 #include <ctime>

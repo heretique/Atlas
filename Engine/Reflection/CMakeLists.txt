@@ -9,4 +9,5 @@ target_include_directories(Reflection
         $<INSTALL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Public>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Public>)
 
-target_link_libraries(Reflection INTERFACE RTTR::Core_Lib)
+
+target_link_libraries(Reflection INTERFACE RTTR::Core)

@@ -90,7 +90,7 @@ struct DebugDrawImpl
         bgfx_transient_vertex_buffer_t debugVbo;
         bgfx_transient_index_buffer_t  debugIbo;
         if (bgfx_alloc_transient_buffers(&debugVbo, &DebugLineVertex::vertLayout, vertexBuffer.size(), &debugIbo,
-                                         indexBuffer.size()))
+                                         indexBuffer.size(), true))
         {
             memcpy(debugVbo.data, vertexBuffer.data(), vertexBuffer.size() * DebugLineVertex::vertLayout.stride);
             memcpy(debugIbo.data, indexBuffer.data(), indexBuffer.size() * sizeof(uint16_t));

@@ -3,12 +3,10 @@ add_executable(TestPlayer
         MainWindow.cpp
     )
 
-target_include_directories(TestPlayer PRIVATE .
-    ../3rdparty/spdlog/include)
+find_package(rttr CONFIG REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
 
-
-
-target_link_libraries(TestPlayer Atlas::Core Atlas::SDL Atlas::Engine RTTR::Core_Lib)
+target_link_libraries(TestPlayer Atlas::Core Atlas::SDL Atlas::Engine SDL2::SDL2 RTTR::Core imgui::imgui fmt::fmt)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     if (MSVC)
@@ -35,20 +33,14 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     find_package(X11 REQUIRED)
     find_library(DL_LIBRARY dl)
     find_library(RT_LIBRARY rt)
-    find_library(SDL2_LIBRARY SDL2)
-    find_path(SDL2_INCLUDE SDL2)
 
     message(${DL_LIBRARY})
     message(${RT_LIBRARY})
-    message(${SDL2_LIBRARY})
-    message(${SDL2_INCLUDE})
 
-    target_include_directories(TestPlayer PRIVATE ${SDL2_INCLUDE})
-    target_link_libraries(TestPlayer Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} EGL GLESv2 ${X11_LIBRARIES} ${SDL2_LIBRARY} stdc++fs)
+    target_link_libraries(TestPlayer Threads::Threads ${RT_LIBRARY} ${DL_LIBRARY} EGL GLESv2 ${X11_LIBRARIES} stdc++fs)
 endif()
 
 target_compile_features(TestPlayer PUBLIC cxx_std_17)
-#target_compile_definitions(test_player PRIVATE SPDLOG_FMT_EXTERNAL)
 target_compile_definitions(TestPlayer PRIVATE _USE_MATH_DEFINES)
 
 

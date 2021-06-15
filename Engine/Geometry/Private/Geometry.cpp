@@ -12,7 +12,7 @@
 #include <SDL2/SDL_filesystem.h>
 
 #define TINYOBJLOADER_IMPLEMENTATION  // define this in only *one* .cc
-#include "tinyobj/tiny_obj_loader.h"
+#include "tiny_obj_loader.h"
 
 namespace atlas
 {

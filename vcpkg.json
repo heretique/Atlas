@@ -1,0 +1,30 @@
+{
+    "name": "atlas",
+    "version-string": "0.0.1",
+    "dependencies": [
+        "hidapi",
+        "glm",
+        "entt",
+        "rttr",
+        "sdl2",
+        "fmt",
+        "cgltf",
+        "doctest",
+        "rapidjson",
+        "implot",
+        "stb",
+        "spdlog",
+        {
+            "name": "tinyobjloader",
+            "features": [ "double" ]
+        },
+        {
+            "name": "imgui",
+            "features": [ "docking-experimental" ]
+        },
+        {
+            "name": "opencv4",
+            "features": [ "contrib", "ffmpeg", "nonfree", "jpeg", "png", "tiff", "world" ]
+        }
+    ]
+}

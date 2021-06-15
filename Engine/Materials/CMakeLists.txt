@@ -20,4 +20,4 @@ target_include_directories(Materials
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(Materials Atlas::Core Atlas::Assets Atlas::Utils RTTR::Core_Lib)
+target_link_libraries(Materials Atlas::Core Atlas::Assets Atlas::Utils RTTR::Core)

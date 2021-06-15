@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 
+find_package(imgui CONFIG REQUIRED)
+find_package(entt CONFIG REQUIRED)
+find_package(rttr CONFIG REQUIRED)
+
 add_subdirectory(Core)
 add_subdirectory(Ecs)
 add_subdirectory(Animation)

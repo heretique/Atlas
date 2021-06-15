@@ -8,8 +8,8 @@ cmake_minimum_required(VERSION 3.16) # for precompiled headers and unity builds
 #    file(TO_CMAKE_PATH "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CMAKE_TOOLCHAIN_FILE)
 #endif()
 
-#set(CMAKE_CXX_STANDARD 17)
-#set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(Atlas VERSION 0.1.0 LANGUAGES CXX C)
 include(CMakeToolsHelpers OPTIONAL)

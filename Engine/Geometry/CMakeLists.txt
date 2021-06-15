@@ -15,4 +15,5 @@ target_include_directories(Geometry
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/Private)
 
-target_link_libraries(Geometry Atlas::Core Atlas::Assets Atlas::SDL RTTR::Core_Lib)
+find_package(tinyobjloader CONFIG REQUIRED)
+target_link_libraries(Geometry Atlas::Core Atlas::Assets Atlas::SDL RTTR::Core tinyobjloader::tinyobjloader_double)

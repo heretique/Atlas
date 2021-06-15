@@ -15,7 +15,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_syswm.h>
 //#include <easy/profiler.h>
-#include <imgui/imgui.h>
+#include <imgui.h>
 
 namespace atlas
 {
@@ -116,7 +116,7 @@ struct ImGuiBgfx
             u32               numIndices  = (u32)drawList->IdxBuffer.size();
 
             if (numVertices != bgfx_get_avail_transient_vertex_buffer(numVertices, &_layout) ||
-                numIndices != bgfx_get_avail_transient_index_buffer(numIndices))
+                numIndices != bgfx_get_avail_transient_index_buffer(numIndices, true))
             {
                 // not enough space in transient buffer just quit drawing the rest...
                 break;
