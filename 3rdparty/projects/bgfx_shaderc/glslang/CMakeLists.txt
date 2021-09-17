@@ -79,6 +79,7 @@ source_list
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/ShaderLang.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/SymbolTable.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/SymbolTable.h
+  ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/SpirvIntrinsics.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/Versions.cpp
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/Versions.h
   ../../../bgfx/3rdparty/glslang/glslang/MachineIndependent/attribute.cpp

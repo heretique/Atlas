@@ -27,6 +27,7 @@ target_sources(bimg PRIVATE
     ../../bimg/3rdparty/astc-codec/src/decoder/quantization.h
     ../../bimg/3rdparty/astc-codec/src/decoder/weight_infill.cc
     ../../bimg/3rdparty/astc-codec/src/decoder/weight_infill.h
+    ../../bimg/3rdparty/tinyexr/deps/miniz/miniz.c
     ../../bimg/src/image_decode.cpp
     ../../bimg/src/image_encode.cpp
     ../../bimg/src/image_gnf.cpp
@@ -40,6 +41,7 @@ target_include_directories(bimg PUBLIC
     ../../bimg/3rdparty
     ../../bimg/3rdparty/iqa/include
     ../../bimg/3rdparty/astc-codec
-    ../../bimg/3rdparty/astc-codec/include)
+    ../../bimg/3rdparty/astc-codec/include
+    ../../bimg/3rdparty/tinyexr/deps/miniz)
 
 target_link_libraries(bimg bx)

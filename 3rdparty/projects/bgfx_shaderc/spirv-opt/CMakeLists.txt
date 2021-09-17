@@ -64,6 +64,8 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/constants.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/convert_to_half_pass.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/convert_to_half_pass.h
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/convert_to_sampled_image_pass.cpp
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/convert_to_sampled_image_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/copy_prop_arrays.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/copy_prop_arrays.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/dead_branch_elim_pass.cpp
@@ -190,6 +192,8 @@ source_list
     ../../../bgfx/3rdparty/spirv-tools/source/opt/reduce_load_size.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/redundancy_elimination.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/redundancy_elimination.h
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/remove_unused_interface_variables_pass.cpp
+    ../../../bgfx/3rdparty/spirv-tools/source/opt/remove_unused_interface_variables_pass.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/reflect.h
     ../../../bgfx/3rdparty/spirv-tools/source/opt/register_pressure.cpp
     ../../../bgfx/3rdparty/spirv-tools/source/opt/register_pressure.h

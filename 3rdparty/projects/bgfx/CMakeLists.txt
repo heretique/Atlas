@@ -10,6 +10,7 @@ target_sources(bgfx PRIVATE ../../bgfx/src/bgfx.cpp
     ../../bgfx/src/glcontext_glx.cpp
     ../../bgfx/src/glcontext_wgl.cpp
     ../../bgfx/src/nvapi.cpp
+    ../../bgfx/src/renderer_agc.cpp
     ../../bgfx/src/renderer_d3d9.cpp
     ../../bgfx/src/renderer_d3d11.cpp
     ../../bgfx/src/renderer_d3d12.cpp
